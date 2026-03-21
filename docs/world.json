@@ -1,0 +1,27 @@
+{
+  "world_id": "world.kilima",
+  "name": "Kilima",
+  "subtitle": "Basura Digital",
+  "version": "1.0",
+  "language": "en",
+  "description": "Techno-political and mystic-digital dystopia organized around The Mountain. 12 central characters, 4 factions, a history of three revolutions.",
+  "author": "The Author",
+  "framework": "gigagen",
+  "default_phase": "act1_start",
+  "principal_count": 12,
+  "faction_count": 4,
+  "location_count": 15,
+  "timeline_files": ["timelines/bn1.yaml"],
+  "data_files": {
+    "characters": "characters.json",
+    "factions": "factions.json",
+    "locations": "locations.json",
+    "relations": "relations.json",
+    "invariants": "invariants.json"
+  },
+  "synonyms": {
+    "act1": ["NB1", "Narrative Block 1", "Bloque Narrativo 1", "Act 1"],
+    "act2": ["NB2", "Narrative Block 2", "Act 2"],
+    "act3": ["NB3", "Narrative Block 3", "Act 3"]
+  }
+}

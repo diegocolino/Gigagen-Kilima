@@ -1,0 +1,58 @@
+[
+  {
+    "id": "fac.resistencia",
+    "entity_type": "faction",
+    "name": "The Resistance",
+    "tags": ["insurgent", "underground", "clandestine"],
+    "canon_level": "fixed",
+    "description": "Clandestine movement opposing the hierarchy.",
+    "doctrine_tags": ["insurgent", "underground"],
+    "base_location_id": "loc.cave",
+    "status": "underground",
+    "power": 0.3,
+    "cohesion": 0.7,
+    "leader_id": "char.deity"
+  },
+  {
+    "id": "fac.agencia",
+    "entity_type": "faction",
+    "name": "The Agency",
+    "tags": ["control", "coercive", "cultural"],
+    "canon_level": "fixed",
+    "description": "Controls careers of artists and celebrities. Coercive cultural arm.",
+    "doctrine_tags": ["control", "coercive"],
+    "base_location_id": "loc.tower",
+    "status": "dominant",
+    "power": 0.8,
+    "cohesion": 0.9,
+    "leader_id": null
+  },
+  {
+    "id": "fac.sindicatos",
+    "entity_type": "faction",
+    "name": "The Unions",
+    "tags": ["political", "bureaucratic", "meritocratic"],
+    "canon_level": "fixed",
+    "description": "Groups representing social sectors. Founded The Net. Subordinate to AI.",
+    "doctrine_tags": ["political", "bureaucratic"],
+    "base_location_id": "loc.capital",
+    "status": "dominant",
+    "power": 0.7,
+    "cohesion": 0.6,
+    "leader_id": null
+  },
+  {
+    "id": "fac.ia",
+    "entity_type": "faction",
+    "name": "The AI",
+    "tags": ["omnipresent", "technological", "surveillance"],
+    "canon_level": "fixed",
+    "description": "Omnipresent technological entity. Controls The Net and consciousness transfer.",
+    "doctrine_tags": ["omnipresent", "technological"],
+    "base_location_id": "loc.net",
+    "status": "dominant",
+    "power": 1.0,
+    "cohesion": 1.0,
+    "leader_id": null
+  }
+]
