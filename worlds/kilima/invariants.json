@@ -1,0 +1,135 @@
+{
+  "world_id": "world.kilima",
+  "version": "1.0",
+  "description": "Rules of what cannot change, what can vary, and what is forbidden.",
+  "fixed": {
+    "world_structure": [
+      "The Mountain exists with hierarchy: Capital (top), City (mid), Village (bottom)",
+      "The Cage exists as semi-autonomous floating city",
+      "The Cave exists as Resistance headquarters (historically impenetrable, breached in NB1)",
+      "The Net exists as digital metaverse controlled by The AI",
+      "The Limbo exists as subzone within The Net for transferred consciousnesses",
+      "The Forno exists as artistic quarter, Kive and Luka's childhood place"
+    ],
+    "factions": [
+      "Exactly 4 factions: The Resistance, The Agency, The Unions, The AI",
+      "Each has a fixed nature and base location",
+      "The Resistance is led by Freya at NB1 start; Dev was previous leader"
+    ],
+    "characters": {
+      "count": 12,
+      "rule": "Equal in ontological rank. Relative centrality varies by seed/phase.",
+      "roster": [
+        {"id": "char.rebel",    "name": "Kive",   "archetype": "REB", "note": "D#", "hero_type": "tragic_hero"},
+        {"id": "char.orphan",   "name": "Len",    "archetype": "ORP", "note": "E",  "hero_type": "mythological_hero"},
+        {"id": "char.hacker",   "name": "Dev",    "archetype": "HCK", "note": "F#", "hero_type": "action_hero"},
+        {"id": "char.leader",   "name": "Saarah", "archetype": "LEA", "note": "G",  "hero_type": "anti_villain"},
+        {"id": "char.creator",  "name": "Cris",   "archetype": "CRE", "note": "A#", "hero_type": "urban_hero"},
+        {"id": "char.innocent", "name": "Brais",  "archetype": "INN", "note": "G#", "hero_type": "redemption_hero"},
+        {"id": "char.lover",    "name": "Ali",    "archetype": "LOV", "note": "F",  "hero_type": "romantic_hero"},
+        {"id": "char.jester",   "name": "Pau",    "archetype": "JES", "note": "C#", "hero_type": "fantasy_hero"},
+        {"id": "char.hero",     "name": "Luka",   "archetype": "HER", "note": "D",  "hero_type": "archetypal_hero"},
+        {"id": "char.explorer", "name": "Yeri",   "archetype": "EXP", "note": "A",  "hero_type": "post_apocalyptic_hero"},
+        {"id": "char.caregiver","name": "Nora",   "archetype": "CAR", "note": "C",  "hero_type": "protector_hero"},
+        {"id": "char.deity",    "name": "Freya",  "archetype": "DEI", "note": "B",  "hero_type": "criminal_hero"}
+      ]
+    },
+    "relationships": [
+      {"source": "char.rebel",    "target": "char.orphan",   "kind": "sibling"},
+      {"source": "char.hacker",   "target": "char.orphan",   "kind": "partner"},
+      {"source": "char.rebel",    "target": "char.lover",    "kind": "ex_partner"},
+      {"source": "char.rebel",    "target": "char.caregiver","kind": "ex_partner"},
+      {"source": "char.rebel",    "target": "char.jester",   "kind": "close_friend"},
+      {"source": "char.rebel",    "target": "char.innocent", "kind": "close_friend"},
+      {"source": "char.rebel",    "target": "char.hero",     "kind": "childhood_best_friends"},
+      {"source": "char.rebel",    "target": "char.leader",   "kind": "former_friend"},
+      {"source": "char.innocent", "target": "char.caregiver","kind": "partner"},
+      {"source": "char.caregiver","target": "char.orphan",   "kind": "maternal_figure"},
+      {"source": "char.deity",    "target": "char.hacker",   "kind": "leadership_succession"},
+      {"source": "char.rebel",    "target": "char.deity",    "kind": "oneiric_bond"},
+      {"source": "char.orphan",   "target": "char.innocent", "kind": "reunited_in_limbo"}
+    ],
+    "faction_memberships": [
+      {"character": "char.rebel",    "faction": "fac.resistencia", "kind": "member_of"},
+      {"character": "char.deity",    "faction": "fac.resistencia", "kind": "leader_of"},
+      {"character": "char.hacker",   "faction": "fac.resistencia", "kind": "allied_with", "note": "former leader, now independent"},
+      {"character": "char.hero",     "faction": "fac.agencia",     "kind": "member_of", "note": "turns during NB1"},
+      {"character": "char.innocent", "faction": "fac.agencia",     "kind": "infiltrated_in", "note": "secret spy"}
+    ],
+    "faction_locations": [
+      {"faction": "fac.resistencia", "location": "loc.cave",    "kind": "based_in"},
+      {"faction": "fac.agencia",     "location": "loc.capital",  "kind": "based_in"},
+      {"faction": "fac.sindicatos",  "location": "loc.capital",  "kind": "based_in"},
+      {"faction": "fac.ia",          "location": "loc.net",      "kind": "based_in"}
+    ]
+  },
+  "nb1_invariants": {
+    "duration_hours": 62,
+    "three_dawns": ["H00 (funeral)", "H30 (travel)", "H62 (death)"],
+    "fixed_events": [
+      "Len is already dead physically at NB1 start",
+      "Her consciousness exists in The Limbo",
+      "Four simultaneous funerals at H00",
+      "Kive declares war on The Agency at H16",
+      "Luka turns from Agency to Resistance (triggered at H20)",
+      "Brais is killed at H20 defending Kive's people",
+      "Brais's consciousness transferred to The Limbo",
+      "Brais's body reanimated as Agency-controlled automaton",
+      "Nora and Pau kidnapped at H20",
+      "Nora discovers missing Butterfly Clip at H08",
+      "Freya contacts Len in The Limbo at H10",
+      "Army invades The Cave at H52-H56 (historic first breach)",
+      "They followed Yeri's route",
+      "Brais-automaton fires at Kive at H62",
+      "The Rebel always dies (H62 or early NB2)"
+    ]
+  },
+  "variables": [
+    {
+      "id": "VAR_DEV",
+      "name": "Dev's decision",
+      "event": "E09",
+      "hour": 35,
+      "type": "binary",
+      "options": ["participates", "refuses"],
+      "probability": {"participates": 0.5, "refuses": 0.5}
+    },
+    {
+      "id": "VAR_BRAIS",
+      "name": "Brais's Agency response",
+      "event": "E07B",
+      "hour": 16,
+      "type": "binary",
+      "options": ["lies", "betrays"],
+      "probability": {"lies": 0.5, "betrays": 0.5}
+    },
+    {
+      "id": "VAR_ENDING",
+      "name": "Who dies at H62",
+      "event": "E24",
+      "hour": 62,
+      "type": "binary",
+      "options": ["kive_dies", "pau_dies"],
+      "probability": {"kive_dies": 0.5, "pau_dies": 0.5}
+    }
+  ],
+  "forbidden": [
+    "Remove any of the 12 from canon",
+    "Change a character's root archetype, note, or hero type",
+    "Delete fixed relationships",
+    "Invent blood relations not in canon",
+    "Start NB1 with Third Revolution active",
+    "Delete Len's initial death",
+    "The Mountain doesn't exist",
+    "The Net doesn't exist",
+    "The Cave is not breached in NB1",
+    "The Rebel survives NB1 AND NB2",
+    "Utopia is visited in NB1",
+    "Brais survives NB1 physically",
+    "Luka doesn't turn",
+    "The Butterfly Clip doesn't exist",
+    "The Limbo doesn't exist",
+    "Brais-automaton concept is removed",
+    "Len's telepathic abilities (H51) are removed"
+  ]
+}

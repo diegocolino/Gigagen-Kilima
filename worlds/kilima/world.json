@@ -1,0 +1,24 @@
+{
+  "world_id": "world.kilima",
+  "name": "Kilima",
+  "version": "1.0",
+  "description": "Dystopian techno-political universe organized around The Mountain. 12 central characters, 4 factions, and a 62-hour narrative timeline.",
+  "canon_level": "fixed",
+  "tags": ["dystopia", "techno-political", "musical", "relational"],
+  "structure": {
+    "characters_file": "characters.json",
+    "factions_file": "factions.json",
+    "locations_file": "locations.json",
+    "relations_file": "relations.json",
+    "invariants_file": "invariants.json",
+    "timelines": {
+      "nb1": "timelines/bn1.yaml"
+    }
+  },
+  "defaults": {
+    "phase": "block_1_start",
+    "duration_hours": 62,
+    "the_rebel_always_dies": true,
+    "variables_count": 3
+  }
+}

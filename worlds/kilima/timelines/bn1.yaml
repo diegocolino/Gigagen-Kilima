@@ -1,0 +1,923 @@
+# ============================================================
+# NARRATIVE BLOCK 1 — DEFINITIVE MASTER FILE (v5.0)
+# ============================================================
+# SINGLE SOURCE OF TRUTH. Ready for programming.
+#
+# 62 hours. Three dawns. The Rebel always dies.
+# Post-credits outside the clock.
+#
+# VARIABLES (only 3):
+#   1. Dev participates yes/no (E09, H35)
+#   2. Brais lies or betrays (E07B, H16)
+#   3. Kive or Pau dies (E24, H62)
+#
+# COMPANION FILES (to be created separately):
+#   - 12x hero arc documents (.md per archetype)
+#   - Dashboard visualization (.html)
+# ============================================================
+
+meta:
+  title: "Narrative Block 1 — The Second Revolution"
+  version: "5.0"
+  language: "en"
+  duration_hours: 62
+  structure: "dispersion -> reunion -> siege -> shattered ending"
+  outcome_feeds_into: NB2
+  the_rebel_always_dies: true
+
+# ============================================================
+# LORE
+# ============================================================
+lore:
+  the_orphan:
+    description: "Len has no mother. Called 'the Orphan'. Nora is her maternal figure."
+
+  the_butterfly_clip:
+    description: "Len's material bond with Air-type Anima. Always wore it. Missing from fake body."
+    status: "Agency captured the Anima."
+    discovered_by: nora
+    discovered_at: H08
+    reveal: NB2
+
+  the_limbo:
+    description: "Subzone of The Net. Where transferred consciousnesses truly exist."
+    inhabitants: "Len, Brais (after H20), other long-term transfers."
+
+  brais_automaton:
+    true_brais: "In The Limbo with Len. Helpless. Watches his body used as weapon."
+    robot_brais: "Body reanimated by Agency. No free will. Deployed with army."
+
+  the_forno:
+    description: "Pizza place where Luka worked for years before going to The Capital. Kive and Luka's shared place. Childhood territory."
+
+  the_cave:
+    description: "Resistance HQ. Led by Freya. Historically impenetrable — no army has ever breached it. Until H56."
+
+  utopia:
+    description: "Exists but NOT visited in NB1. Moved to NB2."
+    nb2_path_pau_dead: "Mushroom revives Pau. Fantasy hero = death and resurrection."
+    nb2_path_kive_dead: "Mushroom modifies Pau. Driven to find way to revive Kive (can't)."
+
+  dev_signature_line:
+    text: "a self-centered girl and her justice-obsessed brother"
+    usage: "Spoken ALWAYS at E09. Accept or refuse, the line is the same."
+
+  lens_telepathy:
+    description: "By H51, Len can reach beyond The Limbo into reality. Not through The Net — direct telepathic contact."
+    significance: "Len's mythological power is growing. Seeds for arc that stretches to end of universe."
+
+# ============================================================
+# LOCATIONS
+# ============================================================
+locations:
+  - { id: the_cage, name: "The Cage", type: zone }
+  - { id: the_capital, name: "The Capital", type: zone }
+  - { id: the_city, name: "The City", type: zone }
+  - { id: the_net, name: "The Net", type: digital_zone }
+  - { id: the_limbo, name: "The Limbo", type: digital_subzone, parent: the_net }
+  - { id: kilima, name: "Kilima", type: place }
+  - { id: the_tower, name: "The Agency Tower", type: building, parent: the_capital }
+  - { id: union_hq, name: "Union Headquarters", type: building, parent: the_city }
+  - { id: the_forno, name: "The Forno", type: neighborhood, note: "Artistic quarter in The City. Giosme lineage territory. Where Kive/Luka/Cris formed their band." }
+  - { id: the_nest, name: "The Nest", type: hospital, parent: the_city, note: "Hospital / medical zone. Nora's professional world. Group hides here after Forno." }
+  - { id: the_backdoor, name: "The Backdoor", type: net_access_point, near: the_cave }
+  - { id: the_wall, name: "The Wall", type: place }
+  - { id: the_village, name: "The Village", type: place, parent: the_wall }
+  - { id: the_cave, name: "The Cave", type: place }
+  - { id: the_road, name: "The Road", type: route }
+
+# ============================================================
+# CHARACTERS
+# ============================================================
+characters:
+
+  - id: kive
+    name: "Kive"
+    archetype: rebel
+    hero_type: tragic_hero
+    lineage: radbot
+    arc_in_nb1: "Opens AND closes. Always dies (H62 or early NB2)."
+    profession: "Musician. Former star of The Mountain, now faded glory. Under Agency contract."
+    guilt: "Feels responsible for Len joining The Agency world. Len is now Agency's new face."
+    bonds:
+      luka: childhood_best_friends
+      ali: ex_girlfriend
+      len: sibling
+      brais: close_friend
+      freya: oneiric_then_intimate
+      nora: serious_ex
+    fate: "THE REBEL ALWAYS DIES."
+
+  - id: luka
+    name: "Luka"
+    archetype: hero
+    hero_type: archetypal_hero
+    arc_in_nb1: "Opens. Turns from Agency to Resistance. Fixed — triggered by seeing Kive broken."
+    bonds:
+      kive: childhood_best_friends
+      saarah: attraction_to_bond
+    turn_trigger: "Seeing Kive broken at The Forno (H20). Childhood loyalty > Agency."
+
+  - id: saarah
+    name: "Saarah"
+    archetype: ruler
+    hero_type: anti_villain
+    arc_in_nb1: "Seeds. Union operative -> speechwriter of the revolution."
+    bonds:
+      luka: attraction_to_bond
+      cris: ally
+
+  - id: brais
+    name: "Brais"
+    archetype: innocent
+    hero_type: redemption_hero
+    arc_in_nb1: "Descent. Dies at H20. Body becomes automaton. Real self in Limbo."
+    bonds:
+      kive: friend_and_spy
+      len: reunited_in_limbo
+    alive_hours: 20  # H00-H20
+
+  - id: nora
+    name: "Nora"
+    archetype: caretaker
+    hero_type: protector_hero
+    arc_in_nb1: "Opens. Motivated purely by protection. Discovers Butterfly Clip."
+    is_medic: true
+    bonds:
+      kive: most_serious_ex
+      len: maternal_figure
+      pau: companion
+
+  - id: pau
+    name: "Pau"
+    archetype: fool
+    hero_type: fantasy_hero
+    lineage: delisse
+    arc_in_nb1: "Trapped. Cannot leave Cage (no CRA breathing chip — Savage). NOT modified in NB1. May die at H62."
+    bonds:
+      nora: companion
+      kive: friend
+    limitation: "no_cra_chip"  # NOT genetic. Economic/philosophical. Refuses modifications.
+    notes: "When kidnapped, Agency gives him temporary breathing device. In NB2: mushroom resolves this."
+
+  - id: yeri
+    name: "Yeri"
+    archetype: explorer
+    hero_type: post_apocalyptic_hero
+    arc_in_nb1: "Post-arc. Connector. His strength = the fatal flaw (leads army to Cave)."
+    bonds:
+      kive: ally
+      group: connector
+
+  - id: cris
+    name: "Cris"
+    archetype: creator
+    hero_type: urban_hero_antihero
+    arc_in_nb1: "Pre-arc. Seeds only. Arc OPENS at H56 (Cave breach = first challenge)."
+    bonds:
+      saarah: ally
+      freya: mentor_at_cave
+
+  - id: ali
+    name: "Ali"
+    archetype: lover
+    hero_type: romantic_hero
+    arc_in_nb1: "Free bird. Intentionally open."
+    bonds:
+      kive: ex_girlfriend
+      len: personal_bond_through_kive
+
+  - id: dev
+    name: "Dev"
+    archetype: hacker
+    hero_type: action_hero
+    arc_in_nb1: "Call to action. Full arc in Third Revolution."
+    bonds:
+      freya: leadership_succession
+      len: decisive_encounter
+    was_resistance_leader: true
+    signature_line: "a self-centered girl and her justice-obsessed brother"
+
+  - id: freya
+    name: "Freya"
+    archetype: goddess
+    hero_type: criminal_hero
+    arc_in_nb1: "Leader of Resistance. Knows the prophecy. Oneiric bond with Kive. Contacts Len."
+    physical_base: the_cave
+    bonds:
+      kive: oneiric_then_intimate
+      dev: predecessor
+      len: contacted_in_limbo
+      cris: mentors_at_cave
+    knows:
+      - the_prophecy
+      - the_ether
+      - the_genetic_plan
+      - the_limbo_true_nature
+
+  - id: len
+    name: "Len"
+    archetype: orphan
+    hero_type: mythological_hero
+    arc_in_nb1: "Call to adventure = dying. Arc stretches to end of universe."
+    bonds:
+      kive: sibling
+      nora: child_to_maternal_figure
+      brais: friend_in_limbo
+      dev: decisive_encounter
+      freya: contacted_by
+    powers_growing: "By H51, can reach beyond Limbo telepathically into reality."
+
+# ============================================================
+# EVENTS — TIMELINE (62 HOURS)
+# ============================================================
+events:
+
+  # === NIGHT 1: FUNERALS + SLEEP (H00 - H07) ===
+
+  - id: E01
+    hour: 0
+    name: "Funeral at The Cage"
+    phase: funeral
+    type: fixed
+    location: the_cage
+    characters: [kive, nora, pau, brais, yeri]
+    description: "Night. Sad ceremony. Fake body incinerated. Kive supported by Nora/Pau, reunites with Brais. Yeri here to pick up Kive."
+    arc_steps:
+      kive: "Hamartia — who he is, shown through grief"
+      brais: "Innocent state — loves Kive, already compromised"
+      nora: "Protector at rest — comforting, mothering"
+      pau: "Fool's prison — trapped, watching others"
+    weight: high
+
+  - id: E02
+    hour: 0
+    name: "Funeral at The Capital"
+    phase: funeral
+    type: fixed
+    location: the_capital
+    characters: [luka, saarah]
+    description: "Night. Elitist, occultist ceremony. Real body. Luka and Saarah meet."
+    arc_steps:
+      luka: "Ordinary world — loyal agent"
+      saarah: "Established power — Union operative"
+    weight: high
+
+  - id: E03
+    hour: 0
+    name: "Funeral at The City"
+    phase: funeral
+    type: fixed
+    location: the_city
+    characters: [cris, ali]
+    description: "Night. Tension, riots. Cris furious. Ali sad — knew Len through Kive."
+    arc_steps:
+      cris: "City life — her world, already angry"
+    weight: medium
+
+  - id: E04
+    hour: 0
+    name: "Celebration on The Net"
+    phase: funeral
+    type: fixed
+    location: the_net
+    characters: [dev, freya, len]
+    description: "The Net celebrates new face. Dev crashes party. Freya (at Cave physically) recognizes him — former leader. Detected. Both disconnect."
+    weight: medium
+
+  - id: E_SLEEP_1
+    hour: 1
+    name: "Post-funeral night"
+    phase: funeral
+    type: fixed
+    location: [the_cage, the_capital, the_city, the_limbo, the_net]
+    characters: [len, dev, luka, saarah]
+    description: "Most sleep. Active: Len experiences Limbo for first time (confused, fragmented). Dev notices Net perturbations, investigates transfer ripples. Luka and Saarah awake in The Capital after occultist horror — processing, maybe crossing paths."
+    weight: medium
+    sim_note: "Simulation calculates internals each hour: grief, bonds, dreams."
+
+  - id: E05B
+    hour: 6
+    name: "Brais sends report"
+    phase: travel
+    type: fixed
+    location: the_cage
+    characters: [brais]
+    description: "Everyone asleep. Brais sneaks out. Transmits. Reports Kive's state, Nora, Pau, mood. Writes, deletes, rewrites softer. Protecting Kive while spying."
+    arc_steps:
+      brais: "Corruption begins — first real-time betrayal"
+    weight: high
+
+  # === DAY 1 MORNING: AFTERMATH + TRAVEL (H07 - H16) ===
+
+  - id: E05D
+    hour: 7
+    name: "Nora and Pau — private conversation"
+    phase: travel
+    type: fixed
+    location: the_cage
+    characters: [nora, pau]
+    description: "Morning. 'We should prepare to leave.' 'I CAN'T leave.' Pau's limitation. Frustration."
+    arc_steps:
+      pau: "Fool's prison — demonstrated physically"
+    weight: medium
+
+  - id: E05E
+    hour: 8
+    name: "Nora discovers missing Butterfly Clip"
+    phase: travel
+    type: fixed
+    location: the_cage
+    characters: [nora]
+    description: "Nora as medic accesses incineration room. Butterfly Clip missing. Len ALWAYS wore it. Keeps secret. Reveal in NB2."
+    arc_steps:
+      nora: "Protector discovers — maternal instinct flags danger"
+    weight: high
+
+  - id: E05C
+    hour: 7
+    name: "Brais receives new orders"
+    phase: travel
+    type: fixed
+    location: the_cage
+    characters: [brais]
+    description: "'Get closer to Kive. We need to know what he's planning.' Brais accepts. Digging his own grave."
+    arc_steps:
+      brais: "Corruption deepens"
+    weight: medium
+
+  - id: E05
+    hour: 8
+    name: "Train journey begins"
+    phase: travel
+    type: fixed
+    location: the_road
+    characters: [kive, yeri]
+    description: "Kive and Yeri board train. 8-hour journey. Conversations about The Road, Kilima, what's coming."
+    arc_steps:
+      kive: "Tragic flaw emerging — rage under grief"
+    weight: medium
+
+  - id: E05_PARALLEL
+    hour: 8
+    name: "Parallel morning activities"
+    phase: travel
+    type: fixed
+    location: [the_tower, the_road, the_city, the_cave, the_limbo, the_net]
+    characters: [luka, saarah, cris, ali, freya, len, dev]
+    description: "Luka: Agency mission, thinks about Saarah. Saarah+Cris: travel, two angers bonding, Saarah researches. Ali: grieves in City. Freya: deity work at Cave/Village, helps children, prepares. Len: first full day in Limbo. Dev: investigating transfer."
+    weight: medium
+
+  - id: E_FREYA_LEN
+    hour: 10
+    name: "Freya contacts Len in The Limbo"
+    phase: travel
+    type: fixed
+    location: [the_cave, the_limbo]
+    characters: [freya, len]
+    description: "Freya reaches Len. She knows the prophecy, the ether, the genetic plan, The Limbo's nature. Len reads her mind — sees everything. First reasonable doubt about what she's doing, about what this existence means."
+    arc_steps:
+      len: "Call to adventure deepens — the doubt"
+      freya: "Goddess acting — reaching into the beyond"
+    weight: critical
+    notes: "Seeds for Len's arc that stretches to end of universe."
+
+  # === DAY 1 AFTERNOON: CONFRONTATION (H16 - H19) ===
+
+  - id: E06
+    hour: 16
+    name: "Arrival at Kilima — split"
+    phase: confrontation
+    type: fixed
+    location: kilima
+    characters: [kive, yeri]
+    description: "Kive and Yeri arrive. Take separate paths."
+    weight: low
+
+  - id: E07
+    hour: 16
+    name: "Kive confronts The Agency — revolver scene — declares war"
+    phase: confrontation
+    type: fixed
+    location: the_net
+    characters: [kive, luka]
+    description: "Kive connects to The Net from a cabin. Meets Agency bosses and Luka (from The Tower). Agency threatens Kive: release your album or go to The Colony. Kive — faded star, former glory, carrying guilt for getting Len into this world — snaps. Loads a revolver skin and shoots the Agency boss between the eyes. Virtual, symbolic, devastating. The boss doesn't flinch but the message is clear: the contract is over. Kive then declares war. Looks at Luka with complicity: 'If you're still my friend, meet me where we always go. Tonight.' (The Forno — where they and Cris formed their band.)"
+    arc_steps:
+      kive: "The wrong decision — brave but reckless, sleep-deprived. Contractual suicide."
+      luka: "Call begins — hears childhood friend invoke their place"
+    weight: critical
+    cohesion: -2
+    scene_detail: "The revolver shot is symbolic. In The Net, nobody dies from a gun. But the act itself — a contracted artist shooting his boss — is the declaration of independence before the declaration of war."
+
+  - id: E07B
+    hour: 16
+    name: "Brais hears declaration from Agency side"
+    phase: confrontation
+    type: variable  # VARIABLE 2
+    location: the_cage
+    characters: [brais]
+    description: "Agency channel. Hears declaration. 'Brais, confirm target position.' Must respond."
+    arc_steps:
+      brais: "Corruption forced — no escape"
+    weight: critical
+    variable:
+      lies: "Protects Kive. Buys time. Kidnapping delayed (~H22)."
+      betrays: "Full intel. Kidnapping accelerated (~H19). Less time at Forno."
+    affects: [kidnapping_timing, cohesion]
+
+  - id: E07C
+    hour: 17
+    name: "Nora and Pau hear the news"
+    phase: confrontation
+    type: fixed
+    location: the_cage
+    characters: [nora, pau]
+    description: "Declaration reaches Cage. 'We go to Kive.' 'I can't.' Confrontation with impotence."
+    arc_steps:
+      pau: "Fool's loyalty — wants to act, body won't let him"
+    weight: medium
+
+  - id: E07D
+    hour: 17
+    name: "Freya intercepts the declaration"
+    phase: confrontation
+    type: fixed
+    location: the_cave
+    characters: [freya]
+    description: "Intercepts signal. Recognizes THE VOICE FROM HER DREAMS. Puts her in motion."
+    arc_steps:
+      freya: "Call from beyond — dream voice = declaration voice"
+    weight: high
+
+  - id: E07E
+    hour: 17
+    name: "Ali witnesses City reaction"
+    phase: confrontation
+    type: fixed
+    location: the_city
+    characters: [ali]
+    description: "City explodes. Ali watches people invoke Len without knowing Len."
+    weight: medium
+
+  - id: E08
+    hour: 18
+    name: "Escape from Union HQ"
+    phase: confrontation
+    type: fixed
+    location: union_hq
+    characters: [cris, saarah, yeri]
+    description: "Saarah breaks with Unions. Escape. Yeri saves Cris + Saarah."
+    arc_steps:
+      saarah: "Power challenged — Unions can't protect her"
+    weight: high
+
+  # === NIGHT 1 EVENING: THE FORNO + KIDNAPPING (H20 - H24) ===
+
+  - id: E_FORNO
+    hour: 20
+    name: "The Forno dinner and reunion"
+    phase: dispersion
+    type: fixed
+    location: the_forno
+    characters: [kive, luka, saarah, cris, yeri, ali]
+    description: "THE FORNO — the artistic quarter where Kive, Luka and Cris formed their band. Kive is there. Luka walks in — he came. Childhood friend chose friendship over Agency. Saarah, Cris, Yeri, Ali join. The group forms for real. Dinner. Conversations. Bonds deepening. As the night goes on, The Forno becomes a party (as it always does). For a moment, things feel normal."
+    arc_steps:
+      luka: "Crossing the threshold — sees Kive broken in their old place"
+      kive: "Brief hope — his friend came"
+    weight: critical
+    notes: "The Forno is always a party at night. This is the last moment of lightness."
+
+  - id: E15
+    hour: 20
+    name: "Kidnapping at The Cage — Brais dies"
+    phase: dispersion
+    type: fixed
+    location: the_cage
+    characters: [pau, nora, brais]
+    description: "PARALLEL WITH FORNO: Nora and Pau kidnapped. Brais killed defending Kive's people. Consciousness -> Limbo. Body seized -> automaton."
+    arc_steps:
+      kive: "The consequences — his war caused this (learns later)"
+      brais: "Sacrifice and fall — death begins the horror"
+      nora: "Protector tested — stripped of ability to protect"
+    weight: critical
+    cohesion: -4
+    timing_note: "If Brais betrayed at E07B, this happens at ~H19 instead."
+
+  - id: E15B
+    hour: 21
+    name: "Len receives Brais in The Limbo"
+    phase: dispersion
+    type: fixed
+    location: the_limbo
+    characters: [len, brais]
+    description: "Len receives Brais. Two dead friends. Len guides him through disorientation. Brais's body is being reanimated elsewhere."
+    arc_steps:
+      len: "Active role — the welcomer"
+      brais: "True self separated from stolen body"
+    weight: high
+
+  - id: E_FORNO_FOUND
+    hour: 22
+    name: "Agency finds them at The Forno — flee to The Nest"
+    phase: dispersion
+    type: fixed
+    location: [the_forno, the_nest]
+    characters: [kive, luka, saarah, cris, yeri, ali]
+    description: "During the Forno party, news arrives: Nora and Pau kidnapped, Brais killed. And worse — The Agency tracked Luka here. They've been found. Ali knows The City's margins: she leads them to The Nest (El Nido — the hospital). They hide there. Kive devastated — his declaration caused all of this."
+    arc_steps:
+      kive: "Consequences hit — guilt and rage"
+    weight: high
+    notes: "The Forno goes from party to panic. Ali's local knowledge saves them. The Nest (hospital) is Nora's territory — hiding there is bittersweet since Nora is kidnapped."
+
+  - id: E11
+    hour: 24
+    name: "Crossed dreams: Kive <-> Freya"
+    phase: dispersion
+    type: fixed
+    location: ~
+    characters: [kive, freya]
+    description: "Midnight. Full crossed dreams. Both know it was real."
+    weight: medium
+
+  # === NIGHT 2: REST + TRANSIT (H25 - H30) ===
+
+  - id: E_SLEEP_2
+    hour: 25
+    name: "Night 2 — partial sleep"
+    phase: dispersion
+    type: fixed
+    location: [the_nest, the_road]
+    characters: []
+    description: "Those who can, sleep at The Nest (~5h). Nora+Pau on kidnap train heading to Capital via mountain route."
+    weight: low
+
+  # === DAY 2 MORNING: CROSSING THE WALL (H30 - H35) ===
+
+  - id: E_MOVE_OUT
+    hour: 30
+    name: "Group leaves The Nest — heads to Wall"
+    phase: convergence
+    type: fixed
+    location: the_road
+    characters: [kive, luka, saarah, cris, ali]
+    description: "Morning. Group heads toward The Wall. Yeri splits to rescue Nora+Pau."
+    weight: medium
+
+  - id: E20
+    hour: 30
+    name: "Yeri goes to rescue Nora and Pau"
+    phase: convergence
+    type: fixed
+    location: the_road
+    characters: [yeri]
+    description: "Yeri splits off. Nora+Pau on a train through the mountains. Yeri intercepts — he knows The Road. Doesn't need to go far. AGENCY FOLLOWS HIM."
+    arc_steps:
+      yeri: "Fatal flaw — the explorer's path reveals The Cave"
+    weight: high
+    critical: "Agency tracks Yeri. This is how they find The Cave."
+
+  - id: E11B
+    hour: 33
+    name: "Freya consults the elder"
+    phase: convergence
+    type: fixed
+    location: the_village
+    characters: [freya]
+    description: "'The dreams are calls. Follow them.' Oneiric pilgrimage confirmed."
+    weight: medium
+
+  - id: E17
+    hour: 34
+    name: "Kive finds Freya at The Village"
+    phase: convergence
+    type: fixed
+    location: the_village
+    characters: [kive, freya]
+    description: "Kive reaches The Wall. Freya at The Village. They recognize each other without having met."
+    arc_steps:
+      freya: "Union of power and purpose"
+    weight: high
+    cohesion: +2
+
+  - id: E18
+    hour: 35
+    name: "Arrival at The Cave"
+    phase: convergence
+    type: fixed
+    location: the_cave
+    characters: [kive, freya, cris, saarah, luka, ali]
+    description: "The Cave. Freya's domain. Reunion with Resistance. Dev is already here."
+    arc_steps:
+      kive: "Anagnorisis — sees the damage, confronts what he's done"
+      luka: "Full turn — definitively Resistance now"
+    weight: critical
+    cohesion: +3
+
+  - id: E09
+    hour: 35
+    name: "Dev finds Len — THE DECISION"
+    phase: convergence
+    type: variable  # VARIABLE 1
+    location: [the_cave, the_limbo]
+    characters: [dev, len]
+    description: "Dev accesses Limbo from Cave systems. Finds fragmented Len. 'A self-centered girl and her justice-obsessed brother.' Always says the line."
+    arc_steps:
+      dev: "Call to action — the decision"
+    weight: critical
+    variable:
+      participates:
+        probability: 0.50
+        line: "I'll do it, but only for a self-centered girl and her justice-obsessed brother."
+        affects: [declaration_infrastructure, backdoor, nb2_resources]
+      refuses:
+        probability: 0.50
+        line: "I won't do it for a self-centered girl and her justice-obsessed brother."
+        affects: [dev_leaves_at_H49, dev_returns_at_H62]
+
+  # === DAY 2 AFTERNOON: PREPARATION (H36 - H44) ===
+
+  - id: E18C
+    hour: 36
+    name: "Len projects into The Cave"
+    phase: convergence
+    type: fixed
+    location: [the_limbo, the_cave]
+    characters: [len]
+    description: "Len projects from Limbo. Emotional earthquake. Kive sees dead sibling. Nora sees the child she mothered. Cannot warn about Brais-automaton."
+    arc_steps:
+      len: "The orphan reaches back to the living"
+    weight: critical
+
+  - id: E21
+    hour: 37
+    name: "Yeri arrives with Nora and Pau"
+    phase: convergence
+    type: fixed
+    location: the_cave
+    characters: [yeri, nora, pau]
+    description: "Group complete. Nora has Butterfly Clip secret. Pau still limited. Nobody knows army is coming."
+    weight: high
+    cohesion: +2
+
+  - id: E_LUKA_SAARAH
+    hour: 38
+    name: "Luka and Saarah moment"
+    phase: convergence
+    type: fixed
+    location: the_cave
+    characters: [luka, saarah]
+    description: "Moment over food. Bond deepens. Two people who met at a funeral 38 hours ago."
+    weight: medium
+
+  - id: E_SPEECH_PREP
+    hour: 40
+    name: "Saarah and Kive prepare the speech"
+    phase: convergence
+    type: fixed
+    location: the_cave
+    characters: [saarah, kive]
+    description: "Saarah writes. Kive speaks. Union rhetoric meets revolutionary fire. The declaration is CRAFTED, not improvised."
+    arc_steps:
+      saarah: "New allegiance — her words fuel the revolution"
+    weight: high
+
+  - id: E_CRIS_FREYA
+    hour: 42
+    name: "Cris and Freya explore The Cave"
+    phase: convergence
+    type: fixed
+    location: the_cave
+    characters: [cris, freya]
+    description: "Cris learns about The Cave, Resistance history. Mind blown. The urban girl in the mountain fortress. Freya mentoring."
+    arc_steps:
+      cris: "Seeds — the Creator meets the Goddess"
+    weight: medium
+
+  - id: E_FINAL_PREP
+    hour: 44
+    name: "Everyone together — final preparation"
+    phase: convergence
+    type: fixed
+    location: the_cave
+    characters: [kive, luka, saarah, yeri, cris, freya, dev, pau, nora, ali]
+    description: "Full group. Last peaceful hours. Freya+Kive intimate conversation — she can't tell him everything but he feels the weight. Tension. Purpose. Fear."
+    weight: high
+
+  # === NIGHT 3: DECLARATION + SIEGE + COMBAT (H48 - H62) ===
+  # Nobody sleeps this night.
+
+  - id: E22
+    hour: 48
+    name: "Declaration of the Second Revolution"
+    phase: declaration
+    type: fixed
+    location: [the_net, the_cave, the_city]
+    characters: [kive, luka, saarah, yeri, cris, freya, dev, len, pau, nora, ali]
+    description: "Night broadcast. CORAL EVENT. Kive declares the Second Revolution."
+    arc_steps:
+      kive: "Peripeteia — peak and most exposed"
+      saarah: "New allegiance crystallized"
+      freya: "Power serves purpose — digital shield"
+    weight: critical
+    coral_roles:
+      kive: "The voice."
+      luka: "Security — Agency knowledge protects signal."
+      saarah: "Speechwriter — the words."
+      yeri: "Logistics — signal to all zones."
+      cris: "Amplifier — City response."
+      freya: "Digital shield on The Net."
+      dev_if_yes: "Infrastructure — broadcast system."
+      dev_if_no: "Absent from tech role. Gap felt."
+      len: "Living proof. 'They killed me and I'm here.'"
+      pau: "Present. Still limited. Here."
+      nora: "Witness. Testifies."
+      ali: "TBD — free bird."
+
+  - id: E_DEV_LEAVES
+    hour: 49
+    name: "Dev leaves The Cave (if refuses)"
+    phase: declaration
+    type: variable
+    location: the_backdoor
+    characters: [dev]
+    description: "IF Dev refused: leaves now. Through Backdoor area. Sees suspicious movement — military column, lights. Keeps going. Not his war."
+    conditional: "Only if E09 = refuses"
+    weight: high
+
+  - id: E_FREYA_HISTORY
+    hour: 50
+    name: "Freya tells the history of The Cave"
+    phase: declaration
+    type: fixed
+    location: the_cave
+    characters: [freya, kive, group]
+    description: "Nobody sleeps. Freya tells the history. What this place means. Why no army has ever breached it. Conversations. Confessions. Fears. Freya and Kive take command together."
+    weight: high
+
+  - id: E_LEN_TELEPATHY
+    hour: 51
+    name: "Len contacts Dev telepathically"
+    phase: declaration
+    type: fixed
+    location: [the_limbo, the_backdoor]
+    characters: [len, dev]
+    description: "Len reaches Dev TELEPATHICALLY. Not through The Net — in reality. Dev is near The Backdoor. Doesn't see Len — HEARS her voice, SEES The Cave under siege. Len's power is growing beyond The Limbo. Dev turns back. Runs. Backdoor crew follows (armed)."
+    arc_steps:
+      len: "Mythological power growing — reaches beyond Limbo"
+      dev: "The call he can't refuse — not the revolution, his friends"
+    weight: critical
+    notes: "This happens regardless of whether Dev accepted or refused E09. If he accepted, he's at Cave and this is a warning. If he refused, this is what brings him back."
+    conditional_detail:
+      dev_accepted: "Dev is at The Cave. Len warns him telepathically about the army. Dev mobilizes Backdoor defenses."
+      dev_refused: "Dev is outside, leaving. Len reaches him. He turns back. Runs with Backdoor crew."
+
+  - id: E_SIEGE_BEGIN
+    hour: 52
+    name: "Siege begins"
+    phase: declaration
+    type: fixed
+    location: the_cave
+    characters: []
+    description: "Army arrives at Cave perimeter. Never been here before. Don't know layout. But have numbers. And Brais-automaton."
+    weight: critical
+
+  - id: E23
+    hour: 56
+    name: "Army breaches The Cave"
+    phase: declaration
+    type: fixed
+    location: the_cave
+    characters: [kive, luka, saarah, yeri, cris, freya, pau, nora, ali, brais]
+    description: "HISTORIC. First breach ever. Full armed combat inside. Freya+Kive command. Cris's first epic moment. Brais-automaton among soldiers."
+    arc_steps:
+      kive: "Catharsis begins"
+      cris: "FIRST CHALLENGE — her arc OPENS"
+      brais: "Ultimate corruption — body used against friends"
+    weight: critical
+    trigger_chain: "Rebel's catharsis = Creator's first challenge"
+
+  - id: E_COMBAT
+    hour: 58
+    name: "Combat continues"
+    phase: declaration
+    type: fixed
+    location: the_cave
+    characters: []
+    description: "Battle reaches inner chambers. Outnumbered. Desperate. Grinding."
+    weight: high
+
+  - id: E24
+    hour: 62
+    name: "Brais fires. Cut to black."
+    phase: declaration
+    type: variable  # VARIABLE 3
+    location: the_cave
+    characters: [kive, brais, pau]
+    description: "Third dawn. First light through The Cave. Brais-automaton aims at Kive. Fires."
+    weight: critical
+    variable:
+      ending_a:
+        description: "Kive falls. Dead. The Rebel never sees the revolution."
+        kive: dead
+        pau: alive
+      ending_b:
+        description: "Pau steps in front. Pau falls. Dead. Kive survives — dies early NB2."
+        kive: alive_briefly
+        pau: dead
+    limbo: "Real Brais watches his body fire. Len holds him."
+    dev_arrival: "Dev is arriving at The Cave with armed crew. Too late for the shot. In time to save everyone else."
+    notes: "THE REBEL ALWAYS DIES. 62 hours. Three dawns. Cut to black."
+
+  # === POST-CREDITS (OUTSIDE THE 62 HOURS) ===
+
+  - id: E_POST_CREDITS
+    hour: null  # outside the clock
+    name: "Post-credits"
+    phase: post_credits
+    type: fixed
+    location: [the_cave, the_city, the_limbo]
+    characters: [dev, cris, len, brais, nora, saarah]
+    description: |
+      1. Dev + Backdoor crew save survivors. Dev sees the body. Weight of leaving.
+      2. Flashforwards / NB2 trailer:
+         - City in revolt (Cris)
+         - Limbo: Brais + Len processing
+         - Nora and the Butterfly Clip
+         - Saarah becoming harder
+         - Agency reaction
+         - (Pau dead): Utopia, mushroom, resurrection
+         - (Kive dead): revolution without its voice
+         - Dev's guilt -> Action Hero seed
+      3. Final image. Something that burns.
+    weight: critical
+
+# ============================================================
+# VARIABLES SUMMARY
+# ============================================================
+variables:
+  - id: VAR_DEV
+    name: "Dev's decision"
+    event: E09
+    hour: 35
+    type: binary
+    probability: { yes: 0.50, no: 0.50 }
+    affects:
+      - "Declaration infrastructure (E22)"
+      - "Backdoor access (E14 in future iterations)"
+      - "Dev's position at H51 (at Cave or leaving)"
+      - "NB2 resources"
+
+  - id: VAR_BRAIS
+    name: "Brais's response to Agency"
+    event: E07B
+    hour: 16
+    type: binary
+    options: { lies: "Protects Kive, buys time", betrays: "Full intel, accelerates kidnapping" }
+    affects:
+      - "Kidnapping timing (E15: H20 if lies, ~H19 if betrays)"
+      - "Time at Forno before learning the news"
+      - "Cohesion"
+
+  - id: VAR_ENDING
+    name: "Who dies at H62"
+    event: E24
+    hour: 62
+    type: binary
+    options: { ending_a: "Kive dies", ending_b: "Pau dies, Kive dies early NB2" }
+    affects:
+      - "NB2 protagonist"
+      - "NB2 opening"
+      - "Utopia path (Pau resurrection vs Pau transformation)"
+      - "THE REBEL ALWAYS DIES"
+
+# ============================================================
+# RELATIONSHIPS
+# ============================================================
+relationships:
+  - { id: R01, pair: [kive, brais], type: "friend/spy -> automaton horror" }
+  - { id: R02, pair: [luka, saarah], type: "attraction -> bond" }
+  - { id: R03, pair: [kive, freya], type: "oneiric -> intimate -> command partners" }
+  - { id: R04, pair: [dev, freya], type: "leadership succession" }
+  - { id: R05, pair: [dev, len], type: "decisive encounter" }
+  - { id: R06, pair: [pau, nora], type: "companions in captivity" }
+  - { id: R07, pair: [yeri, group], type: "connector / fatal thread" }
+  - { id: R08, pair: [len, brais], type: "reunited in Limbo" }
+  - { id: R09, pair: [ali, kive], type: "ex-partners" }
+  - { id: R10, pair: [nora, len], type: "maternal figure" }
+  - { id: R11, pair: [kive, luka], type: "childhood best friends" }
+  - { id: R12, pair: [freya, len], type: "goddess contacts orphan" }
+  - { id: R13, pair: [cris, freya], type: "mentor at Cave" }
+
+# ============================================================
+# TODOs
+# ============================================================
+todos:
+  - "Ali's full arc and Declaration role (free bird — later)"
+  - "The Forno dinner — what specific conversations/bonds happen?"
+  - "E24 ending mechanism — how chosen? RNG? Cohesion? Player?"
+  - "Brais-automaton — shock reveal at H56 or known before?"
+  - "Can Len/Brais in Limbo communicate with physical world before H51?"
+  - "Why did Dev quit as Resistance leader?"
+  - "Where exactly are Pau/Nora held between kidnapping (H20) and rescue (H30)?"
+  - "Post-credits final image — what burns?"
+  - "12x hero arc .md files (one per archetype)"

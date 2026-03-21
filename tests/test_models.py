@@ -1,4 +1,4 @@
-"""Milestone 1 validation tests for Gigagen core models."""
+"""Milestone 1 & 2 validation tests for Gigagen core models and worldpack."""
 
 from __future__ import annotations
 
@@ -267,3 +267,79 @@ class TestWorldState:
         assert build(42) == build(42)
         # Different seeds still load the same fixed data (variation comes later)
         assert build(1) != build(2)  # seed field differs
+
+
+# ---------------------------------------------------------------------------
+# Milestone 2 — Worldpack completeness tests
+# ---------------------------------------------------------------------------
+
+class TestWorldpackFiles:
+    """Verify all M2 deliverables exist and validate."""
+
+    def test_world_json_exists(self) -> None:
+        path = WORLDS_DIR / "world.json"
+        assert path.exists(), "world.json missing"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        assert data["world_id"] == "world.kilima"
+
+    def test_characters_json_validates(self) -> None:
+        chars = [Character(**c) for c in _load_json("characters.json")]
+        assert len(chars) == 12
+        # All have hero_type (M2 requirement)
+        for c in chars:
+            assert c.hero_type, f"{c.id} missing hero_type"
+
+    def test_factions_json_with_corrected_leadership(self) -> None:
+        factions = [Faction(**f) for f in _load_json("factions.json")]
+        assert len(factions) == 4
+        resistance = next(f for f in factions if f.id == "fac.resistencia")
+        assert resistance.leader_id == "char.deity", "Freya should lead Resistance"
+
+    def test_locations_json_includes_limbo_and_forno(self) -> None:
+        locations = [Location(**loc) for loc in _load_json("locations.json")]
+        ids = {loc.id for loc in locations}
+        assert "loc.limbo" in ids, "The Limbo missing"
+        assert "loc.forno" in ids, "The Forno missing"
+
+    def test_relations_json_validates(self) -> None:
+        relations = [Relation(**r) for r in _load_json("relations.json")]
+        assert len(relations) >= 15, "Need at least 15 core relations"
+
+    def test_invariants_json_exists(self) -> None:
+        path = WORLDS_DIR / "invariants.json"
+        assert path.exists(), "invariants.json missing"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        assert "fixed" in data
+        assert "forbidden" in data
+        assert "variables" in data
+        assert len(data["variables"]) == 3
+
+    def test_timeline_bn1_exists(self) -> None:
+        path = WORLDS_DIR / "timelines" / "bn1.yaml"
+        assert path.exists(), "timelines/bn1.yaml missing"
+        content = path.read_text(encoding="utf-8")
+        assert "version:" in content
+        assert "events:" in content
+
+    def test_all_jsons_validate_against_models(self) -> None:
+        """Full integration: load every JSON and build a WorldState."""
+        characters = [Character(**c) for c in _load_json("characters.json")]
+        factions = [Faction(**f) for f in _load_json("factions.json")]
+        locations = [Location(**loc) for loc in _load_json("locations.json")]
+        relations = [Relation(**r) for r in _load_json("relations.json")]
+
+        entities: dict[str, BaseEntity] = {}
+        for ent in [*characters, *factions, *locations]:
+            entities[ent.id] = ent
+
+        ws = WorldState(
+            world_id="world.kilima",
+            seed=1,
+            phase="block_1_start",
+            entities=entities,
+            relations=relations,
+            active_faction_ids=[f.id for f in factions if f.status != "dissolved"],
+            active_location_ids=[loc.id for loc in locations],
+        )
+        assert ws.world_id == "world.kilima"
+        assert len(ws.entities) == 31  # 12 + 4 + 15
