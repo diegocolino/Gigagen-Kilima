@@ -11,6 +11,7 @@ import yaml
 from gigagen.core.entity import BaseEntity, Character, Faction, Location
 from gigagen.core.relation import Relation
 from gigagen.core.world_state import WorldState
+from gigagen.core.seed import apply_seed_variation
 
 
 _ENTITY_LOADERS: dict[str, type[BaseEntity]] = {
@@ -32,6 +33,8 @@ def load_worldpack(
     worldpack_dir: str | pathlib.Path,
     seed: int = 1,
     phase: str = "block_1_start",
+    *,
+    apply_variation: bool = True,
 ) -> WorldState:
     """Load all JSONs from a worldpack directory and build a WorldState.
 
@@ -43,6 +46,8 @@ def load_worldpack(
         Deterministic seed for this run.
     phase:
         Starting phase label.
+    apply_variation:
+        If True, apply seed-based variation to seeded fields.
 
     Returns
     -------
@@ -105,7 +110,7 @@ def load_worldpack(
     # -- tags from meta --
     tags: list[str] = meta.get("tags", [])
 
-    return WorldState(
+    ws = WorldState(
         world_id=world_id,
         seed=seed,
         phase=phase,
@@ -116,3 +121,11 @@ def load_worldpack(
         active_location_ids=active_location_ids,
         tags=tags,
     )
+
+    # -- Apply seed-based variation --
+    if apply_variation:
+        invariants_file = structure.get("invariants_file", "invariants.json")
+        inv_path = root / invariants_file
+        apply_seed_variation(ws, invariants_path=inv_path if inv_path.exists() else None)
+
+    return ws

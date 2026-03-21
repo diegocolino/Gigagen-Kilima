@@ -26,7 +26,7 @@ OUTPUTS_DIR = pathlib.Path(__file__).resolve().parent.parent / "outputs"
 class TestLoadWorldpack:
     @pytest.fixture(scope="class")
     def ws(self) -> WorldState:
-        return load_worldpack(WORLDS_DIR, seed=1)
+        return load_worldpack(WORLDS_DIR, seed=1, apply_variation=False)
 
     def test_world_id(self, ws: WorldState) -> None:
         assert ws.world_id == "world.kilima"
@@ -72,13 +72,13 @@ class TestLoadWorldpack:
 
 class TestLoaderReproducibility:
     def test_same_seed_same_output(self) -> None:
-        ws1 = load_worldpack(WORLDS_DIR, seed=42)
-        ws2 = load_worldpack(WORLDS_DIR, seed=42)
+        ws1 = load_worldpack(WORLDS_DIR, seed=42, apply_variation=False)
+        ws2 = load_worldpack(WORLDS_DIR, seed=42, apply_variation=False)
         assert ws1.model_dump_json() == ws2.model_dump_json()
 
     def test_different_seeds_differ(self) -> None:
-        ws1 = load_worldpack(WORLDS_DIR, seed=1)
-        ws2 = load_worldpack(WORLDS_DIR, seed=2)
+        ws1 = load_worldpack(WORLDS_DIR, seed=1, apply_variation=False)
+        ws2 = load_worldpack(WORLDS_DIR, seed=2, apply_variation=False)
         assert ws1.model_dump_json() != ws2.model_dump_json()
 
 
@@ -88,13 +88,13 @@ class TestLoaderReproducibility:
 
 class TestExporter:
     def test_export_creates_file(self, tmp_path: pathlib.Path) -> None:
-        ws = load_worldpack(WORLDS_DIR, seed=1)
+        ws = load_worldpack(WORLDS_DIR, seed=1, apply_variation=False)
         out_path = tmp_path / "test_export.json"
         result = export_world_state(ws, out_path)
         assert result.exists()
 
     def test_export_valid_json(self, tmp_path: pathlib.Path) -> None:
-        ws = load_worldpack(WORLDS_DIR, seed=1)
+        ws = load_worldpack(WORLDS_DIR, seed=1, apply_variation=False)
         out_path = tmp_path / "test_export.json"
         export_world_state(ws, out_path)
         data = json.loads(out_path.read_text(encoding="utf-8"))
@@ -102,8 +102,8 @@ class TestExporter:
         assert data["seed"] == 1
 
     def test_export_reproducible(self, tmp_path: pathlib.Path) -> None:
-        ws1 = load_worldpack(WORLDS_DIR, seed=7)
-        ws2 = load_worldpack(WORLDS_DIR, seed=7)
+        ws1 = load_worldpack(WORLDS_DIR, seed=7, apply_variation=False)
+        ws2 = load_worldpack(WORLDS_DIR, seed=7, apply_variation=False)
         p1 = tmp_path / "a.json"
         p2 = tmp_path / "b.json"
         export_world_state(ws1, p1)
@@ -118,7 +118,7 @@ class TestExporter:
 class TestConsole:
     @pytest.fixture
     def ws(self) -> WorldState:
-        return load_worldpack(WORLDS_DIR, seed=1)
+        return load_worldpack(WORLDS_DIR, seed=1, apply_variation=False)
 
     def _run_cmd(self, ws: WorldState, command: str) -> str:
         out = io.StringIO()

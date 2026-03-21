@@ -1,6 +1,6 @@
 {
   "world_id": "world.kilima",
-  "seed": 1,
+  "seed": 2,
   "phase": "block_1_start",
   "description": "Dystopian techno-political universe organized around The Mountain. 12 central characters, 4 factions, and a 62-hour narrative timeline.",
   "entities": {
@@ -758,8 +758,8 @@
     "techno-political",
     "musical",
     "relational",
-    "VAR_DEV=participates",
+    "VAR_DEV=refuses",
     "VAR_BRAIS=betrays",
-    "VAR_ENDING=pau_dies"
+    "VAR_ENDING=kive_dies"
   ]
 }
