@@ -1,6 +1,6 @@
 # Roadmap 2 — Consolidation Phase
 
-> Milestones 1–5 are complete (103 tests passing). Before adding new features, consolidate the foundation.
+> Roadmap1 milestones M1–M5 are complete (103 tests passing). Before adding new features, consolidate the foundation (C1–C6).
 
 ---
 
@@ -16,7 +16,7 @@
 
 ---
 
-## Milestone 6 — Vocabulary & relation fixes
+## C1 — Vocabulary & relation fixes
 
 **Goal:** Every relation kind used in data or documentation exists in code, and vice versa.
 
@@ -37,7 +37,7 @@
 
 ---
 
-## Milestone 7 — Data completeness audit
+## C2 — Data completeness audit
 
 **Goal:** All worldpack data files are complete and internally consistent.
 
@@ -58,11 +58,11 @@
 
 ---
 
-## Milestone 8 — New data files: hero arcs
+## C3 — New data files: hero arcs
 
 **Goal:** Create the 12 hero arc documents referenced in kilima_bible.md.
 
-**Findings:** 0 of 12 hero arc files exist. These are needed before Milestone 9 (hero arc tracking) from roadmap1.
+**Findings:** 0 of 12 hero arc files exist. These are needed before M9 (hero arc tracking) from roadmap1.
 
 **Deliverables:**
 - [ ] Define hero arc template (arc steps, event mappings, narrative block span, trigger chains)
@@ -83,7 +83,7 @@
 
 ---
 
-## Milestone 9 — Code quality & test hardening
+## C4 — Code quality & test hardening
 
 **Goal:** Tests validate data integrity, not just model construction.
 
@@ -105,7 +105,7 @@
 
 ---
 
-## Milestone 10 — Lore verification pass
+## C5 — Lore verification pass
 
 **Goal:** Docs and data tell the same story. No contradictions between documentation and JSON/YAML.
 
@@ -121,7 +121,7 @@
 
 ---
 
-## Milestone 11 — Pre-implementation design for roadmap1 Milestone 6+
+## C6 — Pre-implementation design for roadmap1 M6+
 
 **Goal:** Before implementing Chronica, Strong Contempo, or Animas, design the data structures and validate against lore.
 
@@ -132,7 +132,7 @@
 - [ ] Validate designs against ontology.md layer definitions (Genesis → Theogony → Chronica → Contempo → Existence)
 - [ ] Identify any new entity types, relation kinds, or JSON files needed
 
-**Success criteria:** When we start implementing roadmap1 Milestone 6, we know exactly what files to create and what models to extend.
+**Success criteria:** When we start implementing roadmap1 M6, we know exactly what files to create and what models to extend.
 
 ---
 
@@ -150,9 +150,9 @@ Each milestone must be:
 
 ## Relationship to roadmap1
 
-Roadmap2 milestones 6–11 slot **between** roadmap1 milestones 5 and 6. Once consolidation is complete, roadmap1 milestones 6+ (Chronica, Strong Contempo, Animas, Hero arc tracking, Godot viewer, Gameplay) resume on a solid foundation.
+Roadmap2 milestones C1–C6 slot **between** roadmap1 M5 and M6. Once consolidation is complete, roadmap1 M6+ (Chronica, Strong Contempo, Animas, Hero arc tracking, Godot viewer, Gameplay) resume on a solid foundation.
 
 ```
 roadmap1: M1 ✓ → M2 ✓ → M3 ✓ → M4 ✓ → M5 ✓ → [consolidation] → M6 → M7 → ...
-roadmap2:                                         M6 → M7 → M8 → M9 → M10 → M11
+roadmap2:                                         C1 → C2 → C3 → C4 → C5 → C6
 ```
