@@ -1,0 +1,113 @@
+/* Gigagen TUI — God Mode Stylesheet */
+
+Screen {
+    background: $surface;
+}
+
+/* Header bar */
+#header-bar {
+    dock: top;
+    height: 1;
+    background: $primary;
+    color: $text;
+    text-style: bold;
+    padding: 0 1;
+}
+
+/* Timeline bar */
+TimelineBar {
+    dock: top;
+    height: 1;
+    background: $primary-darken-1;
+    color: $text;
+}
+
+/* Main content area */
+#main-content {
+    height: 1fr;
+}
+
+/* Top row: characters + event log */
+#top-row {
+    height: 2fr;
+}
+
+#char-panel {
+    width: 1fr;
+    border: solid $primary;
+    overflow-y: auto;
+}
+
+#char-panel:focus-within {
+    border: solid $accent;
+}
+
+#event-panel {
+    width: 1fr;
+    border: solid $primary;
+    overflow-y: auto;
+}
+
+#event-panel:focus-within {
+    border: solid $accent;
+}
+
+/* Bottom row: factions + locations + variables */
+#bottom-row {
+    height: 1fr;
+}
+
+#faction-panel {
+    width: 1fr;
+    border: solid $primary;
+    overflow-y: auto;
+}
+
+#faction-panel:focus-within {
+    border: solid $accent;
+}
+
+#location-panel {
+    width: 1fr;
+    border: solid $primary;
+    overflow-y: auto;
+}
+
+#location-panel:focus-within {
+    border: solid $accent;
+}
+
+#variables-panel {
+    width: 1fr;
+    border: solid $primary;
+    overflow-y: auto;
+}
+
+#variables-panel:focus-within {
+    border: solid $accent;
+}
+
+/* Footer */
+#footer-bar {
+    dock: bottom;
+    height: 1;
+    background: $primary;
+    color: $text;
+    padding: 0 1;
+}
+
+/* Panel :focus styling */
+FactionPanel:focus { border: solid $accent; }
+LocationPanel:focus { border: solid $accent; }
+EventLogPanel:focus { border: solid $accent; }
+VariablesPanel:focus { border: solid $accent; }
+
+/* DataTable styling */
+DataTable {
+    height: 100%;
+}
+
+DataTable > .datatable--cursor {
+    background: $accent;
+    color: $text;
+}
