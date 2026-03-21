@@ -206,6 +206,8 @@ Este valor base se **modifica** por: facción compartida, relaciones comunes, hi
 - `leadership_succession` — one succeeded the other as leader
 - `reunited_in_limbo` — reconnected after transfer to The Limbo
 - `automaton_of` — the automaton body of a transferred consciousness
+- `future_partner` — destined romantic partners (meet during NB1, bond deepens post-NB1)
+- `contacted_in_limbo` — one entity contacts another in The Limbo (telepathic/oneiric link)
 
 **Personaje ↔ Facción:**
 - `member_of` — miembro

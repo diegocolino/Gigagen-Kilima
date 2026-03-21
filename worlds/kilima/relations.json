@@ -253,6 +253,28 @@
     "origin_event_id": null
   },
   {
+    "id": "rel.luka.saarah.future_partner",
+    "source_id": "char.hero",
+    "target_id": "char.leader",
+    "kind": "future_partner",
+    "weight": 0.7,
+    "polarity": 1,
+    "tags": ["core", "personal"],
+    "canon_level": "fixed",
+    "origin_event_id": null
+  },
+  {
+    "id": "rel.freya.len.contacted_in_limbo",
+    "source_id": "char.deity",
+    "target_id": "char.orphan",
+    "kind": "contacted_in_limbo",
+    "weight": 0.8,
+    "polarity": 1,
+    "tags": ["core", "personal"],
+    "canon_level": "fixed",
+    "origin_event_id": "E05"
+  },
+  {
     "id": "rel.resistencia.cueva.based_in",
     "source_id": "fac.resistencia",
     "target_id": "loc.cave",

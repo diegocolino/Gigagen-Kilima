@@ -56,7 +56,7 @@
 | Luka | Saarah | future_partner | Meet at NB1 funeral, bond deepens, eventually marry |
 | Nora | Len | maternal_figure | Nora is Len's strongest maternal figure. Len has no mother (the Orphan). |
 | Freya | Dev | leadership_succession | Dev was Resistance leader before Freya. He stepped down. |
-| Kive | Freya | oneiric_then_intimate | Begins as dream connection, becomes intimate at The Cave. |
+| Kive | Freya | oneiric_bond | Dream connection (deepens to intimacy at The Cave during NB1). |
 | Len | Brais | reunited_in_limbo | After both die, reunited in The Limbo. |
 | Freya | Len | contacted_in_limbo | Freya contacts Len; Len reads her mind (prophecy, ether, genetic plan). |
 

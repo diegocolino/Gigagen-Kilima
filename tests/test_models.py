@@ -140,8 +140,8 @@ class TestRelations:
     def relations(self) -> list[Relation]:
         return [Relation(**r) for r in _load_json("relations.json")]
 
-    def test_load_all_27(self, relations: list[Relation]) -> None:
-        assert len(relations) == 27
+    def test_load_all_29(self, relations: list[Relation]) -> None:
+        assert len(relations) == 29
 
     def test_all_kinds_valid(self, relations: list[Relation]) -> None:
         from gigagen.core.relation import RELATION_KINDS
@@ -236,7 +236,7 @@ class TestWorldState:
         assert len(world_state.entities) == 12 + 4 + 15  # chars + facs + locs
 
     def test_relation_count(self, world_state: WorldState) -> None:
-        assert len(world_state.relations) == 27
+        assert len(world_state.relations) == 29
 
     def test_seed(self, world_state: WorldState) -> None:
         assert world_state.seed == 1
@@ -304,6 +304,23 @@ class TestWorldpackFiles:
     def test_relations_json_validates(self) -> None:
         relations = [Relation(**r) for r in _load_json("relations.json")]
         assert len(relations) >= 15, "Need at least 15 core relations"
+
+    def test_invariant_relations_exist_in_relations_json(self) -> None:
+        """Every fixed relationship declared in invariants.json must have
+        a matching entry in relations.json (same source, target, kind)."""
+        inv = json.loads(
+            (WORLDS_DIR / "invariants.json").read_text(encoding="utf-8")
+        )
+        rel_data = _load_json("relations.json")
+        rel_triples = {
+            (r["source_id"], r["target_id"], r["kind"]) for r in rel_data
+        }
+        missing = []
+        for entry in inv["fixed"]["relationships"]:
+            triple = (entry["source"], entry["target"], entry["kind"])
+            if triple not in rel_triples:
+                missing.append(triple)
+        assert not missing, f"Relations in invariants.json missing from relations.json: {missing}"
 
     def test_invariants_json_exists(self) -> None:
         path = WORLDS_DIR / "invariants.json"

@@ -50,8 +50,8 @@ class TestLoadWorldpack:
         locs = [e for e in ws.entities.values() if isinstance(e, Location)]
         assert len(locs) == 15
 
-    def test_loads_27_relations(self, ws: WorldState) -> None:
-        assert len(ws.relations) == 27
+    def test_loads_29_relations(self, ws: WorldState) -> None:
+        assert len(ws.relations) == 29
 
     def test_active_factions(self, ws: WorldState) -> None:
         assert len(ws.active_faction_ids) == 4

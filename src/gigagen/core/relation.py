@@ -12,7 +12,7 @@ RELATION_KINDS = frozenset({
     "sibling", "partner", "ex_partner", "close_friend", "former_friend",
     "rival", "mentor", "distrust", "childhood_best_friends", "oneiric_bond",
     "maternal_figure", "leadership_succession", "reunited_in_limbo",
-    "automaton_of",
+    "automaton_of", "future_partner", "contacted_in_limbo",
     # Character <-> Faction
     "member_of", "leader_of", "allied_with", "opposed_to", "infiltrated_in",
     # Character <-> Location

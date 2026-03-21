@@ -26,12 +26,12 @@
 - `oneiric_bond` vs `oneiric_then_intimate` (Kive ↔ Freya) — inconsistency between invariants.md and relations.json
 
 **Deliverables:**
-- [ ] Add `future_partner` and `contacted_in_limbo` to RELATION_KINDS in `src/gigagen/core/relation.py`
-- [ ] Resolve `oneiric_bond` / `oneiric_then_intimate` — decide canonical kind, update everywhere
-- [ ] Add Luka ↔ Saarah relation to `worlds/kilima/relations.json`
-- [ ] Add Freya ↔ Len relation to `worlds/kilima/relations.json`
-- [ ] Cross-check all relation kinds: ontology.md ↔ relation.py ↔ relations.json ↔ invariants.md (single source of truth)
-- [ ] Tests verifying every relation in invariants.json exists in relations.json
+- [x] Add `future_partner` and `contacted_in_limbo` to RELATION_KINDS in `src/gigagen/core/relation.py`
+- [x] Resolve `oneiric_bond` / `oneiric_then_intimate` — decided: `oneiric_bond` is canonical (per ontology.md). Updated invariants.md.
+- [x] Add Luka ↔ Saarah relation to `worlds/kilima/relations.json`
+- [x] Add Freya ↔ Len relation to `worlds/kilima/relations.json`
+- [x] Cross-check all relation kinds: ontology.md ↔ relation.py ↔ relations.json ↔ invariants.md (single source of truth)
+- [x] Tests verifying every relation in invariants.json exists in relations.json
 
 **Success criteria:** Zero undocumented relation kinds. Zero documented-but-missing relations.
 

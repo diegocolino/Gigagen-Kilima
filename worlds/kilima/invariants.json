@@ -47,7 +47,9 @@
       {"source": "char.caregiver","target": "char.orphan",   "kind": "maternal_figure"},
       {"source": "char.deity",    "target": "char.hacker",   "kind": "leadership_succession"},
       {"source": "char.rebel",    "target": "char.deity",    "kind": "oneiric_bond"},
-      {"source": "char.orphan",   "target": "char.innocent", "kind": "reunited_in_limbo"}
+      {"source": "char.orphan",   "target": "char.innocent", "kind": "reunited_in_limbo"},
+      {"source": "char.hero",     "target": "char.leader",   "kind": "future_partner"},
+      {"source": "char.deity",    "target": "char.orphan",   "kind": "contacted_in_limbo"}
     ],
     "faction_memberships": [
       {"character": "char.rebel",    "faction": "fac.resistencia", "kind": "member_of"},
