@@ -43,7 +43,7 @@ def _list_characters(ws: WorldState, out: TextIO) -> None:
         key=lambda c: c.civil_name,
     )
     out.write(f"\n  {'Name':<12} {'Archetype':<6} {'Note':<4} {'Status':<14} {'Location':<16} {'Emotion'}\n")
-    out.write(f"  {'─'*12} {'─'*6} {'─'*4} {'─'*14} {'─'*16} {'─'*10}\n")
+    out.write(f"  {'-'*12} {'-'*6} {'-'*4} {'-'*14} {'-'*16} {'-'*10}\n")
     for c in chars:
         out.write(
             f"  {c.civil_name:<12} {c.archetype:<6} {c.note:<4} "
@@ -58,7 +58,7 @@ def _list_factions(ws: WorldState, out: TextIO) -> None:
         key=lambda f: f.name,
     )
     out.write(f"\n  {'Name':<20} {'Status':<14} {'Power':>6} {'Cohesion':>9} {'Leader'}\n")
-    out.write(f"  {'─'*20} {'─'*14} {'─'*6} {'─'*9} {'─'*16}\n")
+    out.write(f"  {'-'*20} {'-'*14} {'-'*6} {'-'*9} {'-'*16}\n")
     for f in facs:
         leader = f.leader_id or "(none)"
         out.write(
@@ -73,7 +73,7 @@ def _list_locations(ws: WorldState, out: TextIO) -> None:
         key=lambda loc: loc.name,
     )
     out.write(f"\n  {'Name':<22} {'Zone':<10} {'Status':<12} {'Tension':>8} {'Access':<14} {'Controller'}\n")
-    out.write(f"  {'─'*22} {'─'*10} {'─'*12} {'─'*8} {'─'*14} {'─'*16}\n")
+    out.write(f"  {'-'*22} {'-'*10} {'-'*12} {'-'*8} {'-'*14} {'-'*16}\n")
     for loc in locs:
         ctrl = loc.controlling_faction_id or "(none)"
         out.write(

@@ -1,0 +1,765 @@
+{
+  "world_id": "world.kilima",
+  "seed": 1,
+  "phase": "block_1_start",
+  "description": "Dystopian techno-political universe organized around The Mountain. 12 central characters, 4 factions, and a 62-hour narrative timeline.",
+  "entities": {
+    "char.rebel": {
+      "id": "char.rebel",
+      "entity_type": "character",
+      "name": "Kive",
+      "tags": [
+        "protagonist",
+        "musician",
+        "savage"
+      ],
+      "canon_level": "fixed",
+      "description": "Young idealist musician. Center of the relational web."
+    },
+    "char.orphan": {
+      "id": "char.orphan",
+      "entity_type": "character",
+      "name": "Len",
+      "tags": [
+        "protagonist",
+        "sensible",
+        "supreme_sensible"
+      ],
+      "canon_level": "fixed",
+      "description": "The only Supreme Sensible. Exists in The Limbo after physical death."
+    },
+    "char.jester": {
+      "id": "char.jester",
+      "entity_type": "character",
+      "name": "Pau",
+      "tags": [
+        "protagonist",
+        "savage",
+        "trapped"
+      ],
+      "canon_level": "fixed",
+      "description": "Kive's best friend. A Savage who cannot leave The Cage."
+    },
+    "char.caregiver": {
+      "id": "char.caregiver",
+      "entity_type": "character",
+      "name": "Nora",
+      "tags": [
+        "protagonist",
+        "medic"
+      ],
+      "canon_level": "fixed",
+      "description": "Medic. Kive's most serious ex. Len's maternal figure."
+    },
+    "char.deity": {
+      "id": "char.deity",
+      "entity_type": "character",
+      "name": "Freya",
+      "tags": [
+        "protagonist",
+        "leader",
+        "sensible"
+      ],
+      "canon_level": "fixed",
+      "description": "Leader of The Resistance. Knows the prophecy, the ether, the genetic plan."
+    },
+    "char.innocent": {
+      "id": "char.innocent",
+      "entity_type": "character",
+      "name": "Brais",
+      "tags": [
+        "protagonist",
+        "spy",
+        "double_agent"
+      ],
+      "canon_level": "fixed",
+      "description": "Close friend of Kive. Secretly works for The Agency."
+    },
+    "char.leader": {
+      "id": "char.leader",
+      "entity_type": "character",
+      "name": "Saarah",
+      "tags": [
+        "protagonist",
+        "politician",
+        "speechwriter"
+      ],
+      "canon_level": "fixed",
+      "description": "Political operator. Connected to The Unions. Crafts Kive's Declaration."
+    },
+    "char.explorer": {
+      "id": "char.explorer",
+      "entity_type": "character",
+      "name": "Yeri",
+      "tags": [
+        "protagonist",
+        "fighter",
+        "connector"
+      ],
+      "canon_level": "fixed",
+      "description": "The only one who has traveled The Road on foot. The connector."
+    },
+    "char.hero": {
+      "id": "char.hero",
+      "entity_type": "character",
+      "name": "Luka",
+      "tags": [
+        "protagonist",
+        "agent",
+        "childhood_friend"
+      ],
+      "canon_level": "fixed",
+      "description": "Childhood best friends with Kive. Works for The Agency. Turns during NB1."
+    },
+    "char.hacker": {
+      "id": "char.hacker",
+      "entity_type": "character",
+      "name": "Dev",
+      "tags": [
+        "protagonist",
+        "hacker",
+        "former_leader",
+        "gamer"
+      ],
+      "canon_level": "fixed",
+      "description": "Former Resistance leader. Len's partner. The only truly variable character in Act 1."
+    },
+    "char.creator": {
+      "id": "char.creator",
+      "entity_type": "character",
+      "name": "Cris",
+      "tags": [
+        "protagonist",
+        "artist",
+        "activist"
+      ],
+      "canon_level": "fixed",
+      "description": "Artist and activist. Leads the movement in The City from The Forno."
+    },
+    "char.lover": {
+      "id": "char.lover",
+      "entity_type": "character",
+      "name": "Ali",
+      "tags": [
+        "protagonist",
+        "artist",
+        "free_bird"
+      ],
+      "canon_level": "fixed",
+      "description": "Kive's ex-girlfriend. Artist. Intentionally free and open arc."
+    },
+    "fac.resistencia": {
+      "id": "fac.resistencia",
+      "entity_type": "faction",
+      "name": "The Resistance",
+      "tags": [
+        "insurgent",
+        "underground",
+        "clandestine"
+      ],
+      "canon_level": "fixed",
+      "description": "Clandestine movement opposing the hierarchy."
+    },
+    "fac.agencia": {
+      "id": "fac.agencia",
+      "entity_type": "faction",
+      "name": "The Agency",
+      "tags": [
+        "control",
+        "coercive",
+        "cultural"
+      ],
+      "canon_level": "fixed",
+      "description": "Controls careers of artists and celebrities. Coercive cultural arm."
+    },
+    "fac.sindicatos": {
+      "id": "fac.sindicatos",
+      "entity_type": "faction",
+      "name": "The Unions",
+      "tags": [
+        "political",
+        "bureaucratic",
+        "meritocratic"
+      ],
+      "canon_level": "fixed",
+      "description": "Groups representing social sectors. Founded The Net. Subordinate to AI."
+    },
+    "fac.ia": {
+      "id": "fac.ia",
+      "entity_type": "faction",
+      "name": "The AI",
+      "tags": [
+        "omnipresent",
+        "technological",
+        "surveillance"
+      ],
+      "canon_level": "fixed",
+      "description": "Omnipresent technological entity. Controls The Net and consciousness transfer."
+    },
+    "loc.cage": {
+      "id": "loc.cage",
+      "entity_type": "location",
+      "name": "The Cage",
+      "tags": [
+        "funeral",
+        "starting_point"
+      ],
+      "canon_level": "fixed",
+      "description": "Semi-autonomous floating city on the ocean."
+    },
+    "loc.capital": {
+      "id": "loc.capital",
+      "entity_type": "location",
+      "name": "The Capital",
+      "tags": [
+        "elite",
+        "power_center"
+      ],
+      "canon_level": "fixed",
+      "description": "Summit of The Mountain. Seat of power."
+    },
+    "loc.city": {
+      "id": "loc.city",
+      "entity_type": "location",
+      "name": "The City",
+      "tags": [
+        "urban",
+        "contested"
+      ],
+      "canon_level": "fixed",
+      "description": "Middle zone of The Mountain. Contested territory."
+    },
+    "loc.net": {
+      "id": "loc.net",
+      "entity_type": "location",
+      "name": "The Net",
+      "tags": [
+        "virtual",
+        "metaverse",
+        "monitored"
+      ],
+      "canon_level": "fixed",
+      "description": "Digital metaverse controlled by The AI."
+    },
+    "loc.limbo": {
+      "id": "loc.limbo",
+      "entity_type": "location",
+      "name": "The Limbo",
+      "tags": [
+        "virtual",
+        "subzone",
+        "transferred"
+      ],
+      "canon_level": "fixed",
+      "description": "Subzone of The Net where transferred consciousnesses reside."
+    },
+    "loc.cave": {
+      "id": "loc.cave",
+      "entity_type": "location",
+      "name": "The Cave",
+      "tags": [
+        "resistance_hq",
+        "hidden"
+      ],
+      "canon_level": "fixed",
+      "description": "Resistance headquarters. Historically impenetrable, breached in NB1."
+    },
+    "loc.tower": {
+      "id": "loc.tower",
+      "entity_type": "location",
+      "name": "The Agency Tower",
+      "tags": [
+        "agency_hq",
+        "surveillance"
+      ],
+      "canon_level": "fixed",
+      "description": "Agency headquarters in The Capital."
+    },
+    "loc.union_hq": {
+      "id": "loc.union_hq",
+      "entity_type": "location",
+      "name": "Union HQ",
+      "tags": [
+        "unions_hq",
+        "political"
+      ],
+      "canon_level": "fixed",
+      "description": "La Sede. Union headquarters in The City."
+    },
+    "loc.forno": {
+      "id": "loc.forno",
+      "entity_type": "location",
+      "name": "The Forno",
+      "tags": [
+        "artistic",
+        "giosme_territory"
+      ],
+      "canon_level": "fixed",
+      "description": "Artistic quarter in The City. Giosme lineage territory."
+    },
+    "loc.nest": {
+      "id": "loc.nest",
+      "entity_type": "location",
+      "name": "The Nest",
+      "tags": [
+        "hospital",
+        "medical"
+      ],
+      "canon_level": "fixed",
+      "description": "Hospital and medical zone in The City. Nora's world."
+    },
+    "loc.backdoor": {
+      "id": "loc.backdoor",
+      "entity_type": "location",
+      "name": "The Backdoor",
+      "tags": [
+        "clandestine",
+        "net_access"
+      ],
+      "canon_level": "fixed",
+      "description": "Clandestine Net access point. Dev's territory."
+    },
+    "loc.wall": {
+      "id": "loc.wall",
+      "entity_type": "location",
+      "name": "The Wall",
+      "tags": [
+        "border",
+        "structure"
+      ],
+      "canon_level": "fixed",
+      "description": "Border between The City and The Village."
+    },
+    "loc.village": {
+      "id": "loc.village",
+      "entity_type": "location",
+      "name": "The Village",
+      "tags": [
+        "marginal",
+        "meeting_point"
+      ],
+      "canon_level": "fixed",
+      "description": "Settlement near The Wall. Freya meets Kive here."
+    },
+    "loc.road": {
+      "id": "loc.road",
+      "entity_type": "location",
+      "name": "The Road",
+      "tags": [
+        "wasteland",
+        "route"
+      ],
+      "canon_level": "fixed",
+      "description": "Wasteland route connecting locations. Dangerous territory."
+    },
+    "loc.kilima": {
+      "id": "loc.kilima",
+      "entity_type": "location",
+      "name": "Kilima",
+      "tags": [
+        "transit",
+        "hub"
+      ],
+      "canon_level": "fixed",
+      "description": "Transit hub where Kive and Yeri arrive and split."
+    }
+  },
+  "relations": [
+    {
+      "id": "rel.kive.len.sibling",
+      "source_id": "char.rebel",
+      "target_id": "char.orphan",
+      "kind": "sibling",
+      "weight": 1.0,
+      "polarity": 1,
+      "tags": [
+        "core",
+        "personal"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.dev.len.partner",
+      "source_id": "char.hacker",
+      "target_id": "char.orphan",
+      "kind": "partner",
+      "weight": 0.9,
+      "polarity": 1,
+      "tags": [
+        "core",
+        "personal"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.kive.ali.ex_partner",
+      "source_id": "char.rebel",
+      "target_id": "char.lover",
+      "kind": "ex_partner",
+      "weight": 0.4,
+      "polarity": 0,
+      "tags": [
+        "personal"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.kive.nora.ex_partner",
+      "source_id": "char.rebel",
+      "target_id": "char.caregiver",
+      "kind": "ex_partner",
+      "weight": 0.6,
+      "polarity": 0,
+      "tags": [
+        "core",
+        "personal"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.kive.pau.close_friend",
+      "source_id": "char.rebel",
+      "target_id": "char.jester",
+      "kind": "close_friend",
+      "weight": 0.9,
+      "polarity": 1,
+      "tags": [
+        "core",
+        "personal"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.kive.brais.close_friend",
+      "source_id": "char.rebel",
+      "target_id": "char.innocent",
+      "kind": "close_friend",
+      "weight": 0.7,
+      "polarity": 1,
+      "tags": [
+        "core",
+        "personal"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.kive.luka.childhood_best_friends",
+      "source_id": "char.rebel",
+      "target_id": "char.hero",
+      "kind": "childhood_best_friends",
+      "weight": 0.8,
+      "polarity": 1,
+      "tags": [
+        "core",
+        "personal"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.kive.saarah.former_friend",
+      "source_id": "char.rebel",
+      "target_id": "char.leader",
+      "kind": "former_friend",
+      "weight": 0.3,
+      "polarity": 0,
+      "tags": [
+        "personal"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.brais.nora.partner",
+      "source_id": "char.innocent",
+      "target_id": "char.caregiver",
+      "kind": "partner",
+      "weight": 0.8,
+      "polarity": 1,
+      "tags": [
+        "core",
+        "personal"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.nora.len.maternal_figure",
+      "source_id": "char.caregiver",
+      "target_id": "char.orphan",
+      "kind": "maternal_figure",
+      "weight": 0.9,
+      "polarity": 1,
+      "tags": [
+        "core",
+        "personal",
+        "structural"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.freya.dev.leadership_succession",
+      "source_id": "char.deity",
+      "target_id": "char.hacker",
+      "kind": "leadership_succession",
+      "weight": 0.7,
+      "polarity": 1,
+      "tags": [
+        "core",
+        "political"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.kive.freya.oneiric_bond",
+      "source_id": "char.rebel",
+      "target_id": "char.deity",
+      "kind": "oneiric_bond",
+      "weight": 0.6,
+      "polarity": 1,
+      "tags": [
+        "core",
+        "personal"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.len.brais.reunited_in_limbo",
+      "source_id": "char.orphan",
+      "target_id": "char.innocent",
+      "kind": "reunited_in_limbo",
+      "weight": 0.5,
+      "polarity": 1,
+      "tags": [
+        "personal"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.kive.resistencia.member_of",
+      "source_id": "char.rebel",
+      "target_id": "fac.resistencia",
+      "kind": "member_of",
+      "weight": 0.8,
+      "polarity": 1,
+      "tags": [
+        "political"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.freya.resistencia.leader_of",
+      "source_id": "char.deity",
+      "target_id": "fac.resistencia",
+      "kind": "leader_of",
+      "weight": 1.0,
+      "polarity": 1,
+      "tags": [
+        "core",
+        "political"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.dev.resistencia.allied_with",
+      "source_id": "char.hacker",
+      "target_id": "fac.resistencia",
+      "kind": "allied_with",
+      "weight": 0.6,
+      "polarity": 1,
+      "tags": [
+        "political"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.luka.agencia.member_of",
+      "source_id": "char.hero",
+      "target_id": "fac.agencia",
+      "kind": "member_of",
+      "weight": 0.7,
+      "polarity": 0,
+      "tags": [
+        "political"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.brais.agencia.infiltrated_in",
+      "source_id": "char.innocent",
+      "target_id": "fac.agencia",
+      "kind": "infiltrated_in",
+      "weight": 0.5,
+      "polarity": -1,
+      "tags": [
+        "political",
+        "secret"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.yeri.resistencia.member_of",
+      "source_id": "char.explorer",
+      "target_id": "fac.resistencia",
+      "kind": "member_of",
+      "weight": 0.7,
+      "polarity": 1,
+      "tags": [
+        "political"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.pau.resistencia.member_of",
+      "source_id": "char.jester",
+      "target_id": "fac.resistencia",
+      "kind": "member_of",
+      "weight": 0.6,
+      "polarity": 1,
+      "tags": [
+        "political"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.nora.resistencia.member_of",
+      "source_id": "char.caregiver",
+      "target_id": "fac.resistencia",
+      "kind": "member_of",
+      "weight": 0.7,
+      "polarity": 1,
+      "tags": [
+        "political"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.len.resistencia.member_of",
+      "source_id": "char.orphan",
+      "target_id": "fac.resistencia",
+      "kind": "member_of",
+      "weight": 0.5,
+      "polarity": 1,
+      "tags": [
+        "political"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.saarah.sindicatos.member_of",
+      "source_id": "char.leader",
+      "target_id": "fac.sindicatos",
+      "kind": "member_of",
+      "weight": 0.6,
+      "polarity": 0,
+      "tags": [
+        "political"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.resistencia.cueva.based_in",
+      "source_id": "fac.resistencia",
+      "target_id": "loc.cave",
+      "kind": "based_in",
+      "weight": 1.0,
+      "polarity": 1,
+      "tags": [
+        "structural"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.agencia.capital.based_in",
+      "source_id": "fac.agencia",
+      "target_id": "loc.capital",
+      "kind": "based_in",
+      "weight": 1.0,
+      "polarity": 1,
+      "tags": [
+        "structural"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.sindicatos.capital.based_in",
+      "source_id": "fac.sindicatos",
+      "target_id": "loc.capital",
+      "kind": "based_in",
+      "weight": 1.0,
+      "polarity": 1,
+      "tags": [
+        "structural"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    },
+    {
+      "id": "rel.ia.red.based_in",
+      "source_id": "fac.ia",
+      "target_id": "loc.net",
+      "kind": "based_in",
+      "weight": 1.0,
+      "polarity": 1,
+      "tags": [
+        "structural"
+      ],
+      "canon_level": "fixed",
+      "origin_event_id": null
+    }
+  ],
+  "active_faction_ids": [
+    "fac.resistencia",
+    "fac.agencia",
+    "fac.sindicatos",
+    "fac.ia"
+  ],
+  "active_location_ids": [
+    "loc.cage",
+    "loc.capital",
+    "loc.city",
+    "loc.net",
+    "loc.limbo",
+    "loc.cave",
+    "loc.tower",
+    "loc.union_hq",
+    "loc.forno",
+    "loc.nest",
+    "loc.backdoor",
+    "loc.wall",
+    "loc.village",
+    "loc.road",
+    "loc.kilima"
+  ],
+  "tags": [
+    "dystopia",
+    "techno-political",
+    "musical",
+    "relational",
+    "VAR_DEV=participates",
+    "VAR_BRAIS=betrays",
+    "VAR_ENDING=pau_dies"
+  ]
+}
