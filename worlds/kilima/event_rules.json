@@ -1,0 +1,119 @@
+[
+  {
+    "event_id": "E05",
+    "move_characters": {"kive": "loc.road", "yeri": "loc.road"}
+  },
+  {
+    "event_id": "E06",
+    "move_characters": {"kive": "loc.kilima", "yeri": "loc.kilima"}
+  },
+  {
+    "event_id": "E07",
+    "set_emotions": {"kive": "rage"}
+  },
+  {
+    "event_id": "E07B",
+    "resolve_variable": {
+      "var_id": "VAR_BRAIS",
+      "options": ["lies", "betrays"]
+    }
+  },
+  {
+    "event_id": "E08",
+    "set_factions": {"saarah": null},
+    "set_political": {"saarah": "turned"}
+  },
+  {
+    "event_id": "E_FORNO",
+    "move_characters": {
+      "kive": "loc.forno", "luka": "loc.forno", "saarah": "loc.forno",
+      "cris": "loc.forno", "yeri": "loc.forno", "ali": "loc.forno"
+    },
+    "set_factions": {"luka": "fac.resistencia"},
+    "set_political": {"luka": "turned"}
+  },
+  {
+    "event_id": "E15",
+    "set_status": {"brais": "dead"},
+    "set_emotions": {"brais": "neutral", "nora": "fear", "pau": "fear"},
+    "set_captive": ["nora", "pau"],
+    "set_life_state": {"brais": "dead", "nora": "captive", "pau": "captive"},
+    "set_bond_state": {"brais": "broken"}
+  },
+  {
+    "event_id": "E15B",
+    "set_status": {"brais": "transferred"},
+    "move_characters": {"brais": "loc.limbo"},
+    "set_life_state": {"brais": "transferred"}
+  },
+  {
+    "event_id": "E_FORNO_FOUND",
+    "move_active": {
+      "characters": ["kive", "luka", "saarah", "cris", "yeri", "ali"],
+      "location": "loc.nest"
+    },
+    "set_emotions": {"kive": "grief"}
+  },
+  {
+    "event_id": "E_MOVE_OUT",
+    "move_active": {
+      "characters": ["kive", "luka", "saarah", "cris", "ali"],
+      "location": "loc.road"
+    }
+  },
+  {
+    "event_id": "E17",
+    "move_characters": {"kive": "loc.village", "freya": "loc.village"}
+  },
+  {
+    "event_id": "E18",
+    "move_active": {
+      "characters": ["kive", "freya", "cris", "saarah", "luka", "ali"],
+      "location": "loc.cave"
+    }
+  },
+  {
+    "event_id": "E09",
+    "resolve_variable": {
+      "var_id": "VAR_DEV",
+      "options": ["participates", "refuses"]
+    },
+    "on_choice": {
+      "participates": {
+        "set_emotions": {"dev": "hope"},
+        "set_bond_state": {"dev": "deepened"}
+      }
+    }
+  },
+  {
+    "event_id": "E21",
+    "rescue": ["nora", "pau"],
+    "move_characters": {"yeri": "loc.cave", "nora": "loc.cave", "pau": "loc.cave"}
+  },
+  {
+    "event_id": "E22",
+    "set_emotions": {"kive": "hope"}
+  },
+  {
+    "event_id": "E_DEV_LEAVES",
+    "conditional": {"var_id": "VAR_DEV", "value": "refuses"},
+    "move_characters": {"dev": "loc.backdoor"}
+  },
+  {
+    "event_id": "E23",
+    "set_location_status": {"loc.cave": {"status": "breached", "tension": 1.0}}
+  },
+  {
+    "event_id": "E24",
+    "resolve_variable": {
+      "var_id": "VAR_ENDING",
+      "options": ["kive_dies", "pau_dies"]
+    },
+    "on_choice": {
+      "kive_dies": {"kill": "kive"},
+      "pau_dies": {"kill": "pau"}
+    },
+    "set_life_state": {"brais": "automaton"},
+    "move_characters": {"dev": "loc.cave"}
+  }
+]

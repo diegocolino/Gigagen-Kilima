@@ -1,0 +1,33 @@
+{
+  "character_map": {
+    "kive": "char.rebel",
+    "len": "char.orphan",
+    "pau": "char.jester",
+    "nora": "char.caregiver",
+    "freya": "char.deity",
+    "brais": "char.innocent",
+    "saarah": "char.leader",
+    "yeri": "char.explorer",
+    "luka": "char.hero",
+    "dev": "char.hacker",
+    "cris": "char.creator",
+    "ali": "char.lover"
+  },
+  "location_map": {
+    "the_cage": "loc.cage",
+    "the_capital": "loc.capital",
+    "the_city": "loc.city",
+    "the_net": "loc.net",
+    "the_limbo": "loc.limbo",
+    "the_cave": "loc.cave",
+    "the_tower": "loc.tower",
+    "union_hq": "loc.union_hq",
+    "the_forno": "loc.forno",
+    "the_nest": "loc.nest",
+    "the_backdoor": "loc.backdoor",
+    "the_wall": "loc.wall",
+    "the_village": "loc.village",
+    "the_road": "loc.road",
+    "kilima": "loc.kilima"
+  }
+}

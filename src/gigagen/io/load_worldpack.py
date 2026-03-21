@@ -129,3 +129,27 @@ def load_worldpack(
         apply_seed_variation(ws, invariants_path=inv_path if inv_path.exists() else None)
 
     return ws
+
+
+def load_timeline_events(
+    worldpack_dir: str | pathlib.Path,
+) -> list[dict[str, Any]]:
+    """Load timeline events from the worldpack's YAML timeline.
+
+    Returns a list of event dicts sorted by hour.
+    """
+    root = pathlib.Path(worldpack_dir)
+    meta = _load_world_meta(root / "world.json")
+    structure = meta.get("structure", {})
+    timelines_cfg = structure.get("timelines", {})
+
+    for _label, tl_file in timelines_cfg.items():
+        tl_path = root / tl_file
+        if tl_path.exists():
+            data = yaml.safe_load(tl_path.read_text(encoding="utf-8"))
+            events = data.get("events", [])
+            return sorted(
+                [e for e in events if e.get("hour") is not None],
+                key=lambda e: (e["hour"], e.get("id", "")),
+            )
+    return []

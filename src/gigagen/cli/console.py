@@ -3,37 +3,66 @@
 from __future__ import annotations
 
 import sys
-from typing import TextIO
+from dataclasses import dataclass, field
+from typing import Any, TextIO
 
 from gigagen.core.entity import Character, Faction, Location
 from gigagen.core.relation import Relation, harmonic_affinity
 from gigagen.core.world_state import WorldState
+from gigagen.core.simulator import (
+    SimulatorState,
+    build_simulator,
+    advance_to,
+)
 from gigagen.io.export_world_state import export_world_state
 
 
 HELP_TEXT = """\
 Commands:
-  show world          — world state summary
-  list characters     — the 12 with status
-  list factions       — factions with state
-  list locations      — locations with state
-  inspect <id>        — full entity detail + relations
-  inspect rel.<id>    — relations of an entity
-  export [path]       — export world_state.json
-  help                — show this help
-  quit / exit         — exit console
+  show world          -- world state summary
+  list characters     -- the 12 with status
+  list factions       -- factions with state
+  list locations      -- locations with state
+  inspect <id>        -- full entity detail + relations
+  inspect rel.<id>    -- relations of an entity
+  advance [N]         -- advance N hours (default 1)
+  hour                -- show current hour and active events
+  outcomes            -- show dramatic states of the 12
+  log [N]             -- show last N event log entries (default 10)
+  export [path]       -- export world_state.json
+  help                -- show this help
+  quit / exit         -- exit console
 """
 
 
-def _show_world(ws: WorldState, out: TextIO) -> None:
+@dataclass
+class ConsoleContext:
+    ws: WorldState
+    sim: SimulatorState
+    timeline_events: list[dict[str, Any]]
+    output_dir: str = "outputs"
+
+
+# ---------------------------------------------------------------------------
+# Display helpers
+# ---------------------------------------------------------------------------
+
+def _show_world(ctx: ConsoleContext, out: TextIO) -> None:
+    ws = ctx.ws
     chars = [e for e in ws.entities.values() if e.entity_type == "character"]
     facs = [e for e in ws.entities.values() if e.entity_type == "faction"]
     locs = [e for e in ws.entities.values() if e.entity_type == "location"]
     out.write(f"\n  World: {ws.world_id}\n")
     out.write(f"  Seed:  {ws.seed}\n")
     out.write(f"  Phase: {ws.phase}\n")
+    out.write(f"  Hour:  H{ctx.sim.current_hour:02d} / H{ctx.sim.max_hour:02d}\n")
+    out.write(f"  Cohesion: {ctx.sim.cohesion:+.1f}\n")
     out.write(f"  Characters: {len(chars)}  Factions: {len(facs)}  Locations: {len(locs)}\n")
     out.write(f"  Relations:  {len(ws.relations)}\n")
+    # Show resolved variables
+    if ctx.sim.resolved_variables:
+        vars_str = ", ".join(f"{k}={v}" for k, v in sorted(ctx.sim.resolved_variables.items()))
+        out.write(f"  Variables: {vars_str}\n")
     out.write(f"  Tags: {', '.join(ws.tags) if ws.tags else '(none)'}\n\n")
 
 
@@ -42,7 +71,7 @@ def _list_characters(ws: WorldState, out: TextIO) -> None:
         (e for e in ws.entities.values() if isinstance(e, Character)),
         key=lambda c: c.civil_name,
     )
-    out.write(f"\n  {'Name':<12} {'Archetype':<6} {'Note':<4} {'Status':<14} {'Location':<16} {'Emotion'}\n")
+    out.write(f"\n  {'Name':<12} {'Arch':<6} {'Note':<4} {'Status':<14} {'Location':<16} {'Emotion'}\n")
     out.write(f"  {'-'*12} {'-'*6} {'-'*4} {'-'*14} {'-'*16} {'-'*10}\n")
     for c in chars:
         out.write(
@@ -101,7 +130,6 @@ def _inspect_entity(ws: WorldState, entity_id: str, out: TextIO) -> None:
     if ent.description:
         out.write(f"  {ent.description}\n")
 
-    # Type-specific fields
     if isinstance(ent, Character):
         out.write(f"\n  Identity:\n")
         out.write(f"    Archetype:  {ent.archetype}  Note: {ent.note}  Hero: {ent.hero_type}\n")
@@ -120,7 +148,6 @@ def _inspect_entity(ws: WorldState, entity_id: str, out: TextIO) -> None:
         out.write(f"  Status: {ent.status}  Tension: {ent.tension:.2f}  Access: {ent.access}\n")
         out.write(f"  Controller: {ent.controlling_faction_id or '(none)'}\n")
 
-    # Relations
     rels = _get_entity_relations(ws, entity_id)
     if rels:
         out.write(f"\n  Relations ({len(rels)}):\n")
@@ -133,14 +160,10 @@ def _inspect_entity(ws: WorldState, entity_id: str, out: TextIO) -> None:
                 f"w={r.weight:.1f} pol={polarity_sym}\n"
             )
 
-        # Harmonic affinity for character pairs
         if isinstance(ent, Character):
             char_rels = [
                 r for r in rels
-                if ws.entities.get(
-                    r.target_id if r.source_id == entity_id else r.source_id,
-                ) is not None
-                and isinstance(
+                if isinstance(
                     ws.entities.get(
                         r.target_id if r.source_id == entity_id else r.source_id
                     ),
@@ -149,7 +172,7 @@ def _inspect_entity(ws: WorldState, entity_id: str, out: TextIO) -> None:
             ]
             if char_rels:
                 out.write(f"\n  Harmonic affinities:\n")
-                seen = set()
+                seen: set[str] = set()
                 for r in char_rels:
                     other_id = r.target_id if r.source_id == entity_id else r.source_id
                     if other_id in seen:
@@ -182,7 +205,102 @@ def _inspect_relations(ws: WorldState, entity_id: str, out: TextIO) -> None:
     out.write("\n")
 
 
-def _handle_command(ws: WorldState, line: str, out: TextIO, output_dir: str) -> bool:
+# ---------------------------------------------------------------------------
+# Simulation commands
+# ---------------------------------------------------------------------------
+
+def _cmd_advance(ctx: ConsoleContext, parts: list[str], out: TextIO) -> None:
+    n = 1
+    if len(parts) >= 2:
+        try:
+            n = int(parts[1])
+        except ValueError:
+            out.write("  Usage: advance [N]  (N = number of hours)\n")
+            return
+
+    if ctx.sim.current_hour >= ctx.sim.max_hour:
+        out.write(f"  Already at H{ctx.sim.max_hour:02d}. Timeline complete.\n\n")
+        return
+
+    target = min(ctx.sim.current_hour + n, ctx.sim.max_hour)
+    new_entries = advance_to(ctx.ws, ctx.sim, target, ctx.timeline_events, ctx.ws.seed)
+
+    out.write(f"\n  Advanced H{ctx.sim.current_hour - n if ctx.sim.current_hour >= n else 0:02d} -> H{ctx.sim.current_hour:02d}")
+    out.write(f"  (cohesion: {ctx.sim.cohesion:+.1f})\n")
+
+    if new_entries:
+        for entry in new_entries:
+            marker = " ***" if entry.variable_resolved else ""
+            out.write(f"    H{entry.hour:02d} [{entry.event_id}] {entry.name}{marker}\n")
+            if entry.variable_resolved:
+                out.write(f"         >> VARIABLE RESOLVED: {entry.variable_resolved}\n")
+    else:
+        out.write("    (no events in this window)\n")
+    out.write("\n")
+
+
+def _cmd_hour(ctx: ConsoleContext, out: TextIO) -> None:
+    out.write(f"\n  Current hour: H{ctx.sim.current_hour:02d} / H{ctx.sim.max_hour:02d}\n")
+    out.write(f"  Cohesion: {ctx.sim.cohesion:+.1f}\n")
+
+    # Show events at current hour
+    current_events = [
+        e for e in ctx.timeline_events
+        if e.get("hour") == ctx.sim.current_hour
+    ]
+    if current_events:
+        out.write(f"  Events at H{ctx.sim.current_hour:02d}:\n")
+        for ev in current_events:
+            chars = ", ".join(str(c) for c in ev.get("characters", []))
+            out.write(f"    [{ev.get('id', '?')}] {ev.get('name', '')}  ({chars})\n")
+    else:
+        out.write(f"  No events at H{ctx.sim.current_hour:02d}.\n")
+
+    # Show resolved variables
+    if ctx.sim.resolved_variables:
+        out.write(f"  Resolved variables:\n")
+        for k, v in sorted(ctx.sim.resolved_variables.items()):
+            out.write(f"    {k} = {v}\n")
+    out.write("\n")
+
+
+def _cmd_outcomes(ctx: ConsoleContext, out: TextIO) -> None:
+    out.write(f"\n  Outcomes at H{ctx.sim.current_hour:02d}:\n")
+    out.write(f"  {'Name':<12} {'Life':<14} {'Bond':<14} {'Politics':<14} {'Location'}\n")
+    out.write(f"  {'-'*12} {'-'*14} {'-'*14} {'-'*14} {'-'*16}\n")
+    for oc in sorted(ctx.sim.outcomes.values(), key=lambda o: o.name):
+        out.write(
+            f"  {oc.name:<12} {oc.life_state:<14} {oc.bond_state:<14} "
+            f"{oc.political_alignment:<14} {oc.location}\n"
+        )
+    out.write("\n")
+
+
+def _cmd_log(ctx: ConsoleContext, parts: list[str], out: TextIO) -> None:
+    n = 10
+    if len(parts) >= 2:
+        try:
+            n = int(parts[1])
+        except ValueError:
+            pass
+    entries = ctx.sim.event_log[-n:]
+    if not entries:
+        out.write("  No events logged yet. Use 'advance' to progress.\n\n")
+        return
+    out.write(f"\n  Event log (last {len(entries)}):\n")
+    for entry in entries:
+        marker = " ***" if entry.variable_resolved else ""
+        out.write(f"    H{entry.hour:02d} [{entry.event_id:<16}] {entry.name}{marker}\n")
+        if entry.variable_resolved:
+            out.write(f"         >> {entry.variable_resolved}\n")
+    out.write("\n")
+
+
+# ---------------------------------------------------------------------------
+# Command dispatcher
+# ---------------------------------------------------------------------------
+
+def _handle_command(ctx: ConsoleContext, line: str, out: TextIO) -> bool:
     """Process one command. Returns False to quit."""
     parts = line.strip().split()
     if not parts:
@@ -198,17 +316,17 @@ def _handle_command(ws: WorldState, line: str, out: TextIO, output_dir: str) -> 
         return True
 
     if cmd == "show" and len(parts) >= 2 and parts[1].lower() == "world":
-        _show_world(ws, out)
+        _show_world(ctx, out)
         return True
 
     if cmd == "list" and len(parts) >= 2:
         target = parts[1].lower()
         if target == "characters":
-            _list_characters(ws, out)
+            _list_characters(ctx.ws, out)
         elif target == "factions":
-            _list_factions(ws, out)
+            _list_factions(ctx.ws, out)
         elif target == "locations":
-            _list_locations(ws, out)
+            _list_locations(ctx.ws, out)
         else:
             out.write(f"  Unknown list target: '{target}'. Try: characters, factions, locations\n")
         return True
@@ -216,16 +334,31 @@ def _handle_command(ws: WorldState, line: str, out: TextIO, output_dir: str) -> 
     if cmd == "inspect" and len(parts) >= 2:
         target = parts[1]
         if target.startswith("rel."):
-            # "inspect rel.char.rebel" → show relations of char.rebel
-            entity_id = target[4:]  # strip "rel."
-            _inspect_relations(ws, entity_id, out)
+            entity_id = target[4:]
+            _inspect_relations(ctx.ws, entity_id, out)
         else:
-            _inspect_entity(ws, target, out)
+            _inspect_entity(ctx.ws, target, out)
+        return True
+
+    if cmd == "advance":
+        _cmd_advance(ctx, parts, out)
+        return True
+
+    if cmd == "hour":
+        _cmd_hour(ctx, out)
+        return True
+
+    if cmd == "outcomes":
+        _cmd_outcomes(ctx, out)
+        return True
+
+    if cmd == "log":
+        _cmd_log(ctx, parts, out)
         return True
 
     if cmd == "export":
-        path = parts[1] if len(parts) >= 2 else f"{output_dir}/{ws.world_id}_seed_{ws.seed:03d}.json"
-        result = export_world_state(ws, path)
+        path = parts[1] if len(parts) >= 2 else f"{ctx.output_dir}/{ctx.ws.world_id}_seed_{ctx.ws.seed:03d}.json"
+        result = export_world_state(ctx.ws, path)
         out.write(f"  Exported to {result}\n\n")
         return True
 
@@ -237,6 +370,10 @@ def run_console(
     ws: WorldState,
     output_dir: str = "outputs",
     *,
+    timeline_events: list[dict[str, Any]] | None = None,
+    char_map: dict[str, str] | None = None,
+    loc_map: dict[str, str] | None = None,
+    event_rules: dict[str, dict[str, Any]] | None = None,
     input_stream: TextIO | None = None,
     output_stream: TextIO | None = None,
 ) -> None:
@@ -244,7 +381,21 @@ def run_console(
     inp = input_stream or sys.stdin
     out = output_stream or sys.stdout
 
-    out.write(f"\n  Gigagen Console — {ws.world_id} (seed {ws.seed})\n")
+    sim = build_simulator(
+        ws, timeline_events or [],
+        char_map=char_map,
+        loc_map=loc_map,
+        event_rules=event_rules,
+    )
+    ctx = ConsoleContext(
+        ws=ws,
+        sim=sim,
+        timeline_events=timeline_events or [],
+        output_dir=output_dir,
+    )
+
+    out.write(f"\n  Gigagen Console -- {ws.world_id} (seed {ws.seed})\n")
+    out.write(f"  Timeline: H00 -> H{sim.max_hour:02d} ({len(timeline_events or [])} events)\n")
     out.write(f"  Type 'help' for commands.\n\n")
 
     interactive = inp is sys.stdin and inp.isatty()
@@ -252,7 +403,8 @@ def run_console(
     while True:
         if interactive:
             try:
-                line = input("gigagen> ")
+                prompt = f"H{sim.current_hour:02d}> "
+                line = input(prompt)
             except (EOFError, KeyboardInterrupt):
                 out.write("\n")
                 break
@@ -261,5 +413,5 @@ def run_console(
             if not line:
                 break
 
-        if not _handle_command(ws, line, out, output_dir):
+        if not _handle_command(ctx, line, out):
             break
