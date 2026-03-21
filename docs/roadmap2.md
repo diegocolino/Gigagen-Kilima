@@ -37,24 +37,32 @@
 
 ---
 
-## C2 — Data completeness audit
+## C2 — Data completeness audit ✓
 
 **Goal:** All worldpack data files are complete and internally consistent.
 
 **Findings:**
-- `worlds/kilima/timelines/bn1.yaml` may be truncated — verify full events section (E01–E24, all 62 hours)
-- Agency leader_id is null (documented as TBD)
-- 3 characters have no faction (Dev, Cris, Ali) — verify this is intentional per lore
+- bn1.yaml is complete: 37 events covering all 62 hours (E01–E24 + sub-events), not truncated
+- All 18 event rules in event_rules.json reference valid timeline events
+- All 12 character `current_location_id` values resolve to valid locations
+- All 4 faction `base_location_id` values resolve to valid locations
+- Dev, Cris, Ali have no faction — **intentional**, secondary characters not yet integrated into faction system
+- Agency, Unions, AI have no leader — **intentional**, pending secondary character integration. Full faction system + harmonic config comes in Chronica
 
 **Deliverables:**
-- [ ] Verify bn1.yaml contains complete events section with all hours covered
-- [ ] Cross-validate event_rules.json against bn1.yaml events (every rule references a real event)
-- [ ] Document why Dev, Cris, Ali have no faction (or assign if lore dictates)
-- [ ] Decide on Agency leader — placeholder or TBD with explicit justification
-- [ ] Verify all character `current_location_id` values match existing location IDs
-- [ ] Verify all faction `base_location_id` values match existing location IDs
+- [x] Verify bn1.yaml contains complete events section with all hours covered
+- [x] Cross-validate event_rules.json against bn1.yaml events (every rule references a real event)
+- [x] Document why Dev, Cris, Ali have no faction — intentional, pending secondary char integration
+- [x] Decide on Agency/Unions/AI leaders — deferred to Chronica (secondary chars not yet integrated)
+- [x] Verify all character `current_location_id` values match existing location IDs
+- [x] Verify all faction `base_location_id` values match existing location IDs
+- [x] Add cross-reference validation tests (`tests/test_data_integrity.py`)
 
-**Success criteria:** Every entity reference resolves. No orphan IDs.
+**Notes:**
+- Location ID naming divergence (snake_case in bn1.yaml vs `loc.*` in JSON) — **deferred**, location system will be reworked later
+- Cross-reference tests added to catch future breakage if someone edits a JSON and introduces orphan IDs
+
+**Success criteria:** Every entity reference resolves. No orphan IDs. ✓
 
 ---
 
