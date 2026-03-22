@@ -11,10 +11,12 @@
       "The Limbo exists as subzone within The Net for transferred consciousnesses",
       "The Forno exists as artistic quarter, Kive and Luka's childhood place"
     ],
+    "faction_count": 10,
     "factions": [
-      "Exactly 4 factions: The Resistance, The Agency, The Unions, The AI",
-      "Each has a fixed nature and base location",
-      "The Resistance is led by Freya at NB1 start; Dev was previous leader"
+      "10 factions: Union Corp, Agency SL, Anti Group, Amparo Foundation, Bohemian Academy, Cult Order, Guard Force, Backdoor, Kilima Lines, Kilima Mail",
+      "Each has a fixed harmonic mode, intervals, and base location",
+      "Anti Group (formerly 'The Resistance') is led by Freya at NB1 start; Dev was previous leader",
+      "Flai (The AI) is NOT a faction — it is an omnipresent character operating through Union Corp and Agency SL"
     ],
     "characters": {
       "count": 12,
@@ -48,21 +50,20 @@
       {"source": "char.deity",    "target": "char.hacker",   "kind": "leadership_succession"},
       {"source": "char.rebel",    "target": "char.deity",    "kind": "oneiric_bond"},
       {"source": "char.orphan",   "target": "char.innocent", "kind": "reunited_in_limbo"},
-      {"source": "char.hero",     "target": "char.leader",   "kind": "future_partner"},
-      {"source": "char.deity",    "target": "char.orphan",   "kind": "contacted_in_limbo"}
+      {"source": "char.hero",     "target": "char.leader",   "kind": "partner"},
+      {"source": "char.deity",    "target": "char.orphan",   "kind": "mentor"}
     ],
     "faction_memberships": [
-      {"character": "char.rebel",    "faction": "fac.resistencia", "kind": "member_of"},
-      {"character": "char.deity",    "faction": "fac.resistencia", "kind": "leader_of"},
-      {"character": "char.hacker",   "faction": "fac.resistencia", "kind": "allied_with", "note": "former leader, now independent"},
-      {"character": "char.hero",     "faction": "fac.agencia",     "kind": "member_of", "note": "turns during NB1"},
-      {"character": "char.innocent", "faction": "fac.agencia",     "kind": "infiltrated_in", "note": "secret spy"}
+      {"character": "char.rebel",    "faction": "fac.anti_group",  "kind": "member_of"},
+      {"character": "char.deity",    "faction": "fac.anti_group",  "kind": "leader_of"},
+      {"character": "char.hacker",   "faction": "fac.anti_group",  "kind": "former_friend", "note": "former leader, now independent in Backdoor"},
+      {"character": "char.hero",     "faction": "fac.agency",      "kind": "member_of", "note": "turns during NB1"},
+      {"character": "char.innocent", "faction": "fac.guard",       "kind": "member_of", "note": "Guard Force member, secretly spying for Agency"}
     ],
     "faction_locations": [
-      {"faction": "fac.resistencia", "location": "loc.cave",    "kind": "based_in"},
-      {"faction": "fac.agencia",     "location": "loc.capital",  "kind": "based_in"},
-      {"faction": "fac.sindicatos",  "location": "loc.capital",  "kind": "based_in"},
-      {"faction": "fac.ia",          "location": "loc.net",      "kind": "based_in"}
+      {"faction": "fac.anti_group",  "location": "loc.cave",    "kind": "based_in"},
+      {"faction": "fac.agency",      "location": "loc.capital",  "kind": "based_in"},
+      {"faction": "fac.union_corp",  "location": "loc.capital",  "kind": "based_in"}
     ]
   },
   "nb1_invariants": {

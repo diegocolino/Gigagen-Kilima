@@ -32,59 +32,28 @@ TimelineBar {
     height: 2fr;
 }
 
-#char-panel {
-    width: 1fr;
-    border: solid $primary;
-    overflow-y: auto;
-}
-
-#char-panel:focus-within {
-    border: solid $accent;
-}
-
-#event-panel {
-    width: 1fr;
-    border: solid $primary;
-    overflow-y: auto;
-}
-
-#event-panel:focus-within {
-    border: solid $accent;
-}
-
-/* Bottom row: factions + locations + variables */
-#bottom-row {
-    height: 1fr;
-}
-
-#faction-panel {
-    width: 1fr;
-    border: solid $primary;
-    overflow-y: auto;
-}
-
-#faction-panel:focus-within {
-    border: solid $accent;
-}
-
-#location-panel {
-    width: 1fr;
-    border: solid $primary;
-    overflow-y: auto;
-}
-
-#location-panel:focus-within {
-    border: solid $accent;
-}
-
+/* All panels: uniform thin border, accent on focus */
+#char-panel,
+#event-panel,
+#faction-panel,
+#location-panel,
 #variables-panel {
     width: 1fr;
     border: solid $primary;
     overflow-y: auto;
 }
 
+#char-panel:focus-within,
+#event-panel:focus-within,
+#faction-panel:focus-within,
+#location-panel:focus-within,
 #variables-panel:focus-within {
     border: solid $accent;
+}
+
+/* Bottom row: factions + locations + variables */
+#bottom-row {
+    height: 1fr;
 }
 
 /* Footer */
@@ -96,11 +65,19 @@ TimelineBar {
     padding: 0 1;
 }
 
-/* Panel :focus styling */
-FactionPanel:focus { border: solid $accent; }
-LocationPanel:focus { border: solid $accent; }
-EventLogPanel:focus { border: solid $accent; }
-VariablesPanel:focus { border: solid $accent; }
+/* DataTable inside panels */
+#fac-table, #loc-table {
+    height: 100%;
+}
+
+/* Global relations dialog */
+#global-rel-dialog {
+    overflow-y: auto;
+}
+
+#rel-filter-bar Static {
+    width: 100%;
+}
 
 /* DataTable styling */
 DataTable {

@@ -16,8 +16,8 @@ from .relation import Relation
 from .world_state import WorldState
 
 
-# Emotional loads that can be assigned to characters by seed
-_EMOTIONAL_OPTIONS = ["neutral", "grief", "rage", "hope", "fear"]
+# Default emotional options if worldpack doesn't specify catalogs
+_DEFAULT_EMOTIONAL_OPTIONS = ["neutral"]
 
 
 def _resolve_variables(
@@ -46,19 +46,21 @@ def _vary_character_emotions(
     rng: random.Random,
     entities: dict[str, BaseEntity],
     fixed_emotions: dict[str, str],
+    emotional_options: list[str] | None = None,
 ) -> None:
     """Vary emotional_load for characters whose canon_level is not fixed,
     or whose emotional_load is a seeded field.
 
     Characters with grief at H00 (funeral) keep grief as base but may shift.
     """
+    options = emotional_options or _DEFAULT_EMOTIONAL_OPTIONS
     for eid, ent in entities.items():
         if not isinstance(ent, Character):
             continue
         base_emotion = fixed_emotions.get(eid, ent.emotional_load)
         # 60% chance to keep base emotion, 40% chance to shift
         if rng.random() < 0.4:
-            ent.emotional_load = rng.choice(_EMOTIONAL_OPTIONS)
+            ent.emotional_load = rng.choice(options)
         else:
             ent.emotional_load = base_emotion
 
@@ -93,10 +95,12 @@ def _vary_faction_state(
 def apply_seed_variation(
     ws: WorldState,
     invariants_path: str | pathlib.Path | None = None,
+    *,
+    catalogs: dict[str, Any] | None = None,
 ) -> dict[str, str]:
     """Apply seed-based variation to a WorldState in place.
 
-    - Resolves NB1 variables deterministically
+    - Resolves variables deterministically
     - Varies seeded fields (emotions, tensions, faction power/cohesion)
     - Does NOT touch fixed identity fields (archetype, note, hero_type, etc.)
 
@@ -123,8 +127,13 @@ def apply_seed_variation(
         if isinstance(ent, Character):
             fixed_emotions[eid] = ent.emotional_load
 
+    # -- Load emotional options from catalogs --
+    emotional_options = None
+    if catalogs:
+        emotional_options = catalogs.get("emotional_states")
+
     # -- Apply seeded variations --
-    _vary_character_emotions(rng, ws.entities, fixed_emotions)
+    _vary_character_emotions(rng, ws.entities, fixed_emotions, emotional_options)
     _vary_location_tensions(rng, ws.entities)
     _vary_faction_state(rng, ws.entities)
 

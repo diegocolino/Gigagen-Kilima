@@ -11,7 +11,7 @@ from textual.containers import Horizontal, Vertical
 from textual.timer import Timer
 from textual.widgets import DataTable, Static, Footer
 
-from gigagen.io.export_world_state import export_world_state
+from gigagen.io.export_world_state import export_world_state, save_worldpack
 
 from .bridge import SimulatorBridge
 from .widgets import (
@@ -28,6 +28,13 @@ from .screens import (
     InspectorScreen,
     RelationsScreen,
     OutcomesScreen,
+    GlobalRelationsScreen,
+    FactionEditorScreen,
+    LocationEditorScreen,
+    CharacterEditorScreen,
+    NewRelationScreen,
+    ValidationResultScreen,
+    HarmonicDashboardScreen,
 )
 
 
@@ -56,11 +63,15 @@ class GigagenApp(App):
         Binding("f", "focus_factions", "Factions", show=True),
         Binding("l", "focus_locations", "Locs", show=True),
         Binding("e", "focus_events", "Events", show=True),
-        Binding("enter", "inspect", "Inspect", show=True),
+        Binding("enter", "inspect", "Inspect", show=False),
         Binding("r", "relations", "Relations", show=False),
+        Binding("R", "global_relations", "All Rels", show=True, key_display="R"),
         Binding("o", "outcomes", "Outcomes", show=True),
         Binding("s", "change_seed", "Seed", show=True),
         Binding("x", "export", "Export", show=True),
+        Binding("ctrl+s", "save_worldpack", "Save", show=True, key_display="^S"),
+        Binding("v", "validate", "Validate", show=True),
+        Binding("h", "harmonic", "Harmonic", show=True),
     ]
 
     def __init__(self, bridge: SimulatorBridge) -> None:
@@ -114,10 +125,11 @@ class GigagenApp(App):
 
         # Header
         header = self.query_one("#header-bar", Static)
+        dirty = " [yellow][MODIFIED][/yellow]" if b.dirty else ""
         header.update(
             f"  GIGAGEN \u00b7 {b.ws.world_id} \u00b7 seed {b.seed:03d}"
             f"     H{b.current_hour:02d}/H{b.max_hour:02d}"
-            f"     Cohesion: {b.cohesion:+.1f}"
+            f"     Cohesion: {b.cohesion:+.1f}{dirty}"
         )
 
         # Timeline
@@ -226,29 +238,143 @@ class GigagenApp(App):
         self.query_one("#char-table", DataTable).focus()
 
     def action_focus_factions(self) -> None:
-        self.query_one("#factions").focus()
+        try:
+            self.query_one("#fac-table", DataTable).focus()
+        except Exception:
+            self.query_one("#factions").focus()
 
     def action_focus_locations(self) -> None:
-        self.query_one("#locations").focus()
+        try:
+            self.query_one("#loc-table", DataTable).focus()
+        except Exception:
+            self.query_one("#locations").focus()
 
     def action_focus_events(self) -> None:
         self.query_one("#eventlog").focus()
 
+    # --- Row selection handler (Enter on DataTables) ---
+
+    def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
+        """Handle Enter on any main DataTable — open the appropriate editor."""
+        table_id = event.data_table.id
+        entity_id = str(event.row_key.value) if event.row_key.value else None
+        if not entity_id:
+            return
+
+        if table_id == "char-table":
+            self._open_character_editor(entity_id)
+        elif table_id == "fac-table":
+            # Row keys are "fac.xxx::SubName" or "fac.xxx"
+            faction_id = entity_id.split("::")[0]
+            self._open_faction_editor(faction_id)
+        elif table_id == "loc-table":
+            self._open_location_editor(entity_id)
+
     # --- Inspection actions ---
 
-    def action_inspect(self) -> None:
+    def _get_focused_entity_id(self) -> str | None:
+        """Get the selected entity from whichever panel has focus."""
+        # Check factions panel
+        fac_panel = self.query_one("#factions", FactionPanel)
+        fac_id = fac_panel.get_selected_id()
+        try:
+            if self.query_one("#fac-table", DataTable).has_focus:
+                return fac_id
+        except Exception:
+            pass
+        # Check locations panel
+        loc_panel = self.query_one("#locations", LocationPanel)
+        loc_id = loc_panel.get_selected_id()
+        try:
+            if self.query_one("#loc-table", DataTable).has_focus:
+                return loc_id
+        except Exception:
+            pass
+        # Default to character table
         char_table = self.query_one("#characters", CharacterTable)
-        entity_id = char_table.get_selected_id()
+        return char_table.get_selected_id()
+
+    def action_inspect(self) -> None:
+        # If faction table has focus, open faction editor
+        try:
+            fac_table = self.query_one("#fac-table", DataTable)
+            if fac_table.has_focus:
+                fac_panel = self.query_one("#factions", FactionPanel)
+                fac_id = fac_panel.get_selected_id()
+                if fac_id:
+                    self._open_faction_editor(fac_id)
+                return
+        except Exception:
+            pass
+
+        # If location table has focus, open location editor
+        try:
+            loc_table = self.query_one("#loc-table", DataTable)
+            if loc_table.has_focus:
+                loc_panel = self.query_one("#locations", LocationPanel)
+                loc_id = loc_panel.get_selected_id()
+                if loc_id:
+                    self._open_location_editor(loc_id)
+                return
+        except Exception:
+            pass
+
+        # If character table has focus, open character editor
+        try:
+            char_dt = self.query_one("#char-table", DataTable)
+            if char_dt.has_focus:
+                char_table = self.query_one("#characters", CharacterTable)
+                char_id = char_table.get_selected_id()
+                if char_id:
+                    self._open_character_editor(char_id)
+                return
+        except Exception:
+            pass
+
+        # Otherwise inspect selected entity
+        entity_id = self._get_focused_entity_id()
         if entity_id:
             self.push_screen(
                 InspectorScreen(entity_id, self.bridge.ws, self.bridge.sim)
             )
 
+    def _open_faction_editor(self, faction_id: str) -> None:
+        def on_result(changed: bool) -> None:
+            if changed:
+                self._refresh_all()
+
+        self.push_screen(
+            FactionEditorScreen(faction_id, self.bridge),
+            on_result,
+        )
+
+    def _open_location_editor(self, location_id: str) -> None:
+        def on_result(changed: bool) -> None:
+            if changed:
+                self._refresh_all()
+
+        self.push_screen(
+            LocationEditorScreen(location_id, self.bridge),
+            on_result,
+        )
+
+    def _open_character_editor(self, char_id: str) -> None:
+        def on_result(changed: bool) -> None:
+            if changed:
+                self._refresh_all()
+
+        self.push_screen(
+            CharacterEditorScreen(char_id, self.bridge),
+            on_result,
+        )
+
     def action_relations(self) -> None:
-        char_table = self.query_one("#characters", CharacterTable)
-        entity_id = char_table.get_selected_id()
+        entity_id = self._get_focused_entity_id()
         if entity_id:
             self.push_screen(RelationsScreen(entity_id, self.bridge.ws))
+
+    def action_global_relations(self) -> None:
+        self.push_screen(GlobalRelationsScreen(self.bridge.ws, self.bridge))
 
     def action_outcomes(self) -> None:
         self.push_screen(
@@ -270,6 +396,18 @@ class GigagenApp(App):
         path = f"outputs/{self.bridge.ws.world_id}_seed_{self.bridge.seed:03d}_H{self.bridge.current_hour:02d}.json"
         result = export_world_state(self.bridge.ws, path)
         self.notify(f"Exported to {result}", title="Export")
+
+    def action_save_worldpack(self) -> None:
+        save_worldpack(self.bridge.ws, self.bridge.worldpack_dir)
+        self.bridge.dirty = False
+        self._refresh_all()
+        self.notify("Worldpack saved", title="Save")
+
+    def action_validate(self) -> None:
+        self.push_screen(ValidationResultScreen(self.bridge))
+
+    def action_harmonic(self) -> None:
+        self.push_screen(HarmonicDashboardScreen(self.bridge.ws))
 
     def action_help(self) -> None:
         self.push_screen(HelpScreen())

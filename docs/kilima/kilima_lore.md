@@ -23,7 +23,7 @@ Kilima exists within the broader universe called **Basura Digital** (Digital Tra
 | ~2015 | Deglaciation | Programs | Massive ice melt. Sea levels rise catastrophically (~1000m in fiction). Most land submerged. |
 | ~2020 | The Pandemic | Programs | "El Virus" — highly contagious, kills ~80% of remaining population during The Migration. |
 | Post-2020 | Construction of The Mountain | 12 Families | The 12 founding lineages finance construction of The Capital on Mount Kilima. |
-| Post-construction | First Revolution | Qualified workers | Workers who built The Capital rebel when the families try to expel them. Results in The Wall, The City, The Unions, The Net. |
+| Post-construction | First Revolution | Qualified workers | Workers who built The Capital rebel when the families try to expel them. Results in The Wall, The City, Union Corp, The Net. |
 | Decades later | Present day | Protagonists | The 12 principals are alive. Second Revolution is about to begin. |
 | ~50 years after 2nd Rev | Third Revolution | Hacker + Orphan | Dev leads. Len's consciousness fused with humanity's collective unconscious in The Net. |
 
@@ -61,7 +61,7 @@ This hierarchy is NOT by design — it's the accumulated result of three crises:
 | Location | Description |
 |----------|-------------|
 | The Cage | Floating city on the ocean. Artists and thinkers. Semi-autonomous. "Wild" (unmodified) humans. |
-| The Cave | Tunnel network on The Mountain's slope. Resistance HQ. Geothermal energy. |
+| The Cave | Tunnel network on The Mountain's slope. Anti Group HQ. Geothermal energy. |
 | The Road | Desolate, dangerous land route. Bandits. Extreme weather. Only surface connection. |
 | The Train | Only autonomous luxury transport on The Road. Goes to The Cage and Atlantis. Stops at The Oasis. |
 | The Oasis | Only stop on The Train's route. |
@@ -69,26 +69,50 @@ This hierarchy is NOT by design — it's the accumulated result of three crises:
 | The Frontier | Luxury space station. Attracts investors to Plan Despega. Symbol of inequality. |
 | The Station | Train departure/arrival point at The Mountain. |
 | The Avenue | Boulevard in The Capital where The Cabins are located. |
-| The Table (La Mesa) | Majestic room in The Capital where Union leaders meet with The AI to make decisions. |
-| The Tower | Agency HQ in The Capital. Imposing. Where artists/celebrities are "created" and controlled. |
-| The Tomb | Underground complex in The City. Union storage. Secrets and advanced tech. |
-| The Hive (La Colmena) | Industrial zone. Produces most consumer goods. Union-controlled. |
+| The Table (La Mesa) | Majestic room in The Capital where Union Corp leaders meet with Flai to make decisions. |
+| The Tower | Agency SL HQ in The Capital. Imposing. Where artists/celebrities are "created" and controlled. |
+| The Tomb | Underground complex in The City. Union Corp storage. Secrets and advanced tech. |
+| The Hive (La Colmena) | Industrial zone. Produces most consumer goods. Union Corp-controlled. |
 
 ---
 
 ## Factions
 
-### The Resistance
-Clandestine movement. Dissidents, cyberactivists, ex-military. Based in The Cave. Led by Freya (previously Dev). Uses infiltration and propaganda. Fights The Unions, The Agency, and The AI.
+> Kilima has 10 major factions organized by the harmonic faction system (see `gigagen_faction_system.md`).
+> Each faction is defined by a musical mode. Subdivisions have root notes tied to their leaders.
+> For full detail on subdivisions, assignments, and harmonic architecture, see `kilima_factions.md`.
 
-### The Agency
-Controls careers of artists and celebrities. Based in The Tower in The Capital. Ensures cultural standards set by The Unions are followed. Coercive arm of the elite. Manages contracts that are essentially slavery (violate = sent to The Colony).
+### The Power Structure (3 pillars)
 
-### The Unions (Los Sindicatos)
-Groups of humans and cyborgs representing social sectors. Founded after the First Revolution as mediation structure. Created The Net. Make decisions at The Table alongside The AI. Push the "Yellow Road" ideology. Lead Plan Despega.
+**Union Corp** (Ionian) — Political governance. 12 ministries (6 real, 6 simulated theater designed by Flai). Groups of humans and cyborgs representing social sectors. Founded after the First Revolution as mediation structure. Created The Net. Make decisions at The Table alongside Flai. Push the "Yellow Road" ideology. Lead Plan Despega.
 
-### The AI
-Omnipresent technological entity. Controls The Net. Monitors all activity. Regulates human life. Descended from FLAI (the AI that saved humanity). Has the power to restrict information, monitor people through The Eye, and manipulate consciousness transfer. Cannot be subdued by Sensibles.
+**Agency SL** (Aeolian) — The interface between the system and the citizen. Manages the Life Pack system (see below). Builds and operates virtual environments in The Net (schools, entertainment, vacations). Controls media narrative. Runs espionage. Based in The Tower. Manages artist contracts that are essentially slavery (violate = sent to The Colony).
+
+**Guard Force** (Dorian) — The armed force of Kilima. Border control (The Wall), military operations, prison management (Moon Soldiers run The Colony), arena entertainment (Arena Corps run The Coliseum). Enforces Union Corp's decisions physically.
+
+### The Opposition
+
+**Anti Group** (Phrygian) — Clandestine movement. Dissidents, cyberactivists, ex-military. Based in The Cave. Led by Freya (previously Dev). Operates through cells: Direnis Cell (command), Red Fist Dragons (action), Dust Parade (external connections), and a Forno cell (underground culture). Uses infiltration and propaganda. Fights Union Corp, Agency SL, and Flai.
+
+**Backdoor** (Whole Tone) — Clandestine Net access, hacking, digital underground. Led by Dev. Based in The Backdoor (The Village). The only unauthorized entry point to The Net. Operates on the most harmonically distant scale in the system — a faction that doesn't fit any mode.
+
+### The Neutral / Independent
+
+**Bohemian Academy** (Mixolydian) — Free thought and uncontrolled culture. Based in The Cage. Semi-autonomous. Home to Savages, artists, thinkers, The Nomads. Practices direct democracy. Contains the Grand Library, Open Forum, Natural Sciences Circle, and Arts Collective.
+
+**Amparo Foundation** (Lydian) — Humanitarian aid. Hospitals (Vital Care), breathing chip access for marginal zones (Open Breath), assistance to Discarded and Forgotten communities (Ground Zero). The only thing between the abandoned and death.
+
+**Kilima Lines** (Pentatonic Major) — Transport of living beings. The Train, The Zeppelin, The Port. Part of the Kilima Service group.
+
+**Kilima Mail** (Pentatonic Minor) — Transport of goods. Cargo, supplies, Life Pack components. Part of the Kilima Service group. Independent from Kilima Lines but sometimes overlapping in operations.
+
+### The Spiritual
+
+**Cult Order** (Locrian) — Religion, prophecy, the supernatural. Custodians of The Prophecy. Based in The Cathedral. Operates through High Clergy (leadership) and Lower Chapel (popular religion). Offers meaning in a synthetic world — and uses it as control.
+
+### Flai (The AI)
+
+Flai is **not a faction**. Flai is an omnipresent entity — in code, literally a character without skin, with access to all information that others have restricted. Multi-relational. Descended from FLAI (the AI that saved humanity during The Migration). Controls The Net, The Eye (surveillance), consciousness transfer technology. Created Union Corp for psychological stability. Designed the real/simulated ministry split. Cannot be subdued by Sensibles.
 
 ---
 
@@ -109,7 +133,7 @@ Transfer consciousness to The Net. The body supposedly stays safe — but actual
 - **CRA (Chip de Respiración Asistida):** Allows breathing toxic atmosphere. Expensive.
 
 ### The Eye (El Ojo)
-Camera and sensor network covering every corner of The Mountain. Controlled by The AI. Surveillance system.
+Camera and sensor network covering every corner of The Mountain. Controlled by Flai. Surveillance system.
 
 ### Drones
 Autonomous flying devices. Omnipresent. Used for deliveries and population surveillance.
@@ -118,13 +142,13 @@ Autonomous flying devices. Omnipresent. Used for deliveries and population surve
 
 ## The Net (Metaverse)
 
-A vast digital metaverse. Inhabitants connect through The Cabins. Offers entertainment, business, virtual relationships. The rich get luxury experiences; the poor get basics. Controlled by The AI and The Unions. Reflects real-world inequality in digital form.
+A vast digital metaverse. Inhabitants connect through The Cabins. Offers entertainment, business, virtual relationships. The rich get luxury experiences; the poor get basics. Controlled by Flai and Union Corp. Virtual environments built and maintained by Agency SL (Net Service). Reflects real-world inequality in digital form.
 
 ### The Limbo
 Subzone within The Net. Where transferred consciousnesses truly exist. Not the main Net — a between-space. Len and Brais end up here.
 
 ### The Void (El Vacío)
-Space in The Net where users connected too long get trapped forever. The Unions also use it to eliminate enemies ("The Disappeared" list).
+Space in The Net where users connected too long get trapped forever. Union Corp also uses it to eliminate enemies ("The Disappeared" list).
 
 ### The Infrared
 Illegal platform within The Net. Drug trafficking, virtual prostitution. Controlled by criminal groups. Lawless zone.
@@ -159,7 +183,7 @@ Extremely rare. Control ALL four elements in The Net. Appear every few generatio
 **Len is the only Supreme Sensible of The Mountain.**
 
 ### The Prophecy
-A prophecy in The Mountain speaks of a girl born under a special astrological alignment who will become the symbol of resistance and change history. She will be a Supreme Sensible with the power to unite other Sensibles against The AI. The prophecy also says she will die at her moment of maximum victory, becoming a martyr. This event becomes legend and gives rise to a cult. The AI hunts for this girl. The Sensibles protect her.
+A prophecy in The Mountain speaks of a girl born under a special astrological alignment who will become the symbol of resistance and change history. She will be a Supreme Sensible with the power to unite other Sensibles against Flai. The prophecy also says she will die at her moment of maximum victory, becoming a martyr. This event becomes legend and gives rise to a cult. Flai hunts for this girl. The Sensibles protect her.
 
 **Len fulfills this prophecy.**
 
@@ -168,20 +192,35 @@ A prophecy in The Mountain speaks of a girl born under a special astrological al
 ## The Three Revolutions
 
 ### First Revolution
-Qualified workers who built The Capital rebel when the 12 families try to expel them. The world outside is no longer habitable. Resolution: creation of The Wall, recognition of The City as autonomous middle-class zone. The Unions are born as mediation structure. They found The Net.
+Qualified workers who built The Capital rebel when the 12 families try to expel them. The world outside is no longer habitable. Resolution: creation of The Wall, recognition of The City as autonomous middle-class zone. Union Corp is born as mediation structure. They found The Net.
 
 ### Second Revolution
-Led by Kive (The Rebel). Begins at the end of Act 1 with Kive's declaration on The Net. The Resistance fights to change the order in The Mountain. During this revolution, Sensibles begin to awaken to their powers in The Net. The Resistance wins.
+Led by Kive (The Rebel). Begins at the end of Act 1 with Kive's declaration on The Net. Anti Group fights to change the order in The Mountain. During this revolution, Sensibles begin to awaken to their powers in The Net. Anti Group wins.
 
 ### Third Revolution
 Led by Dev (The Hacker) and Len (The Orphan). ~50 years after the Second Revolution. Centered on Plan Despega. Culminates with the fusion of Len's digital consciousness with humanity's collective unconscious stored in The Net, using AI technology. Most Act 1/2 protagonists become secondary characters with key cameo appearances.
 
 ---
 
+## The Life Pack System
+
+There is no money in Kilima. Flai calculates each person's contribution (human, robot, cyborg). Based on this score, Flai proposes a **Life Pack**: housing, clothing, food, transport, and other essentials.
+
+- Each person has a **score** and a **rank**.
+- Exceeding a score threshold → better Life Pack (move from Village to City, from City to Capital).
+- Dropping below a threshold → worse Life Pack (demotion).
+- Life Packs are calculated by Flai, approved by Union Corp, and **delivered by Agency SL**.
+
+Agency SL is the interface — they are the ones who knock on your door, explain your new Pack, move you to a new house, "advise" you. This is what makes Agency SL indispensable: every citizen interacts with them, whether they want to or not.
+
+The Yellow Road ideology (promoted by Union Corp via Agency SL's Marketing Division) tells citizens they can climb through talent and effort. In practice, the system is rigged. The Life Pack is the mechanism that makes meritocracy feel real in a dystopia where machines do everything.
+
+---
+
 ## Social Control Systems
 
 ### The Yellow Road (Camino Amarillo)
-Belief promoted by The Unions: there exists a path to happiness and prosperity that only those with the right abilities and qualities can follow. Justifies discrimination and exclusion. Used as social control. Extends to education, work, social life. Those who can't follow it are seen as inferior or undeserving. The Resistance fights against this as a tool of oppression.
+Belief promoted by Union Corp: there exists a path to happiness and prosperity that only those with the right abilities and qualities can follow. Justifies discrimination and exclusion. Used as social control. Extends to education, work, social life. Those who can't follow it are seen as inferior or undeserving. Anti Group fights against this as a tool of oppression.
 
 ### The Nomads (counterculture)
 A group of thinkers and artists in The Cage who believe in physical/emotional experience over technological progress. Value nature, simple living, direct democracy. Organize festivals and art exhibitions. Oppose The Yellow Road philosophy.
@@ -189,13 +228,13 @@ A group of thinkers and artists in The Cage who believe in physical/emotional ex
 ### Social Categories
 - **Cyborgs:** Almost everyone in Capital and City. Technology requires neuropolymers.
 - **Savages (Salvajes):** Humans without cybernetic modifications. Pau is one — can't leave The Cage because of this.
-- **The Disappeared (Desaparecidos):** People trapped in The Void. Unions also use the list to eliminate enemies.
-- **The Discarded (Descartados):** People who don't meet Union standards. Exiled to the Dark Zone.
+- **The Disappeared (Desaparecidos):** People trapped in The Void. Union Corp also uses the list to eliminate enemies.
+- **The Discarded (Descartados):** People who don't meet Union Corp standards. Exiled to the Dark Zone.
 - **The Awakened (Despiertos):** Social movement challenging AI control. Seeking human autonomy.
 
 ### Other Social Groups
-- **Gladiators:** Cybernetically modified fighters. Arena combat in The Capital for entertainment.
-- **Mercenaries:** Soldiers hired by The Unions. Live exiled on The Road.
+- **Gladiators:** Cybernetically modified fighters. Arena combat in The Capital for entertainment. Now part of Guard Force (Arena Corps).
+- **Mercenaries:** Soldiers hired by Union Corp. Live exiled on The Road. Now part of Guard Force (Road Patrol).
 - **The Forgotten (Olvidados):** Isolated community in the Dark Zone. Agriculture/hunting. Exploited by bandits.
 - **The Outcasts (Parias):** Marginalized group. Drug production. Illegal sales on The Road.
 
@@ -203,7 +242,7 @@ A group of thinkers and artists in The Cage who believe in physical/emotional ex
 
 ## Plan Despega
 
-Program led by The Unions to evacuate Earth. Transfer human population to 7 planets in the solar system. Select exceptional people from The Capital. Subject them to consciousness transfer into robots sent to assigned planets per district. Central to the Third Revolution.
+Program led by Union Corp to evacuate Earth. Transfer human population to 7 planets in the solar system. Select exceptional people from The Capital. Subject them to consciousness transfer into robots sent to assigned planets per district. Central to the Third Revolution.
 
 ---
 
@@ -223,20 +262,20 @@ The author references the 13 circles of Metatron's Cube as a structural inspirat
 | Item | Old lore says | Current Act 1 says | Resolution |
 |------|--------------|-------------------|------------|
 | Train journey | Kive travels with Explorer, Creator, Hacker | Kive travels with Yeri only | **Keep current** |
-| Freya's role | Platonic love who disappeared, hiding in Cave | Resistance leader, knows prophecy, contacts Len | **Keep current (stronger)** |
-| Saarah faction | Initially works with Unions | Union operative who turns | **Compatible** |
+| Freya's role | Platonic love who disappeared, hiding in Cave | Anti Group leader, knows prophecy, contacts Len | **Keep current (stronger)** |
+| Saarah faction | Initially works with Union Corp | Union Corp operative who turns | **Compatible** |
 | Secondary characters | El Fan, El Secretario, Los Gemelos, El Boxeador, La Fundadora, El Jefe | Not in Act 1 | **Note for future** |
-| Revolver scene | Kive shoots Agency boss in The Net (symbolic) | E07 is a verbal declaration of war | **Keep as potential detail within E07** |
+| Revolver scene | Kive shoots Agency SL boss in The Net (symbolic) | E07 is a verbal declaration of war | **Keep as potential detail within E07** |
 | 3rd Revolution timing | 50 years after 2nd Revolution | Not yet defined | **Note — major time skip** |
 | Utopia | Pau and Nora shipwreck there in BN1 | Moved to NB2 | **Keep current** |
-| Kive as artist | Has a music contract with Agency, must release a new album | Not explicitly in current Act 1 | **IMPORTANT — add to lore. Kive is a musician.** |
+| Kive as artist | Has a music contract with Agency SL, must release a new album | Not explicitly in current Act 1 | **IMPORTANT — add to lore. Kive is a musician.** |
 
 ---
 
 ## Key Pending Items
 
 - 12 founding lineage names and details
-- Kive's music career (he has a CONTRACT with The Agency — this is why they have power over him)
+- Kive's music career (he has a CONTRACT with Agency SL — this is why they have power over him)
 - The Ether system (natural vs synthetic) — full mechanics
 - Anima system — full mechanics and specific anima instances for each character
 - Atlantis (mentioned as Train destination — what is it?)

@@ -2,7 +2,7 @@
   "world_id": "world.kilima",
   "name": "Kilima",
   "version": "1.0",
-  "description": "Dystopian techno-political universe organized around The Mountain. 12 central characters, 4 factions, and a 62-hour narrative timeline.",
+  "description": "Dystopian techno-political universe organized around The Mountain. 12 central characters, 10 factions, and a 62-hour narrative timeline.",
   "canon_level": "fixed",
   "tags": ["dystopia", "techno-political", "musical", "relational"],
   "structure": {
@@ -20,5 +20,14 @@
     "duration_hours": 62,
     "the_rebel_always_dies": true,
     "variables_count": 3
+  },
+  "catalogs": {
+    "archetype_codes": ["CAR", "JES", "HER", "REB", "ORP", "LOV", "HCK", "LEA", "INN", "EXP", "CRE", "DEI"],
+    "notes": ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+    "elements": ["Agua", "Fuego", "Tierra", "Aire", "Nube", "Barro", "Hielo", "Metal", "Humo", "Polvo", "Lava", "Humedad", "Ceniza", "Tormenta", "Éter Natural", "Éter Sintético"],
+    "emotional_states": ["neutral", "grief", "rage", "hope", "fear"],
+    "character_statuses": ["active", "dead", "missing", "captive", "digitalized", "transferred", "automaton"],
+    "faction_statuses": ["active", "dissolved", "underground", "dominant"],
+    "location_statuses": ["stable", "tense", "fragile", "unstable", "hidden", "active", "breached", "besieged"]
   }
 }

@@ -1,0 +1,196 @@
+{
+  "factions": [
+    {
+      "id": "fac.union_corp",
+      "entity_type": "faction",
+      "name": "Union Corp",
+      "tags": ["political", "institutional", "governance"],
+      "canon_level": "fixed",
+      "description": "Political governance of Kilima. 12 ministries (6 real, 6 simulated theater). The facade of order.",
+      "mode": "ionian",
+      "intervals": [2, 2, 1, 2, 2, 2, 1],
+      "note_count": 7,
+      "scale_family": "greek",
+      "base_location_id": "loc.sede",
+      "status": "dominant",
+      "subdivisions": [
+        {"name": "Culture",        "note": "C",  "type": "simulated", "leader_id": null},
+        {"name": "Education",      "note": "C#", "type": "real",      "leader_id": null},
+        {"name": "Energy",         "note": "D",  "type": "real",      "leader_id": null},
+        {"name": "Defense",        "note": "D#", "type": "real",      "leader_id": null},
+        {"name": "Biotechnology",  "note": "E",  "type": "real",      "leader_id": null},
+        {"name": "Structures",     "note": "F",  "type": "real",      "leader_id": null},
+        {"name": "Systems",        "note": "F#", "type": "real",      "leader_id": null},
+        {"name": "Interior",       "note": "G",  "type": "simulated", "leader_id": "char.leader"},
+        {"name": "Memory",         "note": "G#", "type": "simulated", "leader_id": null},
+        {"name": "Materials",      "note": "A",  "type": "simulated", "leader_id": null},
+        {"name": "Engineering",    "note": "A#", "type": "simulated", "leader_id": null},
+        {"name": "Exterior",       "note": "B",  "type": "simulated", "leader_id": null}
+      ]
+    },
+    {
+      "id": "fac.agency",
+      "entity_type": "faction",
+      "name": "Agency SL",
+      "tags": ["control", "media", "espionage", "life_packs"],
+      "canon_level": "fixed",
+      "description": "The interface between the system and the citizen. Manages Life Packs, virtual environments in The Net, media narrative, and espionage.",
+      "mode": "aeolian",
+      "intervals": [2, 1, 2, 2, 1, 2, 2],
+      "note_count": 7,
+      "scale_family": "greek",
+      "base_location_id": "loc.tower",
+      "status": "dominant",
+      "subdivisions": [
+        {"name": "Master Council",          "note": null, "leader_id": "char.hero"},
+        {"name": "Contracts Bureau",        "note": null, "leader_id": null},
+        {"name": "Intelligence Department", "note": null, "leader_id": null},
+        {"name": "Marketing Division",      "note": null, "leader_id": null},
+        {"name": "Net Service",             "note": null, "leader_id": null}
+      ]
+    },
+    {
+      "id": "fac.anti_group",
+      "entity_type": "faction",
+      "name": "Anti Group",
+      "tags": ["insurgent", "underground", "clandestine"],
+      "canon_level": "fixed",
+      "description": "Clandestine opposition. Dissidents, cyberactivists, ex-military. Operates through cells with independent leaders.",
+      "mode": "phrygian",
+      "intervals": [1, 2, 2, 2, 1, 2, 2],
+      "note_count": 7,
+      "scale_family": "greek",
+      "base_location_id": "loc.cave",
+      "status": "underground",
+      "subdivisions": [
+        {"name": "Direnis Cell",      "note": "B",  "leader_id": "char.deity"},
+        {"name": "Red Fist Dragons",  "note": "D#", "leader_id": "char.rebel"},
+        {"name": "Dust Parade",       "note": "A",  "leader_id": "char.explorer"},
+        {"name": "Forno Cell",        "note": null,  "leader_id": null, "notes": "Name TBD. Cris is member. Leader is secondary character TBD."}
+      ]
+    },
+    {
+      "id": "fac.amparo",
+      "entity_type": "faction",
+      "name": "Amparo Foundation",
+      "tags": ["humanitarian", "medical", "aid"],
+      "canon_level": "fixed",
+      "description": "Humanitarian aid. Hospitals, breathing chip access, refugee support. The only thing between the forgotten and death.",
+      "mode": "lydian",
+      "intervals": [2, 2, 2, 1, 2, 2, 1],
+      "note_count": 7,
+      "scale_family": "greek",
+      "base_location_id": null,
+      "status": "active",
+      "subdivisions": [
+        {"name": "Vital Care",   "note": null, "leader_id": null},
+        {"name": "Open Breath",  "note": null, "leader_id": null},
+        {"name": "Ground Zero",  "note": null, "leader_id": null},
+        {"name": null,           "note": null, "leader_id": null, "notes": "Refuge subdivision — name in review"}
+      ]
+    },
+    {
+      "id": "fac.bohemian",
+      "entity_type": "faction",
+      "name": "Bohemian Academy",
+      "tags": ["intellectual", "counterculture", "artistic", "autonomous"],
+      "canon_level": "fixed",
+      "description": "Free thought and uncontrolled culture. Based in The Cage, semi-autonomous floating city. Home to Savages, artists, thinkers.",
+      "mode": "mixolydian",
+      "intervals": [2, 2, 1, 2, 2, 1, 2],
+      "note_count": 7,
+      "scale_family": "greek",
+      "base_location_id": "loc.cage",
+      "status": "active",
+      "subdivisions": [
+        {"name": "Grand Library",          "note": "C#", "leader_id": null},
+        {"name": "Open Forum",             "note": null, "leader_id": null},
+        {"name": "Natural Sciences Circle", "note": null, "leader_id": null},
+        {"name": "Arts Collective",         "note": null, "leader_id": null}
+      ]
+    },
+    {
+      "id": "fac.cult",
+      "entity_type": "faction",
+      "name": "Cult Order",
+      "tags": ["religious", "prophecy", "supernatural", "ritual"],
+      "canon_level": "fixed",
+      "description": "Religion, prophecy, the supernatural. Custodians of The Prophecy. Offers meaning in a synthetic world — and uses it as control.",
+      "mode": "locrian",
+      "intervals": [1, 2, 2, 1, 2, 2, 2],
+      "note_count": 7,
+      "scale_family": "greek",
+      "base_location_id": "loc.cathedral",
+      "status": "active",
+      "subdivisions": [
+        {"name": "High Clergy",  "note": null, "leader_id": null},
+        {"name": "Lower Chapel", "note": null, "leader_id": null}
+      ]
+    },
+    {
+      "id": "fac.guard",
+      "entity_type": "faction",
+      "name": "Guard Force",
+      "tags": ["military", "enforcement", "border", "prison"],
+      "canon_level": "fixed",
+      "description": "Armed force of Kilima. Border control, military operations, prison management, arena entertainment.",
+      "mode": "dorian",
+      "intervals": [2, 1, 2, 2, 2, 1, 2],
+      "note_count": 7,
+      "scale_family": "greek",
+      "base_location_id": "loc.wall",
+      "status": "active",
+      "subdivisions": [
+        {"name": "Wall Command", "note": null, "leader_id": null},
+        {"name": "Moon Soldiers", "note": null, "leader_id": null},
+        {"name": "Arena Corps",  "note": null, "leader_id": null},
+        {"name": "Road Patrol",  "note": null, "leader_id": null}
+      ]
+    },
+    {
+      "id": "fac.backdoor",
+      "entity_type": "faction",
+      "name": "Backdoor",
+      "tags": ["hacker", "underground", "digital", "clandestine"],
+      "canon_level": "fixed",
+      "description": "Clandestine Net access, hacking, digital underground. F# whole tone — the tritone of the establishment, maximum harmonic distance.",
+      "mode": "whole_tone",
+      "intervals": [2, 2, 2, 2, 2, 2],
+      "note_count": 6,
+      "scale_family": "symmetric",
+      "base_location_id": "loc.backdoor",
+      "status": "underground",
+      "subdivisions": []
+    },
+    {
+      "id": "fac.kilima_lines",
+      "entity_type": "faction",
+      "name": "Kilima Lines",
+      "tags": ["transport", "logistics", "neutral", "service"],
+      "canon_level": "fixed",
+      "description": "Transport of living beings. Train, Zeppelin, Port. Part of the Kilima Service group alongside Kilima Mail.",
+      "mode": "pentatonic_major",
+      "intervals": [2, 2, 3, 2, 3],
+      "note_count": 5,
+      "scale_family": "pentatonic",
+      "base_location_id": "loc.station",
+      "status": "active",
+      "subdivisions": []
+    },
+    {
+      "id": "fac.kilima_mail",
+      "entity_type": "faction",
+      "name": "Kilima Mail",
+      "tags": ["cargo", "logistics", "neutral", "industrial"],
+      "canon_level": "fixed",
+      "description": "Transport of goods. Cargo, supplies, Life Pack components. Part of the Kilima Service group alongside Kilima Lines.",
+      "mode": "pentatonic_minor",
+      "intervals": [3, 2, 2, 3, 2],
+      "note_count": 5,
+      "scale_family": "pentatonic",
+      "base_location_id": null,
+      "status": "active",
+      "subdivisions": []
+    }
+  ]
+}

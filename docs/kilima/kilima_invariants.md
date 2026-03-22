@@ -2,6 +2,12 @@
 
 > What cannot change, what can vary, and what is forbidden.
 
+> **TODO:** This file mixes Kilima-specific invariants with generic engine rules.
+> A `gigagen/gigagen_invariants.md` should be created that defines the generic
+> invariant system (fixed/seeded/derived/variable/forbidden framework), and this
+> file should only contain Kilima-specific rules that load into that system —
+> same pattern as faction_system.md (engine) + kilima_factions.md (worldpack).
+
 ---
 
 ## Universal invariants (every seed, every run)

@@ -126,7 +126,12 @@ def load_worldpack(
     if apply_variation:
         invariants_file = structure.get("invariants_file", "invariants.json")
         inv_path = root / invariants_file
-        apply_seed_variation(ws, invariants_path=inv_path if inv_path.exists() else None)
+        catalogs = meta.get("catalogs")
+        apply_seed_variation(
+            ws,
+            invariants_path=inv_path if inv_path.exists() else None,
+            catalogs=catalogs,
+        )
 
     return ws
 

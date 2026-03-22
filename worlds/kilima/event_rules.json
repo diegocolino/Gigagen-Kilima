@@ -29,7 +29,7 @@
       "kive": "loc.forno", "luka": "loc.forno", "saarah": "loc.forno",
       "cris": "loc.forno", "yeri": "loc.forno", "ali": "loc.forno"
     },
-    "set_factions": {"luka": "fac.resistencia"},
+    "set_factions": {"luka": "fac.anti_group"},
     "set_political": {"luka": "turned"}
   },
   {

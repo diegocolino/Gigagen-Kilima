@@ -26,6 +26,11 @@ class EventLogEntry:
     characters: list[str]
     phase: str = ""
     variable_resolved: str | None = None
+    # Harmonic enrichment (Phase 4)
+    location_id: str | None = None
+    location_tonic: str | None = None
+    modal_influence: str | None = None          # controlling faction id
+    character_affinities: dict[str, float] = field(default_factory=dict)
 
 
 @dataclass
@@ -36,13 +41,14 @@ class CharacterOutcome:
     bond_state: str = "unresolved"
     political_alignment: str = "aligned"
     location: str = ""
+    location_affinity: float | None = None      # current location affinity
 
 
 @dataclass
 class SimulatorState:
     """Tracks simulation progress."""
     current_hour: int = 0
-    max_hour: int = 62
+    max_hour: int = 0
     cohesion: float = 0.0
     event_log: list[EventLogEntry] = field(default_factory=list)
     outcomes: dict[str, CharacterOutcome] = field(default_factory=dict)
@@ -51,6 +57,8 @@ class SimulatorState:
     char_map: dict[str, str] = field(default_factory=dict)
     loc_map: dict[str, str] = field(default_factory=dict)
     event_rules: dict[str, dict[str, Any]] = field(default_factory=dict)
+    # Harmonic state (Phase 4)
+    character_affinities: dict[str, float | None] = field(default_factory=dict)
 
 
 def _resolve_location(loc_raw: Any, loc_map: dict[str, str]) -> str | None:
@@ -72,11 +80,7 @@ def _init_outcomes(ws: WorldState) -> dict[str, CharacterOutcome]:
     for eid, ent in ws.entities.items():
         if not isinstance(ent, Character):
             continue
-        life = "alive"
-        if ent.status == "digitalized":
-            life = "digitalized"
-        elif ent.status == "dead":
-            life = "dead"
+        life = "dead" if ent.status == "dead" else "alive"
         pol = "aligned"
         if ent.current_faction_id is None:
             pol = "conflicted"
@@ -114,6 +118,90 @@ def load_event_rules(
     return {}
 
 
+def _calc_character_location_affinity(
+    char: Character,
+    loc: Location,
+    ws: WorldState,
+) -> float | None:
+    """Calculate a character's affinity with a location using the harmonic engine.
+
+    Returns None if no tonic is set on the location (graceful null handling).
+    """
+    from .harmony import character_location_affinity
+
+    if loc.tonic is None:
+        return None
+
+    # Get controlling faction's intervals
+    faction_intervals = None
+    if loc.controlling_faction_id:
+        fac = ws.entities.get(loc.controlling_faction_id)
+        if isinstance(fac, Faction) and fac.intervals:
+            faction_intervals = fac.intervals
+
+    return character_location_affinity(
+        char.note, loc.tonic, faction_intervals,
+    )
+
+
+def _update_character_affinity(
+    char_id: str,
+    ws: WorldState,
+    sim: SimulatorState,
+) -> None:
+    """Recalculate and store a character's affinity with their current location."""
+    char = ws.entities.get(char_id)
+    if not isinstance(char, Character):
+        return
+    loc = ws.entities.get(char.current_location_id)
+    if not isinstance(loc, Location):
+        return
+    aff = _calc_character_location_affinity(char, loc, ws)
+    sim.character_affinities[char_id] = aff
+    if char_id in sim.outcomes:
+        sim.outcomes[char_id].location_affinity = aff
+
+
+def _update_location_affinities(
+    loc_id: str,
+    ws: WorldState,
+    sim: SimulatorState,
+) -> None:
+    """Recalculate affinity for ALL characters currently at a location."""
+    for eid, ent in ws.entities.items():
+        if isinstance(ent, Character) and ent.current_location_id == loc_id:
+            _update_character_affinity(eid, ws, sim)
+
+
+def _get_event_harmonic_data(
+    loc_id: str | None,
+    ws: WorldState,
+    sim: SimulatorState,
+    char_ids: list[str],
+) -> tuple[str | None, str | None, str | None, dict[str, float]]:
+    """Extract harmonic metadata for an event log entry.
+
+    Returns (location_id, tonic, modal_influence_faction_id, character_affinities).
+    """
+    if not loc_id:
+        return None, None, None, {}
+
+    loc = ws.entities.get(loc_id)
+    if not isinstance(loc, Location):
+        return loc_id, None, None, {}
+
+    tonic = loc.tonic
+    modal = loc.controlling_faction_id
+
+    affinities: dict[str, float] = {}
+    for cid in char_ids:
+        aff = sim.character_affinities.get(cid)
+        if aff is not None:
+            affinities[cid] = aff
+
+    return loc_id, tonic, modal, affinities
+
+
 def build_simulator(
     ws: WorldState,
     timeline_events: list[dict[str, Any]],
@@ -121,6 +209,7 @@ def build_simulator(
     char_map: dict[str, str] | None = None,
     loc_map: dict[str, str] | None = None,
     event_rules: dict[str, dict[str, Any]] | None = None,
+    max_hour: int | None = None,
 ) -> SimulatorState:
     """Create a SimulatorState initialized from the WorldState."""
     sim = SimulatorState()
@@ -128,6 +217,19 @@ def build_simulator(
     sim.char_map = char_map or {}
     sim.loc_map = loc_map or {}
     sim.event_rules = event_rules or {}
+
+    # Derive max_hour from timeline events if not explicitly provided
+    if max_hour is not None:
+        sim.max_hour = max_hour
+    elif timeline_events:
+        sim.max_hour = max(e.get("hour", 0) for e in timeline_events)
+    # else stays at 0
+
+    # Calculate initial harmonic affinities for all characters
+    for eid, ent in ws.entities.items():
+        if isinstance(ent, Character):
+            _update_character_affinity(eid, ws, sim)
+
     return sim
 
 
@@ -185,6 +287,7 @@ def _apply_rule(
                 c.current_location_id = loc_id
                 if cid in sim.outcomes:
                     sim.outcomes[cid].location = loc_id
+                _update_character_affinity(cid, ws, sim)
 
     # -- Move active characters --
     move_active = rule.get("move_active")
@@ -198,6 +301,7 @@ def _apply_rule(
                     c.current_location_id = loc_id
                     if cid in sim.outcomes:
                         sim.outcomes[cid].location = loc_id
+                    _update_character_affinity(cid, ws, sim)
 
     # -- Set status --
     for cname, status in rule.get("set_status", {}).items():
@@ -262,6 +366,10 @@ def _apply_rule(
                 loc.status = changes["status"]
             if "tension" in changes:
                 loc.tension = changes["tension"]
+            if "controlling_faction_id" in changes:
+                loc.controlling_faction_id = changes["controlling_faction_id"]
+            # Recalculate affinities for all characters at this location
+            _update_location_affinities(loc_id, ws, sim)
 
     return variable_resolved
 
@@ -305,6 +413,7 @@ def _apply_event_state_changes(
                     char.current_location_id = loc_id
                     if char_id in sim.outcomes:
                         sim.outcomes[char_id].location = loc_id
+                    _update_character_affinity(char_id, ws, sim)
 
     # -- Cohesion changes --
     cohesion_delta = event.get("cohesion", 0)
@@ -352,6 +461,13 @@ def advance_to(
         chars_in_event = event.get("characters", [])
         char_ids = [sim.char_map.get(str(c), str(c)) for c in chars_in_event]
 
+        # Resolve event location for harmonic enrichment
+        location_raw = event.get("location")
+        event_loc_id = _resolve_location(location_raw, sim.loc_map)
+        h_loc_id, h_tonic, h_modal, h_affs = _get_event_harmonic_data(
+            event_loc_id, ws, sim, char_ids,
+        )
+
         entry = EventLogEntry(
             hour=event["hour"],
             event_id=event.get("id", "?"),
@@ -360,6 +476,10 @@ def advance_to(
             characters=char_ids,
             phase=event.get("phase", ""),
             variable_resolved=var_resolved,
+            location_id=h_loc_id,
+            location_tonic=h_tonic,
+            modal_influence=h_modal,
+            character_affinities=h_affs,
         )
         new_entries.append(entry)
         sim.event_log.append(entry)

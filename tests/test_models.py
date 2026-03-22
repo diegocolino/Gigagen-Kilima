@@ -59,34 +59,36 @@ class TestCharacters:
             assert c.entity_type == "character"
 
 
-class TestCharacterValidation:
-    def test_reject_wrong_archetype(self) -> None:
-        with pytest.raises(ValueError, match="Invalid archetype"):
-            Character(
-                id="char.test",
-                name="Test",
-                canon_level="fixed",
-                archetype="WRONG",
-                note="C",
-                hero_type="test",
-                civil_name="Test",
-                role_name="Test",
-                current_location_id="loc.x",
-            )
+    def test_subdivision_assignments(self, characters: list[Character]) -> None:
+        """Characters with known subdivision assignments have them set."""
+        by_id = {c.id: c for c in characters}
+        assert by_id["char.rebel"].current_subdivision_id == "Red Fist Dragons"
+        assert by_id["char.deity"].current_subdivision_id == "Direnis Cell"
+        assert by_id["char.explorer"].current_subdivision_id == "Dust Parade"
+        assert by_id["char.hero"].current_subdivision_id == "Master Council"
+        assert by_id["char.leader"].current_subdivision_id == "Interior"
+        assert by_id["char.creator"].current_subdivision_id == "Forno Cell"
+        # Characters without known subdivisions default to None
+        assert by_id["char.orphan"].current_subdivision_id is None
+        assert by_id["char.hacker"].current_subdivision_id is None
 
-    def test_reject_wrong_note(self) -> None:
-        with pytest.raises(ValueError, match="Invalid note"):
-            Character(
-                id="char.test",
-                name="Test",
-                canon_level="fixed",
-                archetype="REB",
-                note="Z",
-                hero_type="test",
-                civil_name="Test",
-                role_name="Test",
-                current_location_id="loc.x",
-            )
+
+class TestCharacterValidation:
+    def test_accepts_any_archetype_string(self) -> None:
+        """Archetype validation is now catalog-based, not hardcoded."""
+        c = Character(
+            id="char.test",
+            name="Test",
+            canon_level="fixed",
+            archetype="CUSTOM",
+            note="X",
+            hero_type="test",
+            civil_name="Test",
+            role_name="Test",
+            current_location_id="loc.x",
+        )
+        assert c.archetype == "CUSTOM"
+        assert c.note == "X"
 
     def test_reject_missing_required_fields(self) -> None:
         with pytest.raises(Exception):
@@ -102,12 +104,24 @@ class TestFactions:
     def factions(self) -> list[Faction]:
         return [Faction(**f) for f in _load_json("factions.json")]
 
-    def test_load_all_4(self, factions: list[Faction]) -> None:
-        assert len(factions) == 4
+    def test_load_all_10(self, factions: list[Faction]) -> None:
+        assert len(factions) == 10
 
-    def test_includes_ai(self, factions: list[Faction]) -> None:
+    def test_includes_anti_group(self, factions: list[Faction]) -> None:
         names = {f.name for f in factions}
-        assert "The AI" in names
+        assert "Anti Group" in names
+
+    def test_no_ai_faction(self, factions: list[Faction]) -> None:
+        """Flai is NOT a faction — it operates through Union Corp and Agency SL."""
+        names = {f.name for f in factions}
+        assert "The AI" not in names
+
+    def test_all_have_harmonic_fields(self, factions: list[Faction]) -> None:
+        for f in factions:
+            assert f.mode, f"{f.id} missing mode"
+            assert f.intervals, f"{f.id} missing intervals"
+            assert f.note_count > 0, f"{f.id} missing note_count"
+            assert f.scale_family, f"{f.id} missing scale_family"
 
     def test_entity_type(self, factions: list[Faction]) -> None:
         for f in factions:
@@ -140,8 +154,8 @@ class TestRelations:
     def relations(self) -> list[Relation]:
         return [Relation(**r) for r in _load_json("relations.json")]
 
-    def test_load_all_29(self, relations: list[Relation]) -> None:
-        assert len(relations) == 29
+    def test_load_all_26(self, relations: list[Relation]) -> None:
+        assert len(relations) == 26
 
     def test_all_kinds_valid(self, relations: list[Relation]) -> None:
         from gigagen.core.relation import RELATION_KINDS
@@ -233,10 +247,10 @@ class TestWorldState:
         )
 
     def test_entity_count(self, world_state: WorldState) -> None:
-        assert len(world_state.entities) == 12 + 4 + 15  # chars + facs + locs
+        assert len(world_state.entities) == 12 + 10 + 15  # chars + facs + locs
 
     def test_relation_count(self, world_state: WorldState) -> None:
-        assert len(world_state.relations) == 29
+        assert len(world_state.relations) == 26
 
     def test_seed(self, world_state: WorldState) -> None:
         assert world_state.seed == 1
@@ -291,9 +305,11 @@ class TestWorldpackFiles:
 
     def test_factions_json_with_corrected_leadership(self) -> None:
         factions = [Faction(**f) for f in _load_json("factions.json")]
-        assert len(factions) == 4
-        resistance = next(f for f in factions if f.id == "fac.resistencia")
-        assert resistance.leader_id == "char.deity", "Freya should lead Resistance"
+        assert len(factions) == 10
+        # Freya leads Anti Group (formerly The Resistance)
+        anti = next(f for f in factions if f.id == "fac.anti_group")
+        assert anti.mode == "phrygian"
+        assert anti.scale_family == "greek"
 
     def test_locations_json_includes_limbo_and_forno(self) -> None:
         locations = [Location(**loc) for loc in _load_json("locations.json")]
@@ -359,4 +375,124 @@ class TestWorldpackFiles:
             active_location_ids=[loc.id for loc in locations],
         )
         assert ws.world_id == "world.kilima"
-        assert len(ws.entities) == 31  # 12 + 4 + 15
+        assert len(ws.entities) == 37  # 12 + 10 + 15
+
+
+# ---------------------------------------------------------------------------
+# Subdivision invariant tests
+# ---------------------------------------------------------------------------
+
+class TestSubdivisionInvariants:
+    """Validate subdivision consistency invariant checks."""
+
+    def _build_ws(
+        self,
+        chars: list[Character],
+        facs: list[Faction],
+    ) -> WorldState:
+        locations = [Location(**loc) for loc in _load_json("locations.json")]
+        relations = [Relation(**r) for r in _load_json("relations.json")]
+        entities: dict[str, BaseEntity] = {}
+        for ent in [*chars, *facs, *locations]:
+            entities[ent.id] = ent
+        return WorldState(
+            world_id="world.kilima",
+            seed=1,
+            phase="block_1_start",
+            entities=entities,
+            relations=relations,
+            active_faction_ids=[f.id for f in facs],
+            active_location_ids=[loc.id for loc in locations],
+        )
+
+    def test_valid_subdivision_passes(self) -> None:
+        from gigagen.core.invariants import validate_invariants
+        chars = [Character(**c) for c in _load_json("characters.json")]
+        facs = [Faction(**f) for f in _load_json("factions.json")]
+        ws = self._build_ws(chars, facs)
+        result = validate_invariants(ws, WORLDS_DIR / "invariants.json")
+        # No subdivision-related errors
+        sub_errors = [e for e in result.errors if "subdivision" in e.lower()]
+        assert not sub_errors, f"Unexpected subdivision errors: {sub_errors}"
+
+    def test_invalid_subdivision_name_fails(self) -> None:
+        from gigagen.core.invariants import validate_invariants
+        chars = [Character(**c) for c in _load_json("characters.json")]
+        facs = [Faction(**f) for f in _load_json("factions.json")]
+        # Set a character to a non-existent subdivision
+        rebel = next(c for c in chars if c.id == "char.rebel")
+        rebel.current_subdivision_id = "Nonexistent Cell"
+        ws = self._build_ws(chars, facs)
+        result = validate_invariants(ws, WORLDS_DIR / "invariants.json")
+        assert not result.valid
+        assert any("Nonexistent Cell" in e for e in result.errors)
+
+    def test_subdivision_without_faction_fails(self) -> None:
+        from gigagen.core.invariants import validate_invariants
+        chars = [Character(**c) for c in _load_json("characters.json")]
+        facs = [Faction(**f) for f in _load_json("factions.json")]
+        # Set subdivision but clear faction
+        rebel = next(c for c in chars if c.id == "char.rebel")
+        rebel.current_subdivision_id = "Red Fist Dragons"
+        rebel.current_faction_id = None
+        ws = self._build_ws(chars, facs)
+        result = validate_invariants(ws, WORLDS_DIR / "invariants.json")
+        assert not result.valid
+        assert any("no faction" in e.lower() for e in result.errors)
+
+
+# ---------------------------------------------------------------------------
+# Location parent hierarchy invariant tests
+# ---------------------------------------------------------------------------
+
+class TestLocationParentInvariants:
+    """Validate location parent hierarchy invariant checks."""
+
+    def _build_ws_with_locations(self, locations: list[Location]) -> WorldState:
+        chars = [Character(**c) for c in _load_json("characters.json")]
+        facs = [Faction(**f) for f in _load_json("factions.json")]
+        relations = [Relation(**r) for r in _load_json("relations.json")]
+        entities: dict[str, BaseEntity] = {}
+        for ent in [*chars, *facs, *locations]:
+            entities[ent.id] = ent
+        return WorldState(
+            world_id="world.kilima",
+            seed=1,
+            phase="block_1_start",
+            entities=entities,
+            relations=relations,
+            active_faction_ids=[f.id for f in facs],
+            active_location_ids=[loc.id for loc in locations],
+        )
+
+    def test_valid_parents_pass(self) -> None:
+        from gigagen.core.invariants import validate_invariants
+        locations = [Location(**loc) for loc in _load_json("locations.json")]
+        ws = self._build_ws_with_locations(locations)
+        result = validate_invariants(ws, WORLDS_DIR / "invariants.json")
+        parent_errors = [e for e in result.errors if "parent" in e.lower()]
+        assert not parent_errors, f"Unexpected parent errors: {parent_errors}"
+
+    def test_invalid_parent_reference_fails(self) -> None:
+        from gigagen.core.invariants import validate_invariants
+        locations = [Location(**loc) for loc in _load_json("locations.json")]
+        # Point a location to a non-existent parent
+        tower = next(l for l in locations if l.id == "loc.tower")
+        tower.parent_location_id = "loc.nonexistent"
+        ws = self._build_ws_with_locations(locations)
+        result = validate_invariants(ws, WORLDS_DIR / "invariants.json")
+        assert not result.valid
+        assert any("loc.nonexistent" in e for e in result.errors)
+
+    def test_parent_cycle_fails(self) -> None:
+        from gigagen.core.invariants import validate_invariants
+        locations = [Location(**loc) for loc in _load_json("locations.json")]
+        # Create a cycle: capital → city → capital
+        capital = next(l for l in locations if l.id == "loc.capital")
+        city = next(l for l in locations if l.id == "loc.city")
+        capital.parent_location_id = "loc.city"
+        city.parent_location_id = "loc.capital"
+        ws = self._build_ws_with_locations(locations)
+        result = validate_invariants(ws, WORLDS_DIR / "invariants.json")
+        assert not result.valid
+        assert any("cycle" in e.lower() for e in result.errors)

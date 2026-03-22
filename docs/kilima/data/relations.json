@@ -7,7 +7,11 @@
       "kind": "sibling",
       "weight": 1.0,
       "polarity": 1,
-      "tags": ["core", "personal", "structural"],
+      "tags": [
+        "core",
+        "personal",
+        "structural"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -18,7 +22,10 @@
       "kind": "partner",
       "weight": 0.9,
       "polarity": 1,
-      "tags": ["core", "personal"],
+      "tags": [
+        "core",
+        "personal"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -29,7 +36,9 @@
       "kind": "ex_partner",
       "weight": 0.5,
       "polarity": 0,
-      "tags": ["personal"],
+      "tags": [
+        "personal"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -40,7 +49,10 @@
       "kind": "ex_partner",
       "weight": 0.6,
       "polarity": 1,
-      "tags": ["personal", "core"],
+      "tags": [
+        "personal",
+        "core"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -51,7 +63,10 @@
       "kind": "close_friend",
       "weight": 0.9,
       "polarity": 1,
-      "tags": ["core", "personal"],
+      "tags": [
+        "core",
+        "personal"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -62,7 +77,11 @@
       "kind": "close_friend",
       "weight": 0.7,
       "polarity": 1,
-      "tags": ["core", "personal", "compromised"],
+      "tags": [
+        "core",
+        "personal",
+        "compromised"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -73,7 +92,11 @@
       "kind": "childhood_best_friends",
       "weight": 0.8,
       "polarity": 1,
-      "tags": ["core", "personal", "structural"],
+      "tags": [
+        "core",
+        "personal",
+        "structural"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -84,7 +107,9 @@
       "kind": "former_friend",
       "weight": 0.3,
       "polarity": 0,
-      "tags": ["personal"],
+      "tags": [
+        "personal"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -95,7 +120,9 @@
       "kind": "partner",
       "weight": 0.8,
       "polarity": 1,
-      "tags": ["personal"],
+      "tags": [
+        "personal"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -106,7 +133,10 @@
       "kind": "partner",
       "weight": 0.2,
       "polarity": 1,
-      "tags": ["personal", "emergent"],
+      "tags": [
+        "personal",
+        "emergent"
+      ],
       "canon_level": "fixed",
       "origin_event_id": "E02"
     },
@@ -117,7 +147,11 @@
       "kind": "maternal_figure",
       "weight": 0.95,
       "polarity": 1,
-      "tags": ["core", "personal", "structural"],
+      "tags": [
+        "core",
+        "personal",
+        "structural"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -128,7 +162,10 @@
       "kind": "leadership_succession",
       "weight": 0.6,
       "polarity": 0,
-      "tags": ["political", "structural"],
+      "tags": [
+        "political",
+        "structural"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -139,7 +176,11 @@
       "kind": "oneiric_bond",
       "weight": 0.3,
       "polarity": 1,
-      "tags": ["personal", "emergent", "oneiric"],
+      "tags": [
+        "personal",
+        "emergent",
+        "oneiric"
+      ],
       "canon_level": "fixed",
       "origin_event_id": "E11"
     },
@@ -150,7 +191,10 @@
       "kind": "reunited_in_limbo",
       "weight": 0.7,
       "polarity": 1,
-      "tags": ["personal", "structural"],
+      "tags": [
+        "personal",
+        "structural"
+      ],
       "canon_level": "fixed",
       "origin_event_id": "E15B"
     },
@@ -161,7 +205,11 @@
       "kind": "mentor",
       "weight": 0.7,
       "polarity": 1,
-      "tags": ["structural", "oneiric", "prophecy"],
+      "tags": [
+        "structural",
+        "oneiric",
+        "prophecy"
+      ],
       "canon_level": "fixed",
       "origin_event_id": "E_FREYA_LEN"
     },
@@ -172,7 +220,9 @@
       "kind": "close_friend",
       "weight": 0.7,
       "polarity": 1,
-      "tags": ["personal"],
+      "tags": [
+        "personal"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -183,7 +233,10 @@
       "kind": "close_friend",
       "weight": 0.5,
       "polarity": 1,
-      "tags": ["political", "personal"],
+      "tags": [
+        "political",
+        "personal"
+      ],
       "canon_level": "fixed",
       "origin_event_id": "E05J"
     },
@@ -194,40 +247,50 @@
       "kind": "mentor",
       "weight": 0.4,
       "polarity": 1,
-      "tags": ["structural", "emergent"],
+      "tags": [
+        "structural",
+        "emergent"
+      ],
       "canon_level": "fixed",
       "origin_event_id": "E_CRIS_FREYA"
     },
     {
-      "id": "rel.innocent.agency.infiltrated",
+      "id": "rel.char.innocent.fac.guard.member_of",
       "source_id": "char.innocent",
-      "target_id": "fac.agency",
-      "kind": "infiltrated_in",
+      "target_id": "fac.guard",
+      "kind": "member_of",
       "weight": 0.6,
       "polarity": -1,
-      "tags": ["political", "secret"],
+      "tags": [
+        "political"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
     {
       "id": "rel.rebel.resistance.member",
       "source_id": "char.rebel",
-      "target_id": "fac.resistance",
+      "target_id": "fac.anti_group",
       "kind": "member_of",
       "weight": 0.8,
       "polarity": 1,
-      "tags": ["political"],
+      "tags": [
+        "political"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
     {
       "id": "rel.deity.resistance.leader",
       "source_id": "char.deity",
-      "target_id": "fac.resistance",
+      "target_id": "fac.anti_group",
       "kind": "leader_of",
       "weight": 1.0,
       "polarity": 1,
-      "tags": ["political", "structural"],
+      "tags": [
+        "political",
+        "structural"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -238,29 +301,37 @@
       "kind": "member_of",
       "weight": 0.7,
       "polarity": 0,
-      "tags": ["political", "turns"],
+      "tags": [
+        "political",
+        "turns"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
     {
       "id": "rel.hacker.resistance.former_leader",
       "source_id": "char.hacker",
-      "target_id": "fac.resistance",
+      "target_id": "fac.anti_group",
       "kind": "former_friend",
       "weight": 0.4,
       "polarity": 0,
-      "tags": ["political", "structural"],
+      "tags": [
+        "political",
+        "structural"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
     {
       "id": "rel.resistance.cave.based",
-      "source_id": "fac.resistance",
+      "source_id": "fac.anti_group",
       "target_id": "loc.cave",
       "kind": "based_in",
       "weight": 1.0,
       "polarity": 1,
-      "tags": ["structural"],
+      "tags": [
+        "structural"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
@@ -271,29 +342,22 @@
       "kind": "based_in",
       "weight": 1.0,
       "polarity": 1,
-      "tags": ["structural"],
+      "tags": [
+        "structural"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     },
     {
       "id": "rel.unions.capital.based",
-      "source_id": "fac.unions",
+      "source_id": "fac.union_corp",
       "target_id": "loc.capital",
       "kind": "based_in",
       "weight": 0.8,
       "polarity": 1,
-      "tags": ["structural"],
-      "canon_level": "fixed",
-      "origin_event_id": null
-    },
-    {
-      "id": "rel.ai.net.based",
-      "source_id": "fac.ai",
-      "target_id": "loc.net",
-      "kind": "based_in",
-      "weight": 1.0,
-      "polarity": 1,
-      "tags": ["structural"],
+      "tags": [
+        "structural"
+      ],
       "canon_level": "fixed",
       "origin_event_id": null
     }

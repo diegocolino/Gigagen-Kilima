@@ -42,19 +42,19 @@ class TestLoadWorldpack:
         chars = [e for e in ws.entities.values() if isinstance(e, Character)]
         assert len(chars) == 12
 
-    def test_loads_4_factions(self, ws: WorldState) -> None:
+    def test_loads_10_factions(self, ws: WorldState) -> None:
         facs = [e for e in ws.entities.values() if isinstance(e, Faction)]
-        assert len(facs) == 4
+        assert len(facs) == 10
 
     def test_loads_15_locations(self, ws: WorldState) -> None:
         locs = [e for e in ws.entities.values() if isinstance(e, Location)]
         assert len(locs) == 15
 
-    def test_loads_29_relations(self, ws: WorldState) -> None:
-        assert len(ws.relations) == 29
+    def test_loads_26_relations(self, ws: WorldState) -> None:
+        assert len(ws.relations) == 26
 
     def test_active_factions(self, ws: WorldState) -> None:
-        assert len(ws.active_faction_ids) == 4
+        assert len(ws.active_faction_ids) == 10
 
     def test_active_locations(self, ws: WorldState) -> None:
         assert len(ws.active_location_ids) == 15
@@ -147,8 +147,8 @@ class TestConsole:
 
     def test_list_factions(self, ws: WorldState) -> None:
         output = self._run_cmd(ws, "list factions")
-        assert "The Resistance" in output
-        assert "The AI" in output
+        assert "Anti Group" in output
+        assert "Union Corp" in output
 
     def test_list_locations(self, ws: WorldState) -> None:
         output = self._run_cmd(ws, "list locations")
@@ -163,8 +163,8 @@ class TestConsole:
         assert "Relations" in output
 
     def test_inspect_faction(self, ws: WorldState) -> None:
-        output = self._run_cmd(ws, "inspect fac.resistencia")
-        assert "The Resistance" in output
+        output = self._run_cmd(ws, "inspect fac.anti_group")
+        assert "Anti Group" in output
         assert "underground" in output
 
     def test_inspect_location(self, ws: WorldState) -> None:
@@ -212,4 +212,4 @@ class TestConsole:
         output = out.getvalue()
         assert "world.kilima" in output
         assert "REB" in output
-        assert "The Resistance" in output
+        assert "Anti Group" in output

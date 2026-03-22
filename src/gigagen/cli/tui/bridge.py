@@ -5,8 +5,9 @@ from __future__ import annotations
 import copy
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
+from gigagen.core.invariants import ValidationResult, validate_invariants
 from gigagen.core.simulator import (
     SimulatorState,
     EventLogEntry,
@@ -41,6 +42,7 @@ class SimulatorBridge:
     event_rules: dict[str, dict[str, Any]] = field(default_factory=dict)
     snapshots: dict[int, Snapshot] = field(default_factory=dict)
     seed: int = 1
+    dirty: bool = False
 
     @classmethod
     def from_worldpack(
@@ -49,16 +51,21 @@ class SimulatorBridge:
         seed: int = 1,
     ) -> "SimulatorBridge":
         """Load a worldpack and build a fully initialized bridge."""
+        import json
         wp = Path(worldpack_dir)
         ws = load_worldpack(wp, seed=seed)
         events = load_timeline_events(wp)
         char_map, loc_map = load_timeline_maps(wp)
         event_rules = load_event_rules(wp)
+        # Load max_hour from worldpack defaults
+        meta = json.loads((wp / "world.json").read_text(encoding="utf-8"))
+        max_hour = meta.get("defaults", {}).get("duration_hours")
         sim = build_simulator(
             ws, events,
             char_map=char_map,
             loc_map=loc_map,
             event_rules=event_rules,
+            max_hour=max_hour,
         )
         bridge = cls(
             worldpack_dir=wp,
@@ -73,6 +80,15 @@ class SimulatorBridge:
         # Save initial snapshot at H00
         bridge._save_snapshot()
         return bridge
+
+    @property
+    def catalogs(self) -> dict[str, Any]:
+        """Load catalogs from world.json (cached)."""
+        if not hasattr(self, "_catalogs_cache"):
+            import json
+            meta = json.loads((self.worldpack_dir / "world.json").read_text(encoding="utf-8"))
+            self._catalogs_cache: dict[str, Any] = meta.get("catalogs", {})
+        return self._catalogs_cache
 
     @property
     def known_variable_names(self) -> list[str]:
@@ -173,15 +189,19 @@ class SimulatorBridge:
 
     def change_seed(self, new_seed: int) -> None:
         """Switch to a new seed. Reloads worldpack and resets to H00."""
+        import json
         self.seed = new_seed
         self.snapshots.clear()
         ws = load_worldpack(self.worldpack_dir, seed=new_seed)
         events = load_timeline_events(self.worldpack_dir)
+        meta = json.loads((self.worldpack_dir / "world.json").read_text(encoding="utf-8"))
+        max_hour = meta.get("defaults", {}).get("duration_hours")
         sim = build_simulator(
             ws, events,
             char_map=self.char_map,
             loc_map=self.loc_map,
             event_rules=self.event_rules,
+            max_hour=max_hour,
         )
         self.ws = ws
         self.sim = sim
@@ -199,3 +219,22 @@ class SimulatorBridge:
     def events_up_to_hour(self, hour: int) -> list[EventLogEntry]:
         """Get all logged events up to the given hour."""
         return [e for e in self.sim.event_log if e.hour <= hour]
+
+    def apply_edit(self, mutator: Callable[[WorldState], None]) -> ValidationResult:
+        """Apply an edit to the world state with invariant validation.
+
+        1. Deep-copy current ws
+        2. Apply mutator to the copy
+        3. Validate the copy against invariants
+        4. If valid: apply mutator to real ws, save snapshot, set dirty
+        5. Return ValidationResult
+        """
+        test_ws = self.ws.model_copy(deep=True)
+        mutator(test_ws)
+        invariants_path = self.worldpack_dir / "invariants.json"
+        result = validate_invariants(test_ws, invariants_path)
+        if result.valid:
+            mutator(self.ws)
+            self._save_snapshot()
+            self.dirty = True
+        return result

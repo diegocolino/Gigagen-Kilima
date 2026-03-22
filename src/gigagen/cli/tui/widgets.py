@@ -10,6 +10,7 @@ from textual.widgets import Static, DataTable, Label
 from textual.reactive import reactive
 
 from gigagen.core.entity import Character, Faction, Location
+from gigagen.core.relation import Relation
 from gigagen.core.world_state import WorldState
 from gigagen.core.simulator import SimulatorState
 
@@ -49,7 +50,7 @@ class CharacterTable(Static):
     def compose(self) -> ComposeResult:
         table = DataTable(id="char-table")
         table.cursor_type = "row"
-        table.add_columns("Name", "Arch", "Status", "Emotion", "Location", "Faction")
+        table.add_columns("Name", "Arch", "Status", "Emotion", "Location", "Division", "Faction")
         self._table = table
         yield table
 
@@ -62,16 +63,14 @@ class CharacterTable(Static):
             key=lambda c: c.civil_name,
         )
         for c in chars:
-            fac = c.current_faction_id or "-"
-            style = ""
-            if c.status == "dead":
-                style = "dim"
-            elif c.status == "digitalized":
-                style = "italic"
+            division = c.current_subdivision_id or "-"
+            fac_name = "-"
+            if c.current_faction_id and c.current_faction_id in ws.entities:
+                fac_name = ws.entities[c.current_faction_id].name
             name = c.civil_name
             self._table.add_row(
                 name, c.archetype, c.status, c.emotional_load,
-                c.current_location_id, fac,
+                c.current_location_id, division, fac_name,
                 key=c.id,
             )
 
@@ -90,9 +89,7 @@ class CharacterTable(Static):
 
 
 class FactionPanel(Static):
-    """Displays faction status."""
-
-    can_focus = True
+    """Displays faction status as an interactive DataTable."""
 
     DEFAULT_CSS = """
     FactionPanel {
@@ -101,28 +98,65 @@ class FactionPanel(Static):
     }
     """
 
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self._table: DataTable | None = None
+
+    def compose(self) -> ComposeResult:
+        table = DataTable(id="fac-table")
+        table.cursor_type = "row"
+        table.add_columns("Division", "Parent", "Status", "Leader", "Type", "Note")
+        self._table = table
+        yield table
+
     def update_data(self, ws: WorldState) -> None:
+        if self._table is None:
+            return
+        self._table.clear()
         facs = sorted(
             (e for e in ws.entities.values() if isinstance(e, Faction)),
             key=lambda f: f.name,
         )
-        lines = ["[b]FACTIONS[/b]\n"]
         for f in facs:
-            leader = f.leader_id or "-"
-            pwr_bar = "\u2588" * int(f.power * 10) + "\u2591" * (10 - int(f.power * 10))
-            coh_bar = "\u2588" * int(f.cohesion * 10) + "\u2591" * (10 - int(f.cohesion * 10))
-            lines.append(f"[bold]{f.name}[/bold] ({f.status})")
-            lines.append(f"  Power:    [{pwr_bar}] {f.power:.2f}")
-            lines.append(f"  Cohesion: [{coh_bar}] {f.cohesion:.2f}")
-            lines.append(f"  Leader:   {leader}")
-            lines.append("")
-        self.update("\n".join(lines))
+            if f.subdivisions:
+                for sub in f.subdivisions:
+                    sub_name = sub.name or "(unnamed)"
+                    sub_leader = "-"
+                    if sub.leader_id and sub.leader_id in ws.entities:
+                        sub_leader = ws.entities[sub.leader_id].name
+                    self._table.add_row(
+                        sub_name, f.name, f.status,
+                        sub_leader, sub.type or "-", sub.note or "-",
+                        key=f"{f.id}::{sub.name or '_unnamed'}",
+                    )
+            else:
+                # Factions without subdivisions show as a single row
+                leader_name = "-"
+                if f.leader_id and f.leader_id in ws.entities:
+                    leader_name = ws.entities[f.leader_id].name
+                self._table.add_row(
+                    f.name, "-", f.status,
+                    leader_name, "-", "-",
+                    key=f.id,
+                )
+
+    def get_selected_id(self) -> str | None:
+        """Returns the faction ID (strips subdivision suffix if present)."""
+        if self._table is None or self._table.cursor_row is None:
+            return None
+        try:
+            keys = list(self._table.rows.keys())
+            if 0 <= self._table.cursor_row < len(keys):
+                raw = str(keys[self._table.cursor_row].value)
+                # Keys are "fac.xxx::SubName" or "fac.xxx"
+                return raw.split("::")[0]
+        except Exception:
+            pass
+        return None
 
 
 class LocationPanel(Static):
-    """Displays location status."""
-
-    can_focus = True
+    """Displays location status as an interactive DataTable."""
 
     DEFAULT_CSS = """
     LocationPanel {
@@ -131,21 +165,50 @@ class LocationPanel(Static):
     }
     """
 
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self._table: DataTable | None = None
+
+    def compose(self) -> ComposeResult:
+        table = DataTable(id="loc-table")
+        table.cursor_type = "row"
+        table.add_columns("Location", "Parent", "Zone", "Status", "Tension", "Access", "Controller")
+        self._table = table
+        yield table
+
     def update_data(self, ws: WorldState) -> None:
+        if self._table is None:
+            return
+        self._table.clear()
         locs = sorted(
             (e for e in ws.entities.values() if isinstance(e, Location)),
             key=lambda loc: loc.name,
         )
-        lines = ["[b]LOCATIONS[/b]\n"]
         for loc in locs:
-            ctrl = loc.controlling_faction_id or "-"
-            tension_bar = "\u2588" * int(loc.tension * 10) + "\u2591" * (10 - int(loc.tension * 10))
-            lines.append(f"[bold]{loc.name}[/bold] ({loc.zone_level})")
-            lines.append(f"  Status:  {loc.status}  Access: {loc.access}")
-            lines.append(f"  Tension: [{tension_bar}] {loc.tension:.2f}")
-            lines.append(f"  Control: {ctrl}")
-            lines.append("")
-        self.update("\n".join(lines))
+            parent_name = "-"
+            if loc.parent_location_id and loc.parent_location_id in ws.entities:
+                parent_name = ws.entities[loc.parent_location_id].name
+            ctrl_name = "-"
+            if loc.controlling_faction_id and loc.controlling_faction_id in ws.entities:
+                ctrl_name = ws.entities[loc.controlling_faction_id].name
+            tension_bar = "\u2588" * int(loc.tension * 5) + "\u2591" * (5 - int(loc.tension * 5))
+            self._table.add_row(
+                loc.name, parent_name, loc.zone_level, loc.status,
+                f"{tension_bar} {loc.tension:.1f}", loc.access,
+                ctrl_name,
+                key=loc.id,
+            )
+
+    def get_selected_id(self) -> str | None:
+        if self._table is None or self._table.cursor_row is None:
+            return None
+        try:
+            keys = list(self._table.rows.keys())
+            if 0 <= self._table.cursor_row < len(keys):
+                return str(keys[self._table.cursor_row].value)
+        except Exception:
+            pass
+        return None
 
 
 class VariablesPanel(Static):
@@ -210,3 +273,86 @@ class EventLogPanel(Static):
         if not event_log:
             lines.append("  [dim](no events yet)[/dim]")
         self.update("\n".join(lines))
+
+
+class RelationsTable(Static):
+    """Global relations table with filtering."""
+
+    DEFAULT_CSS = """
+    RelationsTable {
+        height: 100%;
+        overflow-y: auto;
+    }
+    """
+
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self._table: DataTable | None = None
+        self._relations: list[Relation] = []
+        self._entities: dict[str, Any] = {}
+        self._filter: str | None = None  # None=all, "cc"=char-char, "cf"=char-fac, "fl"=fac-loc
+        self._sort_key: str = "source"
+
+    def compose(self) -> ComposeResult:
+        table = DataTable(id="rel-table")
+        table.cursor_type = "row"
+        table.add_columns("Source", "Target", "Kind", "Weight", "Pol", "Canon", "Tags")
+        self._table = table
+        yield table
+
+    def set_data(self, relations: list[Relation], entities: dict[str, Any]) -> None:
+        self._relations = relations
+        self._entities = entities
+        self._rebuild()
+
+    def set_filter(self, filter_key: str | None) -> None:
+        self._filter = filter_key
+        self._rebuild()
+
+    def set_sort(self, sort_key: str) -> None:
+        self._sort_key = sort_key
+        self._rebuild()
+
+    def _classify(self, rel: Relation) -> str:
+        s, t = rel.source_id, rel.target_id
+        if s.startswith("char.") and t.startswith("char."):
+            return "cc"
+        if s.startswith("char.") and t.startswith("fac."):
+            return "cf"
+        if s.startswith("fac.") and t.startswith("loc."):
+            return "fl"
+        return "other"
+
+    def _resolve_name(self, entity_id: str) -> str:
+        ent = self._entities.get(entity_id)
+        return ent.name if ent else entity_id
+
+    def _rebuild(self) -> None:
+        if self._table is None:
+            return
+        self._table.clear()
+
+        rels = self._relations
+        if self._filter:
+            rels = [r for r in rels if self._classify(r) == self._filter]
+
+        if self._sort_key == "weight":
+            rels = sorted(rels, key=lambda r: r.weight, reverse=True)
+        elif self._sort_key == "kind":
+            rels = sorted(rels, key=lambda r: r.kind)
+        else:
+            rels = sorted(rels, key=lambda r: self._resolve_name(r.source_id))
+
+        for r in rels:
+            pol_sym = {1: "[green]+[/green]", 0: "~", -1: "[red]-[/red]"}.get(r.polarity, "?")
+            tags = ", ".join(r.tags[:2]) if r.tags else "-"
+            self._table.add_row(
+                self._resolve_name(r.source_id),
+                self._resolve_name(r.target_id),
+                r.kind,
+                f"{r.weight:.1f}",
+                pol_sym,
+                r.canon_level,
+                tags,
+                key=r.id,
+            )

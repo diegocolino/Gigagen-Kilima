@@ -49,9 +49,11 @@ def validate_invariants(
 
     # -- Character count --
     chars = {eid: e for eid, e in ws.entities.items() if isinstance(e, Character)}
-    expected_count = fixed.get("characters", {}).get("count", 12)
-    if len(chars) != expected_count:
-        result.fail(f"Expected {expected_count} characters, found {len(chars)}")
+    char_cfg = fixed.get("characters", {})
+    if "count" in char_cfg:
+        expected_count = char_cfg["count"]
+        if len(chars) != expected_count:
+            result.fail(f"Expected {expected_count} characters, found {len(chars)}")
 
     # -- Roster identity check --
     roster = fixed.get("characters", {}).get("roster", [])
@@ -76,11 +78,10 @@ def validate_invariants(
 
     # -- Faction count --
     facs = {eid: e for eid, e in ws.entities.items() if isinstance(e, Faction)}
-    faction_rules = fixed.get("factions", [])
-    if faction_rules:
-        # First rule says "Exactly 4 factions"
-        if len(facs) != 4:
-            result.fail(f"Expected 4 factions, found {len(facs)}")
+    faction_count = fixed.get("faction_count")
+    if faction_count is not None:
+        if len(facs) != faction_count:
+            result.fail(f"Expected {faction_count} factions, found {len(facs)}")
 
     # -- Fixed relationships --
     fixed_rels = fixed.get("relationships", [])
@@ -114,5 +115,55 @@ def validate_invariants(
                 f"Missing faction-location bond: {fl['faction']} -> "
                 f"{fl['location']} ({fl['kind']})"
             )
+
+    # -- Subdivision uniqueness within each faction --
+    for fid, fac in facs.items():
+        names = [s.name for s in fac.subdivisions if s.name is not None]
+        if len(names) != len(set(names)):
+            dupes = [n for n in names if names.count(n) > 1]
+            result.fail(f"{fid}: duplicate subdivision names: {sorted(set(dupes))}")
+
+    # -- Character subdivision consistency --
+    for cid, char in chars.items():
+        if char.current_subdivision_id is None:
+            continue
+        if char.current_faction_id is None:
+            result.fail(
+                f"{cid}: has subdivision '{char.current_subdivision_id}' "
+                f"but no faction"
+            )
+            continue
+        fac = facs.get(char.current_faction_id)
+        if fac is None:
+            continue  # faction existence is checked elsewhere
+        sub_names = {s.name for s in fac.subdivisions if s.name is not None}
+        if char.current_subdivision_id not in sub_names:
+            result.fail(
+                f"{cid}: subdivision '{char.current_subdivision_id}' "
+                f"not found in {char.current_faction_id}"
+            )
+
+    # -- Location parent validity --
+    locs = {eid: e for eid, e in ws.entities.items() if isinstance(e, Location)}
+    for lid, loc in locs.items():
+        if loc.parent_location_id is None:
+            continue
+        if loc.parent_location_id not in locs:
+            result.fail(
+                f"{lid}: parent_location_id '{loc.parent_location_id}' "
+                f"is not a valid location"
+            )
+
+    # -- Location parent cycle detection --
+    for lid in locs:
+        visited: set[str] = set()
+        current = lid
+        while current is not None:
+            if current in visited:
+                result.fail(f"{lid}: cycle in location hierarchy")
+                break
+            visited.add(current)
+            parent_loc = locs.get(current)
+            current = parent_loc.parent_location_id if parent_loc else None
 
     return result

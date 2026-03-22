@@ -86,12 +86,13 @@ def _list_factions(ws: WorldState, out: TextIO) -> None:
         (e for e in ws.entities.values() if isinstance(e, Faction)),
         key=lambda f: f.name,
     )
-    out.write(f"\n  {'Name':<20} {'Status':<14} {'Power':>6} {'Cohesion':>9} {'Leader'}\n")
-    out.write(f"  {'-'*20} {'-'*14} {'-'*6} {'-'*9} {'-'*16}\n")
+    out.write(f"\n  {'Name':<20} {'Mode':<14} {'Family':<12} {'Status':<14} {'Power':>6} {'Cohesion':>9}\n")
+    out.write(f"  {'-'*20} {'-'*14} {'-'*12} {'-'*14} {'-'*6} {'-'*9}\n")
     for f in facs:
-        leader = f.leader_id or "(none)"
+        mode = f.mode or "-"
+        family = f.scale_family or "-"
         out.write(
-            f"  {f.name:<20} {f.status:<14} {f.power:>6.2f} {f.cohesion:>9.2f} {leader}\n"
+            f"  {f.name:<20} {mode:<14} {family:<12} {f.status:<14} {f.power:>6.2f} {f.cohesion:>9.2f}\n"
         )
     out.write("\n")
 
@@ -101,13 +102,14 @@ def _list_locations(ws: WorldState, out: TextIO) -> None:
         (e for e in ws.entities.values() if isinstance(e, Location)),
         key=lambda loc: loc.name,
     )
-    out.write(f"\n  {'Name':<22} {'Zone':<10} {'Status':<12} {'Tension':>8} {'Access':<14} {'Controller'}\n")
-    out.write(f"  {'-'*22} {'-'*10} {'-'*12} {'-'*8} {'-'*14} {'-'*16}\n")
+    out.write(f"\n  {'Name':<22} {'Zone':<10} {'Tonic':<6} {'Status':<12} {'Tension':>8} {'Controller'}\n")
+    out.write(f"  {'-'*22} {'-'*10} {'-'*6} {'-'*12} {'-'*8} {'-'*16}\n")
     for loc in locs:
         ctrl = loc.controlling_faction_id or "(none)"
+        tonic = loc.tonic or "-"
         out.write(
-            f"  {loc.name:<22} {loc.zone_level:<10} {loc.status:<12} "
-            f"{loc.tension:>8.2f} {loc.access:<14} {ctrl}\n"
+            f"  {loc.name:<22} {loc.zone_level:<10} {tonic:<6} {loc.status:<12} "
+            f"{loc.tension:>8.2f} {ctrl}\n"
         )
     out.write("\n")
 
@@ -140,13 +142,29 @@ def _inspect_entity(ws: WorldState, entity_id: str, out: TextIO) -> None:
         out.write(f"    Location: {ent.current_location_id}\n")
         out.write(f"    Faction:  {ent.current_faction_id or '(none)'}\n")
     elif isinstance(ent, Faction):
-        out.write(f"\n  Doctrine: {', '.join(ent.doctrine_tags)}\n")
-        out.write(f"  Base: {ent.base_location_id}  Leader: {ent.leader_id or '(none)'}\n")
-        out.write(f"  Status: {ent.status}  Power: {ent.power:.2f}  Cohesion: {ent.cohesion:.2f}\n")
+        out.write(f"\n  Harmonic:\n")
+        out.write(f"    Mode: {ent.mode or '(none)'}  Family: {ent.scale_family or '(none)'}  Notes: {ent.note_count}\n")
+        if ent.intervals:
+            out.write(f"    Intervals: {ent.intervals}\n")
+        if ent.subdivisions:
+            out.write(f"\n  Subdivisions ({len(ent.subdivisions)}):\n")
+            for sub in ent.subdivisions:
+                name = sub.name or "(unnamed)"
+                note = sub.note or "-"
+                leader = sub.leader_id or "-"
+                out.write(f"    {name:<28} root={note:<4} leader={leader}\n")
+        out.write(f"\n  Structure:\n")
+        out.write(f"    Base: {ent.base_location_id or '(none)'}  Leader: {ent.leader_id or '(none)'}\n")
+        out.write(f"    Status: {ent.status}  Power: {ent.power:.2f}  Cohesion: {ent.cohesion:.2f}\n")
     elif isinstance(ent, Location):
         out.write(f"\n  Zone: {ent.zone_level}  Biome: {', '.join(ent.biome_tags)}\n")
-        out.write(f"  Status: {ent.status}  Tension: {ent.tension:.2f}  Access: {ent.access}\n")
+        tonic_str = ent.tonic or "(none)"
+        out.write(f"  Tonic: {tonic_str}  Status: {ent.status}  Tension: {ent.tension:.2f}  Access: {ent.access}\n")
         out.write(f"  Controller: {ent.controlling_faction_id or '(none)'}\n")
+        if ent.parent_location_id:
+            out.write(f"  Parent: {ent.parent_location_id}\n")
+        if ent.secondary_faction_ids:
+            out.write(f"  Secondary factions: {', '.join(ent.secondary_faction_ids)}\n")
 
     rels = _get_entity_relations(ws, entity_id)
     if rels:

@@ -3,195 +3,345 @@
     "id": "loc.cage",
     "entity_type": "location",
     "name": "The Cage",
-    "tags": ["funeral", "starting_point"],
+    "tags": [
+      "external",
+      "artistic",
+      "semi_autonomous"
+    ],
     "canon_level": "fixed",
-    "description": "Semi-autonomous floating city on the ocean.",
+    "description": "Semi-autonomous floating city. Artists, thinkers, Savages. Bohemian Academy base.",
+    "tonic": null,
     "zone_level": "external",
-    "biome_tags": ["floating", "oceanic"],
-    "status": "tense",
-    "controlling_faction_id": null,
-    "tension": 0.6,
+    "parent_location_id": null,
+    "biome_tags": [
+      "floating",
+      "artistic"
+    ],
+    "status": "stable",
+    "controlling_faction_id": "fac.bohemian",
+    "secondary_faction_ids": [],
+    "tension": 0.3,
     "access": "restricted"
   },
   {
     "id": "loc.capital",
     "entity_type": "location",
     "name": "The Capital",
-    "tags": ["elite", "power_center"],
+    "tags": [
+      "high",
+      "elite",
+      "technological"
+    ],
     "canon_level": "fixed",
-    "description": "Summit of The Mountain. Seat of power.",
+    "description": "Seat of power at the top of The Mountain. Union Corp + Agency SL shared control. 7 districts for Plan Despega.",
+    "tonic": null,
     "zone_level": "high",
-    "biome_tags": ["mountain", "urban", "elite"],
+    "parent_location_id": null,
+    "biome_tags": [
+      "mountain",
+      "technological",
+      "elite"
+    ],
     "status": "stable",
-    "controlling_faction_id": "fac.agencia",
-    "tension": 0.3,
+    "controlling_faction_id": "fac.union_corp",
+    "secondary_faction_ids": [
+      "fac.agency"
+    ],
+    "tension": 0.4,
     "access": "restricted"
   },
   {
     "id": "loc.city",
     "entity_type": "location",
     "name": "The City",
-    "tags": ["urban", "contested"],
+    "tags": [
+      "mid",
+      "contested",
+      "urban"
+    ],
     "canon_level": "fixed",
-    "description": "Middle zone of The Mountain. Contested territory.",
+    "description": "Middle class zone. Politically contested between Union Corp and Anti Group.",
+    "tonic": null,
     "zone_level": "mid",
-    "biome_tags": ["urban", "residential"],
+    "parent_location_id": null,
+    "biome_tags": [
+      "mountain",
+      "urban",
+      "slope"
+    ],
     "status": "tense",
-    "controlling_faction_id": "fac.sindicatos",
+    "controlling_faction_id": "fac.union_corp",
+    "secondary_faction_ids": [
+      "fac.anti_group"
+    ],
+    "tension": 0.6,
+    "access": "open"
+  },
+  {
+    "id": "loc.village",
+    "entity_type": "location",
+    "name": "The Village",
+    "tags": [
+      "low",
+      "marginal",
+      "modular"
+    ],
+    "canon_level": "fixed",
+    "description": "Marginal zone. Flooded. Modular platforms. Population lives mostly in The Net through cubicles.",
+    "tonic": null,
+    "zone_level": "low",
+    "parent_location_id": null,
+    "biome_tags": [
+      "mountain",
+      "flooded",
+      "modular"
+    ],
+    "status": "fragile",
+    "controlling_faction_id": null,
+    "secondary_faction_ids": [],
     "tension": 0.5,
     "access": "open"
+  },
+  {
+    "id": "loc.cave",
+    "entity_type": "location",
+    "name": "The Cave",
+    "tags": [
+      "hidden",
+      "anti_group_hq",
+      "historically_impenetrable"
+    ],
+    "canon_level": "fixed",
+    "description": "Tunnel network. Anti Group HQ. Direnis Cell command center. Historically impenetrable — breached for first time at H52-H56.",
+    "tonic": null,
+    "zone_level": "hidden",
+    "parent_location_id": null,
+    "biome_tags": [
+      "mountain",
+      "tunnels",
+      "underground"
+    ],
+    "status": "hidden",
+    "controlling_faction_id": "fac.anti_group",
+    "secondary_faction_ids": [],
+    "tension": 0.2,
+    "access": "clandestine"
   },
   {
     "id": "loc.net",
     "entity_type": "location",
     "name": "The Net",
-    "tags": ["virtual", "metaverse", "monitored"],
+    "tags": [
+      "virtual",
+      "metaverse",
+      "flai_controlled"
+    ],
     "canon_level": "fixed",
-    "description": "Digital metaverse controlled by The AI.",
+    "description": "Vast digital metaverse. Controlled by Flai (not a faction). Virtual environments built by Agency SL Net Service.",
+    "tonic": null,
     "zone_level": "virtual",
-    "biome_tags": ["digital", "infinite"],
-    "status": "stable",
-    "controlling_faction_id": "fac.ia",
-    "tension": 0.2,
+    "parent_location_id": null,
+    "biome_tags": [
+      "digital",
+      "metaverse"
+    ],
+    "status": "active",
+    "controlling_faction_id": null,
+    "secondary_faction_ids": [
+      "fac.agency"
+    ],
+    "tension": 0.3,
     "access": "open"
   },
   {
     "id": "loc.limbo",
     "entity_type": "location",
     "name": "The Limbo",
-    "tags": ["virtual", "subzone", "transferred"],
+    "tags": [
+      "virtual",
+      "subzone",
+      "transferred_souls"
+    ],
     "canon_level": "fixed",
-    "description": "Subzone of The Net where transferred consciousnesses reside.",
+    "description": "Subzone within The Net. Where transferred consciousnesses truly exist. Len and Brais end up here.",
+    "tonic": null,
     "zone_level": "virtual",
-    "biome_tags": ["digital", "liminal"],
+    "parent_location_id": "loc.net",
+    "biome_tags": [
+      "digital",
+      "between_space"
+    ],
     "status": "hidden",
     "controlling_faction_id": null,
+    "secondary_faction_ids": [],
     "tension": 0.1,
     "access": "sealed"
   },
   {
-    "id": "loc.cave",
-    "entity_type": "location",
-    "name": "The Cave",
-    "tags": ["resistance_hq", "hidden"],
-    "canon_level": "fixed",
-    "description": "Resistance headquarters. Historically impenetrable, breached in NB1.",
-    "zone_level": "hidden",
-    "biome_tags": ["underground", "fortified"],
-    "status": "active",
-    "controlling_faction_id": "fac.resistencia",
-    "tension": 0.4,
-    "access": "clandestine"
-  },
-  {
     "id": "loc.tower",
     "entity_type": "location",
-    "name": "The Agency Tower",
-    "tags": ["agency_hq", "surveillance"],
+    "name": "The Tower",
+    "tags": [
+      "building",
+      "agency_hq"
+    ],
     "canon_level": "fixed",
-    "description": "Agency headquarters in The Capital.",
+    "description": "Agency SL headquarters. Master Council seat. Where artists and celebrities are created and controlled.",
+    "tonic": null,
     "zone_level": "high",
-    "biome_tags": ["urban", "corporate"],
+    "parent_location_id": "loc.capital",
+    "biome_tags": [
+      "mountain",
+      "corporate"
+    ],
     "status": "stable",
-    "controlling_faction_id": "fac.agencia",
+    "controlling_faction_id": "fac.agency",
+    "secondary_faction_ids": [],
     "tension": 0.2,
     "access": "restricted"
   },
   {
-    "id": "loc.union_hq",
+    "id": "loc.sede",
     "entity_type": "location",
-    "name": "Union HQ",
-    "tags": ["unions_hq", "political"],
+    "name": "La Sede",
+    "tags": [
+      "building",
+      "union_corp_hq"
+    ],
     "canon_level": "fixed",
-    "description": "La Sede. Union headquarters in The City.",
+    "description": "Union Corp headquarters. All 12 ministries operate from here. Saarah leads Interior.",
+    "tonic": null,
     "zone_level": "mid",
-    "biome_tags": ["urban", "institutional"],
-    "status": "stable",
-    "controlling_faction_id": "fac.sindicatos",
-    "tension": 0.3,
+    "parent_location_id": "loc.city",
+    "biome_tags": [
+      "urban",
+      "institutional"
+    ],
+    "status": "tense",
+    "controlling_faction_id": "fac.union_corp",
+    "secondary_faction_ids": [],
+    "tension": 0.5,
     "access": "restricted"
   },
   {
     "id": "loc.forno",
     "entity_type": "location",
     "name": "The Forno",
-    "tags": ["artistic", "giosme_territory"],
+    "tags": [
+      "social",
+      "childhood_place",
+      "anti_group_cell"
+    ],
     "canon_level": "fixed",
-    "description": "Artistic quarter in The City. Giosme lineage territory.",
+    "description": "Artistic quarter. Giosme lineage territory. Kive/Luka/Cris band origin. Anti Group Forno cell base. Reunion dinner H20.",
+    "tonic": null,
     "zone_level": "mid",
-    "biome_tags": ["urban", "artistic"],
-    "status": "tense",
-    "controlling_faction_id": null,
-    "tension": 0.5,
+    "parent_location_id": "loc.city",
+    "biome_tags": [
+      "urban",
+      "artistic",
+      "nightlife"
+    ],
+    "status": "stable",
+    "controlling_faction_id": "fac.anti_group",
+    "secondary_faction_ids": [],
+    "tension": 0.1,
     "access": "open"
   },
   {
     "id": "loc.nest",
     "entity_type": "location",
     "name": "The Nest",
-    "tags": ["hospital", "medical"],
+    "tags": [
+      "hospital",
+      "medical",
+      "amparo"
+    ],
     "canon_level": "fixed",
-    "description": "Hospital and medical zone in The City. Nora's world.",
+    "description": "Hospital / medical zone. Amparo Foundation Vital Care base. Nora's world. Group hides here after Forno.",
+    "tonic": null,
     "zone_level": "mid",
-    "biome_tags": ["urban", "medical"],
-    "status": "stable",
-    "controlling_faction_id": null,
-    "tension": 0.2,
-    "access": "open"
+    "parent_location_id": "loc.city",
+    "biome_tags": [
+      "urban",
+      "medical"
+    ],
+    "status": "hidden",
+    "controlling_faction_id": "fac.amparo",
+    "secondary_faction_ids": [],
+    "tension": 0.1,
+    "access": "clandestine"
   },
   {
     "id": "loc.backdoor",
     "entity_type": "location",
     "name": "The Backdoor",
-    "tags": ["clandestine", "net_access"],
+    "tags": [
+      "access_point",
+      "net",
+      "clandestine",
+      "backdoor_hq"
+    ],
     "canon_level": "fixed",
-    "description": "Clandestine Net access point. Dev's territory.",
-    "zone_level": "low",
-    "biome_tags": ["underground", "technological"],
-    "status": "active",
-    "controlling_faction_id": "fac.resistencia",
-    "tension": 0.3,
+    "description": "Clandestine Net access point. Backdoor faction HQ. Dev's territory. Near The Cave.",
+    "tonic": null,
+    "zone_level": "hidden",
+    "parent_location_id": "loc.village",
+    "biome_tags": [
+      "technological",
+      "clandestine"
+    ],
+    "status": "hidden",
+    "controlling_faction_id": "fac.backdoor",
+    "secondary_faction_ids": [],
+    "tension": 0.1,
     "access": "clandestine"
   },
   {
     "id": "loc.wall",
     "entity_type": "location",
     "name": "The Wall",
-    "tags": ["border", "structure"],
+    "tags": [
+      "border",
+      "structural",
+      "guard_force"
+    ],
     "canon_level": "fixed",
-    "description": "Border between The City and The Village.",
-    "zone_level": "low",
-    "biome_tags": ["urban", "fortified"],
+    "description": "Border between The City and The Village. Guard Force Wall Command base.",
+    "tonic": null,
+    "zone_level": "mid",
+    "parent_location_id": null,
+    "biome_tags": [
+      "mountain",
+      "border"
+    ],
     "status": "stable",
-    "controlling_faction_id": null,
-    "tension": 0.4,
+    "controlling_faction_id": "fac.guard",
+    "secondary_faction_ids": [],
+    "tension": 0.3,
     "access": "restricted"
-  },
-  {
-    "id": "loc.village",
-    "entity_type": "location",
-    "name": "The Village",
-    "tags": ["marginal", "meeting_point"],
-    "canon_level": "fixed",
-    "description": "Settlement near The Wall. Freya meets Kive here.",
-    "zone_level": "low",
-    "biome_tags": ["rural", "marginal"],
-    "status": "fragile",
-    "controlling_faction_id": null,
-    "tension": 0.5,
-    "access": "open"
   },
   {
     "id": "loc.road",
     "entity_type": "location",
     "name": "The Road",
-    "tags": ["wasteland", "route"],
+    "tags": [
+      "route",
+      "dangerous",
+      "lawless"
+    ],
     "canon_level": "fixed",
-    "description": "Wasteland route connecting locations. Dangerous territory.",
+    "description": "Desolate wasteland route. Bandits, extreme weather. Only surface connection between zones.",
+    "tonic": null,
     "zone_level": "external",
-    "biome_tags": ["wasteland", "desert"],
+    "parent_location_id": null,
+    "biome_tags": [
+      "wasteland",
+      "route"
+    ],
     "status": "unstable",
     "controlling_faction_id": null,
+    "secondary_faction_ids": [],
     "tension": 0.7,
     "access": "open"
   },
@@ -199,13 +349,22 @@
     "id": "loc.kilima",
     "entity_type": "location",
     "name": "Kilima",
-    "tags": ["transit", "hub"],
+    "tags": [
+      "hub",
+      "transit"
+    ],
     "canon_level": "fixed",
-    "description": "Transit hub where Kive and Yeri arrive and split.",
+    "description": "Transit hub on The Mountain. Where Kive and Yeri arrive and split.",
+    "tonic": null,
     "zone_level": "mid",
-    "biome_tags": ["urban", "transit"],
+    "parent_location_id": null,
+    "biome_tags": [
+      "mountain",
+      "transit"
+    ],
     "status": "tense",
     "controlling_faction_id": null,
+    "secondary_faction_ids": [],
     "tension": 0.4,
     "access": "open"
   }
