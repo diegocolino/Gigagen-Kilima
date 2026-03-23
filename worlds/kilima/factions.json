@@ -1,470 +1,797 @@
-[
-  {
-    "id": "fac.union_corp",
-    "entity_type": "faction",
-    "name": "Union Corp",
-    "tags": [
-      "political",
-      "institutional",
-      "governance"
-    ],
-    "canon_level": "fixed",
-    "description": "Political governance of Kilima. 12 ministries (6 real, 6 simulated theater). The facade of order.",
-    "mode": "ionian",
-    "intervals": [
-      2,
-      2,
-      1,
-      2,
-      2,
-      2,
-      1
-    ],
-    "note_count": 7,
-    "scale_family": "greek",
-    "base_location_id": "loc.sede",
-    "status": "dominant",
-    "subdivisions": [
-      {
-        "name": "Culture",
-        "note": "C",
-        "type": "simulated",
-        "leader_id": null
-      },
-      {
-        "name": "Education",
-        "note": "C#",
-        "type": "real",
-        "leader_id": null
-      },
-      {
-        "name": "Energy",
-        "note": "D",
-        "type": "real",
-        "leader_id": null
-      },
-      {
-        "name": "Defense",
-        "note": "D#",
-        "type": "real",
-        "leader_id": null
-      },
-      {
-        "name": "Biotechnology",
-        "note": "E",
-        "type": "real",
-        "leader_id": null
-      },
-      {
-        "name": "Structures",
-        "note": "F",
-        "type": "real",
-        "leader_id": null
-      },
-      {
-        "name": "Systems",
-        "note": "F#",
-        "type": "real",
-        "leader_id": null
-      },
-      {
-        "name": "Interior",
-        "note": "G",
-        "type": "simulated",
-        "leader_id": "char.leader"
-      },
-      {
-        "name": "Memory",
-        "note": "G#",
-        "type": "simulated",
-        "leader_id": null
-      },
-      {
-        "name": "Materials",
-        "note": "A",
-        "type": "simulated",
-        "leader_id": null
-      },
-      {
-        "name": "Engineering",
-        "note": "A#",
-        "type": "simulated",
-        "leader_id": null
-      },
-      {
-        "name": "Exterior",
-        "note": "B",
-        "type": "simulated",
-        "leader_id": null
-      }
-    ]
-  },
-  {
-    "id": "fac.agency",
-    "entity_type": "faction",
-    "name": "Agency SL",
-    "tags": [
-      "control",
-      "media",
-      "espionage",
-      "life_packs"
-    ],
-    "canon_level": "fixed",
-    "description": "The interface between the system and the citizen. Manages Life Packs, virtual environments in The Net, media narrative, and espionage.",
-    "mode": "aeolian",
-    "intervals": [
-      2,
-      1,
-      2,
-      2,
-      1,
-      2,
-      2
-    ],
-    "note_count": 7,
-    "scale_family": "greek",
-    "base_location_id": "loc.tower",
-    "status": "dominant",
-    "subdivisions": [
-      {
-        "name": "Master Council",
-        "note": null,
-        "leader_id": "char.hero"
-      },
-      {
-        "name": "Contracts Bureau",
-        "note": null,
-        "leader_id": null
-      },
-      {
-        "name": "Intelligence Department",
-        "note": null,
-        "leader_id": null
-      },
-      {
-        "name": "Marketing Division",
-        "note": null,
-        "leader_id": null
-      },
-      {
-        "name": "Net Service",
-        "note": null,
-        "leader_id": null
-      }
-    ]
-  },
-  {
-    "id": "fac.anti_group",
-    "entity_type": "faction",
-    "name": "Anti Group",
-    "tags": [
-      "insurgent",
-      "underground",
-      "clandestine"
-    ],
-    "canon_level": "fixed",
-    "description": "Clandestine opposition. Dissidents, cyberactivists, ex-military. Operates through cells with independent leaders.",
-    "mode": "phrygian",
-    "intervals": [
-      1,
-      2,
-      2,
-      2,
-      1,
-      2,
-      2
-    ],
-    "note_count": 7,
-    "scale_family": "greek",
-    "base_location_id": "loc.cave",
-    "status": "underground",
-    "subdivisions": [
-      {
-        "name": "Direnis Cell",
-        "note": "B",
-        "leader_id": "char.deity"
-      },
-      {
-        "name": "Red Fist Dragons",
-        "note": "D#",
-        "leader_id": "char.rebel"
-      },
-      {
-        "name": "Dust Parade",
-        "note": "A",
-        "leader_id": "char.explorer"
-      },
-      {
-        "name": "Forno Cell",
-        "note": null,
-        "leader_id": null,
-        "notes": "Name TBD. Cris is member. Leader is secondary character TBD."
-      }
-    ]
-  },
-  {
-    "id": "fac.amparo",
-    "entity_type": "faction",
-    "name": "Amparo Foundation",
-    "tags": [
-      "humanitarian",
-      "medical",
-      "aid"
-    ],
-    "canon_level": "fixed",
-    "description": "Humanitarian aid. Hospitals, breathing chip access, refugee support. The only thing between the forgotten and death.",
-    "mode": "lydian",
-    "intervals": [
-      2,
-      2,
-      2,
-      1,
-      2,
-      2,
-      1
-    ],
-    "note_count": 7,
-    "scale_family": "greek",
-    "base_location_id": null,
-    "status": "active",
-    "subdivisions": [
-      {
-        "name": "Vital Care",
-        "note": null,
-        "leader_id": null
-      },
-      {
-        "name": "Open Breath",
-        "note": null,
-        "leader_id": null
-      },
-      {
-        "name": "Ground Zero",
-        "note": null,
-        "leader_id": null
-      },
-      {
-        "name": null,
-        "note": null,
-        "leader_id": null,
-        "notes": "Refuge subdivision — name in review"
-      }
-    ]
-  },
-  {
-    "id": "fac.bohemian",
-    "entity_type": "faction",
-    "name": "Bohemian Academy",
-    "tags": [
-      "intellectual",
-      "counterculture",
-      "artistic",
-      "autonomous"
-    ],
-    "canon_level": "fixed",
-    "description": "Free thought and uncontrolled culture. Based in The Cage, semi-autonomous floating city. Home to Savages, artists, thinkers.",
-    "mode": "mixolydian",
-    "intervals": [
-      2,
-      2,
-      1,
-      2,
-      2,
-      1,
-      2
-    ],
-    "note_count": 7,
-    "scale_family": "greek",
-    "base_location_id": "loc.cage",
-    "status": "active",
-    "subdivisions": [
-      {
-        "name": "Grand Library",
-        "note": "C#",
-        "leader_id": null
-      },
-      {
-        "name": "Open Forum",
-        "note": null,
-        "leader_id": null
-      },
-      {
-        "name": "Natural Sciences Circle",
-        "note": null,
-        "leader_id": null
-      },
-      {
-        "name": "Arts Collective",
-        "note": null,
-        "leader_id": null
-      }
-    ]
-  },
-  {
-    "id": "fac.cult",
-    "entity_type": "faction",
-    "name": "Cult Order",
-    "tags": [
-      "religious",
-      "prophecy",
-      "supernatural",
-      "ritual"
-    ],
-    "canon_level": "fixed",
-    "description": "Religion, prophecy, the supernatural. Custodians of The Prophecy. Offers meaning in a synthetic world — and uses it as control.",
-    "mode": "locrian",
-    "intervals": [
-      1,
-      2,
-      2,
-      1,
-      2,
-      2,
-      2
-    ],
-    "note_count": 7,
-    "scale_family": "greek",
-    "base_location_id": null,
-    "status": "active",
-    "subdivisions": [
-      {
-        "name": "High Clergy",
-        "note": null,
-        "leader_id": null
-      },
-      {
-        "name": "Lower Chapel",
-        "note": null,
-        "leader_id": null
-      }
-    ]
-  },
-  {
-    "id": "fac.guard",
-    "entity_type": "faction",
-    "name": "Guard Force",
-    "tags": [
-      "military",
-      "enforcement",
-      "border",
-      "prison"
-    ],
-    "canon_level": "fixed",
-    "description": "Armed force of Kilima. Border control, military operations, prison management, arena entertainment.",
-    "mode": "dorian",
-    "intervals": [
-      2,
-      1,
-      2,
-      2,
-      2,
-      1,
-      2
-    ],
-    "note_count": 7,
-    "scale_family": "greek",
-    "base_location_id": "loc.wall",
-    "status": "active",
-    "subdivisions": [
-      {
-        "name": "Wall Command",
-        "note": null,
-        "leader_id": null
-      },
-      {
-        "name": "Moon Soldiers",
-        "note": null,
-        "leader_id": null
-      },
-      {
-        "name": "Arena Corps",
-        "note": null,
-        "leader_id": null
-      },
-      {
-        "name": "Road Patrol",
-        "note": null,
-        "leader_id": null
-      }
-    ]
-  },
-  {
-    "id": "fac.backdoor",
-    "entity_type": "faction",
-    "name": "Backdoor",
-    "tags": [
-      "hacker",
-      "underground",
-      "digital",
-      "clandestine"
-    ],
-    "canon_level": "fixed",
-    "description": "Clandestine Net access, hacking, digital underground. F# whole tone — the tritone of the establishment, maximum harmonic distance.",
-    "mode": "whole_tone",
-    "intervals": [
-      2,
-      2,
-      2,
-      2,
-      2,
-      2
-    ],
-    "note_count": 6,
-    "scale_family": "symmetric",
-    "base_location_id": "loc.backdoor",
-    "status": "underground",
-    "subdivisions": []
-  },
-  {
-    "id": "fac.kilima_lines",
-    "entity_type": "faction",
-    "name": "Kilima Lines",
-    "tags": [
-      "transport",
-      "logistics",
-      "neutral",
-      "service"
-    ],
-    "canon_level": "fixed",
-    "description": "Transport of living beings. Train, Zeppelin, Port. Part of the Kilima Service group alongside Kilima Mail.",
-    "mode": "pentatonic_major",
-    "intervals": [
-      2,
-      2,
-      3,
-      2,
-      3
-    ],
-    "note_count": 5,
-    "scale_family": "pentatonic",
-    "base_location_id": null,
-    "status": "active",
-    "subdivisions": []
-  },
-  {
-    "id": "fac.kilima_mail",
-    "entity_type": "faction",
-    "name": "Kilima Mail",
-    "tags": [
-      "cargo",
-      "logistics",
-      "neutral",
-      "industrial"
-    ],
-    "canon_level": "fixed",
-    "description": "Transport of goods. Cargo, supplies, Life Pack components. Part of the Kilima Service group alongside Kilima Lines.",
-    "mode": "pentatonic_minor",
-    "intervals": [
-      3,
-      2,
-      2,
-      3,
-      2
-    ],
-    "note_count": 5,
-    "scale_family": "pentatonic",
-    "base_location_id": null,
-    "status": "active",
-    "subdivisions": []
-  }
-]
+{
+  "$schema": "kilima_factions_v2",
+  "$doc": "Definitive factions for Kilima. Macro-factions (modes) separated from factions (concrete scales). Updated 2026-03-23. FL-0.",
+  "macro_factions": [
+    {
+      "id": "mfac.union_corp",
+      "entity_type": "macro_faction",
+      "name": "Union Corp",
+      "mode": "ionian",
+      "intervals": [
+        2,
+        2,
+        1,
+        2,
+        2,
+        2,
+        1
+      ],
+      "note_count": 7,
+      "scale_family": "greek",
+      "tags": [
+        "political",
+        "institutional",
+        "governance"
+      ],
+      "canon_level": "fixed",
+      "status": "dominant",
+      "description": "Political governance of Kilima. 12 ministries (6 real, 6 simulated theater). The facade of order."
+    },
+    {
+      "id": "mfac.agency",
+      "entity_type": "macro_faction",
+      "name": "Agency SL",
+      "mode": "aeolian",
+      "intervals": [
+        2,
+        1,
+        2,
+        2,
+        1,
+        2,
+        2
+      ],
+      "note_count": 7,
+      "scale_family": "greek",
+      "tags": [
+        "control",
+        "media",
+        "espionage",
+        "life_packs"
+      ],
+      "canon_level": "fixed",
+      "status": "dominant",
+      "description": "The interface between the system and the citizen. Manages Life Packs, virtual environments in The Net, media narrative, and espionage."
+    },
+    {
+      "id": "mfac.anti_group",
+      "entity_type": "macro_faction",
+      "name": "Anti Group",
+      "mode": "phrygian",
+      "intervals": [
+        1,
+        2,
+        2,
+        2,
+        1,
+        2,
+        2
+      ],
+      "note_count": 7,
+      "scale_family": "greek",
+      "tags": [
+        "insurgent",
+        "underground",
+        "clandestine"
+      ],
+      "canon_level": "fixed",
+      "status": "underground",
+      "description": "Clandestine opposition. Dissidents, cyberactivists, ex-military. Operates through cells with independent leaders."
+    },
+    {
+      "id": "mfac.amparo",
+      "entity_type": "macro_faction",
+      "name": "Amparo Foundation",
+      "mode": "lydian",
+      "intervals": [
+        2,
+        2,
+        2,
+        1,
+        2,
+        2,
+        1
+      ],
+      "note_count": 7,
+      "scale_family": "greek",
+      "tags": [
+        "humanitarian",
+        "medical",
+        "aid"
+      ],
+      "canon_level": "fixed",
+      "status": "active",
+      "description": "Humanitarian aid. Hospitals, breathing chip access, refugee support. The only thing between the forgotten and death."
+    },
+    {
+      "id": "mfac.bohemian",
+      "entity_type": "macro_faction",
+      "name": "Bohemian Academy",
+      "mode": "mixolydian",
+      "intervals": [
+        2,
+        2,
+        1,
+        2,
+        2,
+        1,
+        2
+      ],
+      "note_count": 7,
+      "scale_family": "greek",
+      "tags": [
+        "intellectual",
+        "counterculture",
+        "artistic",
+        "autonomous"
+      ],
+      "canon_level": "fixed",
+      "status": "active",
+      "description": "Free thought and uncontrolled culture. Based in Golden Cage, semi-autonomous floating city. Home to Savages, artists, thinkers."
+    },
+    {
+      "id": "mfac.cult",
+      "entity_type": "macro_faction",
+      "name": "Cult Order",
+      "mode": "locrian",
+      "intervals": [
+        1,
+        2,
+        2,
+        1,
+        2,
+        2,
+        2
+      ],
+      "note_count": 7,
+      "scale_family": "greek",
+      "tags": [
+        "religious",
+        "prophecy",
+        "supernatural",
+        "ritual"
+      ],
+      "canon_level": "fixed",
+      "status": "active",
+      "description": "Religion, prophecy, the supernatural. Custodians of The Prophecy. Offers meaning in a synthetic world — and uses it as control."
+    },
+    {
+      "id": "mfac.guard",
+      "entity_type": "macro_faction",
+      "name": "Guard Force",
+      "mode": "dorian",
+      "intervals": [
+        2,
+        1,
+        2,
+        2,
+        2,
+        1,
+        2
+      ],
+      "note_count": 7,
+      "scale_family": "greek",
+      "tags": [
+        "military",
+        "enforcement",
+        "border",
+        "prison"
+      ],
+      "canon_level": "fixed",
+      "status": "active",
+      "description": "Armed force of Kilima. Border control, military operations, prison management, arena entertainment."
+    },
+    {
+      "id": "mfac.backdoor",
+      "entity_type": "macro_faction",
+      "name": "Backdoor",
+      "mode": "whole_tone",
+      "intervals": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "note_count": 6,
+      "scale_family": "symmetric",
+      "tags": [
+        "hacker",
+        "underground",
+        "digital",
+        "clandestine"
+      ],
+      "canon_level": "fixed",
+      "status": "underground",
+      "description": "Clandestine Net access, hacking, digital underground. F# whole tone — the tritone of the establishment, maximum harmonic distance."
+    },
+    {
+      "id": "mfac.kilima_lines",
+      "entity_type": "macro_faction",
+      "name": "Kilima Lines",
+      "mode": "pentatonic_major",
+      "intervals": [
+        2,
+        2,
+        3,
+        2,
+        3
+      ],
+      "note_count": 5,
+      "scale_family": "pentatonic",
+      "tags": [
+        "transport",
+        "logistics",
+        "neutral",
+        "service"
+      ],
+      "canon_level": "fixed",
+      "status": "active",
+      "description": "Transport of living beings. Train, Zeppelin, Port. Part of the Kilima Service group alongside Kilima Mail."
+    },
+    {
+      "id": "mfac.kilima_mail",
+      "entity_type": "macro_faction",
+      "name": "Kilima Mail",
+      "mode": "pentatonic_minor",
+      "intervals": [
+        3,
+        2,
+        2,
+        3,
+        2
+      ],
+      "note_count": 5,
+      "scale_family": "pentatonic",
+      "tags": [
+        "cargo",
+        "logistics",
+        "neutral",
+        "industrial"
+      ],
+      "canon_level": "fixed",
+      "status": "active",
+      "description": "Transport of goods. Cargo, supplies, Life Pack components. Part of the Kilima Service group alongside Kilima Lines."
+    }
+  ],
+  "factions": [
+    {
+      "id": "fac.uc_culture",
+      "macro_faction_id": "mfac.union_corp",
+      "entity_type": "faction",
+      "name": "Culture",
+      "root_note": "C",
+      "leader_id": null,
+      "base_location_id": null,
+      "ministry_type": "simulated",
+      "agora_barrio": null,
+      "tags": [
+        "ministry"
+      ],
+      "canon_level": "fixed",
+      "description": "Ministry of Culture. Simulated — theater of control. Apostle: Juan."
+    },
+    {
+      "id": "fac.uc_education",
+      "macro_faction_id": "mfac.union_corp",
+      "entity_type": "faction",
+      "name": "Education",
+      "root_note": "C#",
+      "leader_id": null,
+      "base_location_id": null,
+      "ministry_type": "real",
+      "agora_barrio": null,
+      "tags": [
+        "ministry"
+      ],
+      "canon_level": "fixed",
+      "description": "Ministry of Education. Real — affects the system. Apostle: Simon el Zelote."
+    },
+    {
+      "id": "fac.uc_energy",
+      "macro_faction_id": "mfac.union_corp",
+      "entity_type": "faction",
+      "name": "Energy",
+      "root_note": "D",
+      "leader_id": null,
+      "base_location_id": null,
+      "ministry_type": "real",
+      "agora_barrio": null,
+      "tags": [
+        "ministry"
+      ],
+      "canon_level": "fixed",
+      "description": "Ministry of Energy. Real — affects the system. Apostle: Pedro."
+    },
+    {
+      "id": "fac.uc_defense",
+      "macro_faction_id": "mfac.union_corp",
+      "entity_type": "faction",
+      "name": "Defense",
+      "root_note": "D#",
+      "leader_id": null,
+      "base_location_id": null,
+      "ministry_type": "real",
+      "agora_barrio": null,
+      "tags": [
+        "ministry"
+      ],
+      "canon_level": "fixed",
+      "description": "Ministry of Defense. Real — affects the system. Apostle: Santiago el Menor."
+    },
+    {
+      "id": "fac.uc_biotech",
+      "macro_faction_id": "mfac.union_corp",
+      "entity_type": "faction",
+      "name": "Biotechnology",
+      "root_note": "E",
+      "leader_id": null,
+      "base_location_id": null,
+      "ministry_type": "real",
+      "agora_barrio": "Katalin Kariko",
+      "tags": [
+        "ministry"
+      ],
+      "canon_level": "fixed",
+      "description": "Ministry of Biotechnology. Real — affects the system. Apostle: Tomas."
+    },
+    {
+      "id": "fac.uc_structures",
+      "macro_faction_id": "mfac.union_corp",
+      "entity_type": "faction",
+      "name": "Structures",
+      "root_note": "F",
+      "leader_id": null,
+      "base_location_id": null,
+      "ministry_type": "real",
+      "agora_barrio": null,
+      "tags": [
+        "ministry"
+      ],
+      "canon_level": "fixed",
+      "description": "Ministry of Structures. Real — affects the system. Apostle: Santiago el Mayor."
+    },
+    {
+      "id": "fac.uc_systems",
+      "macro_faction_id": "mfac.union_corp",
+      "entity_type": "faction",
+      "name": "Systems",
+      "root_note": "F#",
+      "leader_id": null,
+      "base_location_id": null,
+      "ministry_type": "real",
+      "agora_barrio": null,
+      "tags": [
+        "ministry"
+      ],
+      "canon_level": "fixed",
+      "description": "Ministry of Systems. Real — affects the system. Apostle: Judas Iscariote."
+    },
+    {
+      "id": "fac.uc_interior",
+      "macro_faction_id": "mfac.union_corp",
+      "entity_type": "faction",
+      "name": "Interior",
+      "root_note": "G",
+      "leader_id": "kilima_in12_leader",
+      "base_location_id": "loc.headquarters",
+      "ministry_type": "simulated",
+      "agora_barrio": null,
+      "tags": [
+        "ministry"
+      ],
+      "canon_level": "fixed",
+      "description": "Ministry of Interior. Simulated — theater of control. Saarah leads it. Apostle: Mateo."
+    },
+    {
+      "id": "fac.uc_memory",
+      "macro_faction_id": "mfac.union_corp",
+      "entity_type": "faction",
+      "name": "Memory",
+      "root_note": "G#",
+      "leader_id": null,
+      "base_location_id": null,
+      "ministry_type": "simulated",
+      "agora_barrio": null,
+      "tags": [
+        "ministry"
+      ],
+      "canon_level": "fixed",
+      "description": "Ministry of Memory. Simulated — theater of control. Apostle: Judas Tadeo."
+    },
+    {
+      "id": "fac.uc_materials",
+      "macro_faction_id": "mfac.union_corp",
+      "entity_type": "faction",
+      "name": "Materials",
+      "root_note": "A",
+      "leader_id": null,
+      "base_location_id": null,
+      "ministry_type": "simulated",
+      "agora_barrio": null,
+      "tags": [
+        "ministry"
+      ],
+      "canon_level": "fixed",
+      "description": "Ministry of Materials. Simulated — theater of control. Apostle: Andres."
+    },
+    {
+      "id": "fac.uc_engineering",
+      "macro_faction_id": "mfac.union_corp",
+      "entity_type": "faction",
+      "name": "Engineering",
+      "root_note": "A#",
+      "leader_id": null,
+      "base_location_id": null,
+      "ministry_type": "simulated",
+      "agora_barrio": null,
+      "tags": [
+        "ministry"
+      ],
+      "canon_level": "fixed",
+      "description": "Ministry of Engineering. Simulated — theater of control. Apostle: Felipe."
+    },
+    {
+      "id": "fac.uc_exterior",
+      "macro_faction_id": "mfac.union_corp",
+      "entity_type": "faction",
+      "name": "Exterior",
+      "root_note": "B",
+      "leader_id": null,
+      "base_location_id": null,
+      "ministry_type": "simulated",
+      "agora_barrio": null,
+      "tags": [
+        "ministry"
+      ],
+      "canon_level": "fixed",
+      "description": "Ministry of Exterior. Simulated — theater of control. Apostle: Bartolome."
+    },
+    {
+      "id": "fac.master_council",
+      "macro_faction_id": "mfac.agency",
+      "entity_type": "faction",
+      "name": "Master Council",
+      "root_note": "D",
+      "leader_id": "kilima_in12_hero",
+      "base_location_id": "loc.tower",
+      "tags": [
+        "governance",
+        "strategic"
+      ],
+      "canon_level": "fixed",
+      "description": "Governing body of Agency SL. Strategic decisions, negotiations with Union Corp. Luka deserts during NB1."
+    },
+    {
+      "id": "fac.contracts_bureau",
+      "macro_faction_id": "mfac.agency",
+      "entity_type": "faction",
+      "name": "Contracts Bureau",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "entertainment",
+        "control"
+      ],
+      "canon_level": "fixed",
+      "description": "Management of artists, celebrities, careers. Contracts = slavery."
+    },
+    {
+      "id": "fac.intelligence",
+      "macro_faction_id": "mfac.agency",
+      "entity_type": "faction",
+      "name": "Intelligence Department",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "espionage",
+        "surveillance"
+      ],
+      "canon_level": "fixed",
+      "description": "Espionage, infiltration, surveillance, covert operations."
+    },
+    {
+      "id": "fac.marketing",
+      "macro_faction_id": "mfac.agency",
+      "entity_type": "faction",
+      "name": "Marketing Division",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "propaganda",
+        "media"
+      ],
+      "canon_level": "fixed",
+      "description": "Press, propaganda, narrative control, Yellow Road promotion."
+    },
+    {
+      "id": "fac.net_service",
+      "macro_faction_id": "mfac.agency",
+      "entity_type": "faction",
+      "name": "Net Service",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "virtual",
+        "infrastructure"
+      ],
+      "canon_level": "fixed",
+      "description": "Construction and maintenance of virtual environments in Net. Ali is a member."
+    },
+    {
+      "id": "fac.direnis_cell",
+      "macro_faction_id": "mfac.anti_group",
+      "entity_type": "faction",
+      "name": "Direnis Cell",
+      "root_note": "B",
+      "leader_id": "kilima_in12_deity",
+      "base_location_id": "loc.cave",
+      "tags": [
+        "cell",
+        "command"
+      ],
+      "canon_level": "fixed",
+      "description": "Command center, strategy. Led by Freya."
+    },
+    {
+      "id": "fac.red_fist_dragons",
+      "macro_faction_id": "mfac.anti_group",
+      "entity_type": "faction",
+      "name": "Red Fist Dragons",
+      "root_note": "D#",
+      "leader_id": "kilima_in12_rebel",
+      "base_location_id": "loc.workshop",
+      "tags": [
+        "cell",
+        "operations"
+      ],
+      "canon_level": "fixed",
+      "description": "Direct action, operations. Led by Kive."
+    },
+    {
+      "id": "fac.dust_parade",
+      "macro_faction_id": "mfac.anti_group",
+      "entity_type": "faction",
+      "name": "Dust Parade",
+      "root_note": "A",
+      "leader_id": "kilima_in12_explorer",
+      "base_location_id": "loc.oasis",
+      "tags": [
+        "cell",
+        "logistics"
+      ],
+      "canon_level": "fixed",
+      "description": "External connections, logistics. Led by Yeri."
+    },
+    {
+      "id": "fac.vital_care",
+      "macro_faction_id": "mfac.amparo",
+      "entity_type": "faction",
+      "name": "Vital Care",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": "loc.nest",
+      "tags": [
+        "medical",
+        "hospital"
+      ],
+      "canon_level": "fixed",
+      "description": "Hospital, medical attention, chip maintenance. Nora is a member."
+    },
+    {
+      "id": "fac.open_breath",
+      "macro_faction_id": "mfac.amparo",
+      "entity_type": "faction",
+      "name": "Open Breath",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "humanitarian",
+        "access"
+      ],
+      "canon_level": "fixed",
+      "description": "CRA (breathing chip) access program for Pobla 2 and marginal zones."
+    },
+    {
+      "id": "fac.ground_zero",
+      "macro_faction_id": "mfac.amparo",
+      "entity_type": "faction",
+      "name": "Ground Zero",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "humanitarian",
+        "aid"
+      ],
+      "canon_level": "fixed",
+      "description": "Assistance to Discarded, Forgotten, and Dark Zone communities. Food, shelter."
+    },
+    {
+      "id": "fac.amparo_refuge",
+      "macro_faction_id": "mfac.amparo",
+      "entity_type": "faction",
+      "name": null,
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "humanitarian",
+        "refuge"
+      ],
+      "canon_level": "fixed",
+      "description": "Refuge and protection for displaced people, fugitives, Savages. Name in review."
+    },
+    {
+      "id": "fac.grand_library",
+      "macro_faction_id": "mfac.bohemian",
+      "entity_type": "faction",
+      "name": "Grand Library",
+      "root_note": "C#",
+      "leader_id": null,
+      "base_location_id": "loc.library",
+      "tags": [
+        "knowledge",
+        "archive"
+      ],
+      "canon_level": "fixed",
+      "description": "Knowledge archive, real history, research. Pau is a member."
+    },
+    {
+      "id": "fac.open_forum",
+      "macro_faction_id": "mfac.bohemian",
+      "entity_type": "faction",
+      "name": "Open Forum",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "democracy",
+        "debate"
+      ],
+      "canon_level": "fixed",
+      "description": "Public debate, direct democracy, festivals. Nomad movement operates here."
+    },
+    {
+      "id": "fac.natural_sciences",
+      "macro_faction_id": "mfac.bohemian",
+      "entity_type": "faction",
+      "name": "Natural Sciences Circle",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "research",
+        "science"
+      ],
+      "canon_level": "fixed",
+      "description": "Physical world research, biology, organics. Mushrooms, evolution, Stoned Monkey."
+    },
+    {
+      "id": "fac.arts_collective",
+      "macro_faction_id": "mfac.bohemian",
+      "entity_type": "faction",
+      "name": "Arts Collective",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "art",
+        "creation"
+      ],
+      "canon_level": "fixed",
+      "description": "Free artistic creation. Music, visual art, performance."
+    },
+    {
+      "id": "fac.high_clergy",
+      "macro_faction_id": "mfac.cult",
+      "entity_type": "faction",
+      "name": "High Clergy",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": "loc.cathedral",
+      "tags": [
+        "religious",
+        "leadership"
+      ],
+      "canon_level": "fixed",
+      "description": "Religious leadership, The Cathedral, dogma, ceremonies, prophecy interpretation."
+    },
+    {
+      "id": "fac.lower_chapel",
+      "macro_faction_id": "mfac.cult",
+      "entity_type": "faction",
+      "name": "Lower Chapel",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "religious",
+        "recruitment"
+      ],
+      "canon_level": "fixed",
+      "description": "Popular religion, sermons, recruitment, street presence."
+    },
+    {
+      "id": "fac.wall_command",
+      "macro_faction_id": "mfac.guard",
+      "entity_type": "faction",
+      "name": "Wall Command",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": "loc.first_wall",
+      "tags": [
+        "military",
+        "border"
+      ],
+      "canon_level": "fixed",
+      "description": "Border control, The First Wall + The Second Wall, patrols, zone access enforcement."
+    },
+    {
+      "id": "fac.moon_soldiers",
+      "macro_faction_id": "mfac.guard",
+      "entity_type": "faction",
+      "name": "Moon Soldiers",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "military",
+        "prison"
+      ],
+      "canon_level": "fixed",
+      "description": "The Colony (lunar prison), Helium-3 extraction, forced labor management."
+    },
+    {
+      "id": "fac.arena_corps",
+      "macro_faction_id": "mfac.guard",
+      "entity_type": "faction",
+      "name": "Arena Corps",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "military",
+        "arena"
+      ],
+      "canon_level": "fixed",
+      "description": "The Coliseum, gladiators, Military School, combat training. Brais is a member."
+    },
+    {
+      "id": "fac.road_patrol",
+      "macro_faction_id": "mfac.guard",
+      "entity_type": "faction",
+      "name": "Road Patrol",
+      "root_note": null,
+      "leader_id": null,
+      "base_location_id": null,
+      "tags": [
+        "military",
+        "patrol"
+      ],
+      "canon_level": "fixed",
+      "description": "Last Road, Mercenaries, Masks (elite mercenaries), external territory control."
+    },
+    {
+      "id": "fac.backdoor",
+      "macro_faction_id": "mfac.backdoor",
+      "entity_type": "faction",
+      "name": "Backdoor",
+      "root_note": "F#",
+      "leader_id": "kilima_in12_hacker",
+      "base_location_id": "loc.backdoor",
+      "tags": [
+        "hacker",
+        "solo"
+      ],
+      "canon_level": "fixed",
+      "description": "Dev's hermetic network. Dual entity — both macro-faction and faction."
+    }
+  ]
+}

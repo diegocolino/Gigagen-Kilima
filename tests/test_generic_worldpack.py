@@ -6,7 +6,7 @@ statuses, and entity counts all work without touching Kilima data.
 
 from __future__ import annotations
 
-from gigagen.core.entity import BaseEntity, Character, Faction, Location
+from gigagen.core.entity import BaseEntity, Character, MacroFaction, Location
 from gigagen.core.relation import Relation
 from gigagen.core.world_state import WorldState
 from gigagen.core.simulator import SimulatorState, build_simulator
@@ -27,7 +27,7 @@ def _build_mini_worldpack() -> tuple[WorldState, list[dict]]:
             role_name="The Warrior",
             status="healthy",
             current_location_id="loc.village",
-            current_faction_id="fac.guild",
+            current_macro_faction_id="fac.guild",
             emotional_load="calm",
         ),
         Character(
@@ -42,14 +42,14 @@ def _build_mini_worldpack() -> tuple[WorldState, list[dict]]:
             role_name="The Mage",
             status="healthy",
             current_location_id="loc.tower",
-            current_faction_id="fac.guild",
+            current_macro_faction_id="fac.guild",
             emotional_load="focused",
         ),
     ]
     facs = [
-        Faction(
+        MacroFaction(
             id="fac.guild",
-            entity_type="faction",
+            entity_type="macro_faction",
             name="Adventurers Guild",
             canon_level="fixed",
             status="active",
@@ -64,7 +64,7 @@ def _build_mini_worldpack() -> tuple[WorldState, list[dict]]:
             canon_level="fixed",
             zone_level="low",
             status="peaceful",
-            controlling_faction_id="fac.guild",
+            controlling_macro_faction_id="fac.guild",
         ),
         Location(
             id="loc.tower",
@@ -87,7 +87,7 @@ def _build_mini_worldpack() -> tuple[WorldState, list[dict]]:
         description="A tiny test worldpack",
         entities=entities,
         relations=[],
-        active_faction_ids=["fac.guild"],
+        active_macro_faction_ids=["fac.guild"],
         active_location_ids=["loc.village", "loc.tower"],
     )
 
@@ -142,5 +142,5 @@ class TestMiniWorldpack:
     def test_faction_with_custom_status(self) -> None:
         ws, _ = _build_mini_worldpack()
         guild = ws.entities["fac.guild"]
-        assert isinstance(guild, Faction)
+        assert isinstance(guild, MacroFaction)
         assert guild.status == "active"

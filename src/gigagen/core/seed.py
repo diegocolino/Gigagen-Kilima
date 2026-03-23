@@ -11,7 +11,7 @@ import pathlib
 import random
 from typing import Any
 
-from .entity import BaseEntity, Character, Faction, Location
+from .entity import BaseEntity, Character, MacroFaction, Location
 from .relation import Relation
 from .world_state import WorldState
 
@@ -84,7 +84,7 @@ def _vary_faction_state(
 ) -> None:
     """Apply small random variation to faction power and cohesion."""
     for ent in entities.values():
-        if not isinstance(ent, Faction):
+        if not isinstance(ent, MacroFaction):
             continue
         power_delta = rng.uniform(-0.1, 0.1)
         cohesion_delta = rng.uniform(-0.1, 0.1)

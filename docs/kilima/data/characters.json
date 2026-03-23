@@ -1,7 +1,7 @@
 {
   "characters": [
     {
-      "id": "char.rebel",
+      "id": "kilima_in12_rebel",
       "entity_type": "character",
       "name": "Kive",
       "tags": [
@@ -19,12 +19,12 @@
       "civil_name": "Kive",
       "role_name": "The Rebel",
       "status": "active",
-      "current_location_id": "loc.cage",
-      "current_faction_id": "fac.anti_group",
+      "current_location_id": "golden_cage",
+      "current_faction_id": "fac.red_fist_dragons",
       "emotional_load": "grief"
     },
     {
-      "id": "char.orphan",
+      "id": "kilima_in12_orphan",
       "entity_type": "character",
       "name": "Len",
       "tags": [
@@ -40,11 +40,12 @@
       "role_name": "The Orphan",
       "status": "transferred",
       "current_location_id": "loc.limbo",
-      "current_faction_id": "fac.agency",
-      "emotional_load": "neutral"
+      "current_faction_id": null,
+      "emotional_load": "neutral",
+      "_faction_note": "Agency SL member, specific faction TBD (occult branch not formalized)"
     },
     {
-      "id": "char.hacker",
+      "id": "kilima_in12_hacker",
       "entity_type": "character",
       "name": "Dev",
       "tags": [
@@ -64,7 +65,7 @@
       "emotional_load": "neutral"
     },
     {
-      "id": "char.leader",
+      "id": "kilima_in12_leader",
       "entity_type": "character",
       "name": "Saarah",
       "tags": [
@@ -79,12 +80,12 @@
       "civil_name": "Saarah Strike",
       "role_name": "The Ruler",
       "status": "active",
-      "current_location_id": "loc.capital",
-      "current_faction_id": "fac.union_corp",
+      "current_location_id": "capitol",
+      "current_faction_id": "fac.uc_interior",
       "emotional_load": "neutral"
     },
     {
-      "id": "char.creator",
+      "id": "kilima_in12_creator",
       "entity_type": "character",
       "name": "Cris",
       "tags": [
@@ -99,12 +100,12 @@
       "civil_name": "Rous",
       "role_name": "The Creator",
       "status": "active",
-      "current_location_id": "loc.city",
-      "current_faction_id": "fac.anti_group",
+      "current_location_id": "agora",
+      "current_faction_id": null,
       "emotional_load": "rage"
     },
     {
-      "id": "char.innocent",
+      "id": "kilima_in12_innocent",
       "entity_type": "character",
       "name": "Brais",
       "tags": [
@@ -119,12 +120,12 @@
       "civil_name": "Brais de Lügen",
       "role_name": "The Innocent",
       "status": "active",
-      "current_location_id": "loc.cage",
-      "current_faction_id": "fac.guard",
+      "current_location_id": "golden_cage",
+      "current_faction_id": "fac.arena_corps",
       "emotional_load": "fear"
     },
     {
-      "id": "char.lover",
+      "id": "kilima_in12_lover",
       "entity_type": "character",
       "name": "Ali",
       "tags": [
@@ -139,12 +140,12 @@
       "civil_name": "Alizia Shirokeji",
       "role_name": "The Lover",
       "status": "active",
-      "current_location_id": "loc.city",
-      "current_faction_id": "fac.agency",
+      "current_location_id": "agora",
+      "current_faction_id": "fac.net_service",
       "emotional_load": "grief"
     },
     {
-      "id": "char.jester",
+      "id": "kilima_in12_jester",
       "entity_type": "character",
       "name": "Pau",
       "tags": [
@@ -161,12 +162,12 @@
       "civil_name": "Paulo",
       "role_name": "The Fool",
       "status": "active",
-      "current_location_id": "loc.cage",
-      "current_faction_id": "fac.bohemian",
+      "current_location_id": "golden_cage",
+      "current_faction_id": "fac.grand_library",
       "emotional_load": "grief"
     },
     {
-      "id": "char.hero",
+      "id": "kilima_in12_hero",
       "entity_type": "character",
       "name": "Luka",
       "tags": [
@@ -181,12 +182,12 @@
       "civil_name": "Luka Karuso",
       "role_name": "The Hero",
       "status": "active",
-      "current_location_id": "loc.capital",
-      "current_faction_id": "fac.agency",
+      "current_location_id": "capitol",
+      "current_faction_id": "fac.master_council",
       "emotional_load": "neutral"
     },
     {
-      "id": "char.explorer",
+      "id": "kilima_in12_explorer",
       "entity_type": "character",
       "name": "Yeri",
       "tags": [
@@ -202,12 +203,12 @@
       "civil_name": "Alexis Hieri",
       "role_name": "The Explorer",
       "status": "active",
-      "current_location_id": "loc.cage",
-      "current_faction_id": "fac.anti_group",
+      "current_location_id": "golden_cage",
+      "current_faction_id": "fac.dust_parade",
       "emotional_load": "neutral"
     },
     {
-      "id": "char.caregiver",
+      "id": "kilima_in12_caregiver",
       "entity_type": "character",
       "name": "Nora",
       "tags": [
@@ -223,12 +224,12 @@
       "civil_name": "Nora",
       "role_name": "The Caretaker",
       "status": "active",
-      "current_location_id": "loc.cage",
-      "current_faction_id": "fac.amparo",
+      "current_location_id": "golden_cage",
+      "current_faction_id": "fac.vital_care",
       "emotional_load": "grief"
     },
     {
-      "id": "char.deity",
+      "id": "kilima_in12_deity",
       "entity_type": "character",
       "name": "Freya",
       "tags": [
@@ -245,7 +246,7 @@
       "role_name": "The Goddess",
       "status": "active",
       "current_location_id": "loc.cave",
-      "current_faction_id": "fac.anti_group",
+      "current_faction_id": "fac.direnis_cell",
       "emotional_load": "neutral"
     }
   ]

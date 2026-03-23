@@ -9,7 +9,7 @@ from textual.containers import Horizontal, Vertical
 from textual.widgets import Static, DataTable, Label
 from textual.reactive import reactive
 
-from gigagen.core.entity import Character, Faction, Location
+from gigagen.core.entity import Character, MacroFaction, Location
 from gigagen.core.relation import Relation
 from gigagen.core.world_state import WorldState
 from gigagen.core.simulator import SimulatorState
@@ -63,14 +63,16 @@ class CharacterTable(Static):
             key=lambda c: c.civil_name,
         )
         for c in chars:
-            division = c.current_subdivision_id or "-"
+            division = c.current_faction_id or "-"
             fac_name = "-"
-            if c.current_faction_id and c.current_faction_id in ws.entities:
-                fac_name = ws.entities[c.current_faction_id].name
-            name = c.civil_name
+            if c.current_macro_faction_id and c.current_macro_faction_id in ws.entities:
+                fac_name = ws.entities[c.current_macro_faction_id].name
+            loc_name = c.current_location_id
+            if c.current_location_id in ws.entities:
+                loc_name = ws.entities[c.current_location_id].name
             self._table.add_row(
-                name, c.archetype, c.status, c.emotional_load,
-                c.current_location_id, division, fac_name,
+                c.civil_name, c.archetype, c.status, c.emotional_load,
+                loc_name, division, fac_name,
                 key=c.id,
             )
 
@@ -114,12 +116,12 @@ class FactionPanel(Static):
             return
         self._table.clear()
         facs = sorted(
-            (e for e in ws.entities.values() if isinstance(e, Faction)),
+            (e for e in ws.entities.values() if isinstance(e, MacroFaction)),
             key=lambda f: f.name,
         )
         for f in facs:
-            if f.subdivisions:
-                for sub in f.subdivisions:
+            if f.factions:
+                for sub in f.factions:
                     sub_name = sub.name or "(unnamed)"
                     sub_leader = "-"
                     if sub.leader_id and sub.leader_id in ws.entities:
@@ -130,7 +132,7 @@ class FactionPanel(Static):
                         key=f"{f.id}::{sub.name or '_unnamed'}",
                     )
             else:
-                # Factions without subdivisions show as a single row
+                # Factions without factions show as a single row
                 leader_name = "-"
                 if f.leader_id and f.leader_id in ws.entities:
                     leader_name = ws.entities[f.leader_id].name
@@ -141,7 +143,7 @@ class FactionPanel(Static):
                 )
 
     def get_selected_id(self) -> str | None:
-        """Returns the faction ID (strips subdivision suffix if present)."""
+        """Returns the faction ID (strips faction suffix if present)."""
         if self._table is None or self._table.cursor_row is None:
             return None
         try:
@@ -189,8 +191,8 @@ class LocationPanel(Static):
             if loc.parent_location_id and loc.parent_location_id in ws.entities:
                 parent_name = ws.entities[loc.parent_location_id].name
             ctrl_name = "-"
-            if loc.controlling_faction_id and loc.controlling_faction_id in ws.entities:
-                ctrl_name = ws.entities[loc.controlling_faction_id].name
+            if loc.controlling_macro_faction_id and loc.controlling_macro_faction_id in ws.entities:
+                ctrl_name = ws.entities[loc.controlling_macro_faction_id].name
             tension_bar = "\u2588" * int(loc.tension * 5) + "\u2591" * (5 - int(loc.tension * 5))
             self._table.add_row(
                 loc.name, parent_name, loc.zone_level, loc.status,

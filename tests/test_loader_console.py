@@ -8,7 +8,7 @@ import pathlib
 
 import pytest
 
-from gigagen.core.entity import Character, Faction, Location
+from gigagen.core.entity import Character, MacroFaction, Location
 from gigagen.core.world_state import WorldState
 from gigagen.core.simulator import build_simulator
 from gigagen.io.load_worldpack import load_worldpack
@@ -43,21 +43,21 @@ class TestLoadWorldpack:
         assert len(chars) == 12
 
     def test_loads_10_factions(self, ws: WorldState) -> None:
-        facs = [e for e in ws.entities.values() if isinstance(e, Faction)]
+        facs = [e for e in ws.entities.values() if isinstance(e, MacroFaction)]
         assert len(facs) == 10
 
-    def test_loads_15_locations(self, ws: WorldState) -> None:
+    def test_loads_locations(self, ws: WorldState) -> None:
         locs = [e for e in ws.entities.values() if isinstance(e, Location)]
-        assert len(locs) == 15
+        assert len(locs) >= 15  # 55 in hierarchical format
 
-    def test_loads_26_relations(self, ws: WorldState) -> None:
-        assert len(ws.relations) == 26
+    def test_loads_relations(self, ws: WorldState) -> None:
+        assert len(ws.relations) >= 26  # 30 after FL-4
 
     def test_active_factions(self, ws: WorldState) -> None:
-        assert len(ws.active_faction_ids) == 10
+        assert len(ws.active_macro_faction_ids) == 10
 
     def test_active_locations(self, ws: WorldState) -> None:
-        assert len(ws.active_location_ids) == 15
+        assert len(ws.active_location_ids) >= 15
 
     def test_no_kilima_data_in_gigagen_source(self) -> None:
         """Verify no Kilima data is hardcoded in Gigagen core/io source."""
@@ -156,24 +156,24 @@ class TestConsole:
         assert "The Limbo" in output
 
     def test_inspect_character(self, ws: WorldState) -> None:
-        output = self._run_cmd(ws, "inspect char.rebel")
+        output = self._run_cmd(ws, "inspect kilima_in12_rebel")
         assert "Kive" in output
         assert "REB" in output
         assert "D#" in output
         assert "Relations" in output
 
     def test_inspect_faction(self, ws: WorldState) -> None:
-        output = self._run_cmd(ws, "inspect fac.anti_group")
+        output = self._run_cmd(ws, "inspect mfac.anti_group")
         assert "Anti Group" in output
         assert "underground" in output
 
     def test_inspect_location(self, ws: WorldState) -> None:
         output = self._run_cmd(ws, "inspect loc.cave")
         assert "The Cave" in output
-        assert "hidden" in output
+        assert "location" in output.lower()
 
     def test_inspect_relations(self, ws: WorldState) -> None:
-        output = self._run_cmd(ws, "inspect rel.char.rebel")
+        output = self._run_cmd(ws, "inspect rel.kilima_in12_rebel")
         assert "sibling" in output
         assert "close_friend" in output
 

@@ -40,13 +40,13 @@ class Character(BaseEntity):
     # State (varies by seed/simulation)
     status: str = "active"
     current_location_id: str
-    current_faction_id: str | None = None
-    current_subdivision_id: str | None = None  # name of subdivision within current faction
+    current_macro_faction_id: str | None = None
+    current_faction_id: str | None = None  # name of faction within current faction
     emotional_load: str = "neutral"
 
 
-class Subdivision(BaseModel):
-    """A concrete instantiation of a faction's mode from a specific root note."""
+class Faction(BaseModel, extra="allow"):
+    """A concrete instantiation of a macro-faction's mode from a specific root note."""
     name: str | None = None
     note: str | None = None       # root note (typically leader's archetype note)
     leader_id: str | None = None
@@ -54,15 +54,15 @@ class Subdivision(BaseModel):
     notes: str | None = None      # freeform design notes
 
 
-class Faction(BaseEntity):
-    entity_type: Literal["faction"] = "faction"
+class MacroFaction(BaseEntity):
+    entity_type: Literal["macro_faction"] = "macro_faction"
 
     # Identity — harmonic
     mode: str = ""                                          # e.g. "ionian", "phrygian", "whole_tone"
     intervals: list[int] = Field(default_factory=list)      # e.g. [2,2,1,2,2,2,1]
     note_count: int = 0                                     # len(intervals)
     scale_family: str = ""                                  # "greek" | "symmetric" | "pentatonic"
-    subdivisions: list[Subdivision] = Field(default_factory=list)
+    factions: list[Faction] = Field(default_factory=list)
 
     # Identity — structural
     doctrine_tags: list[str] = Field(default_factory=list)
@@ -86,8 +86,8 @@ class Location(BaseEntity):
 
     # State
     status: str = "stable"
-    controlling_faction_id: str | None = None
-    secondary_faction_ids: list[str] = Field(default_factory=list)
+    controlling_macro_faction_id: str | None = None
+    secondary_macro_faction_ids: list[str] = Field(default_factory=list)
     tension: float = Field(ge=0.0, le=1.0, default=0.0)
     access: str = "open"          # e.g. "open", "restricted", "sealed", "clandestine"
 

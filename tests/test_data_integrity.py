@@ -22,8 +22,21 @@ WORLDS_DIR = pathlib.Path(__file__).resolve().parent.parent / "worlds" / "kilima
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _load_json(name: str) -> list[dict] | dict:
+def _load_json_raw(name: str) -> Any:
     return json.loads((WORLDS_DIR / name).read_text(encoding="utf-8"))
+
+
+def _load_json(name: str) -> list[dict]:
+    """Load a worldpack JSON, handling both plain arrays and object wrappers."""
+    raw = _load_json_raw(name)
+    if isinstance(raw, list):
+        return raw
+    if isinstance(raw, dict):
+        for key in ("characters", "relations", "locations", "factions",
+                     "macro_factions"):
+            if key in raw:
+                return raw[key]
+    return []
 
 
 def _load_yaml(rel_path: str) -> dict:
@@ -34,9 +47,20 @@ def _load_yaml(rel_path: str) -> dict:
 def _all_entity_ids() -> set[str]:
     """Collect every entity ID across characters, factions, and locations."""
     ids: set[str] = set()
-    for name in ("characters.json", "factions.json", "locations.json"):
-        for entry in _load_json(name):
-            ids.add(entry["id"])
+    for entry in _load_json("characters.json"):
+        ids.add(entry["id"])
+    # Factions: macro-factions + concrete factions
+    fac_raw = _load_json_raw("factions.json")
+    if isinstance(fac_raw, dict) and "macro_factions" in fac_raw:
+        for mf in fac_raw["macro_factions"]:
+            ids.add(mf["id"])
+        for f in fac_raw.get("factions", []):
+            ids.add(f["id"])
+    elif isinstance(fac_raw, list):
+        for f in fac_raw:
+            ids.add(f["id"])
+    for entry in _load_json("locations.json"):
+        ids.add(entry["id"])
     return ids
 
 
@@ -67,12 +91,18 @@ class TestFactionBases:
         """Every base_location_id in factions.json resolves to a location
         in locations.json."""
         location_ids = {loc["id"] for loc in _load_json("locations.json")}
-        factions = _load_json("factions.json")
+        fac_raw = _load_json_raw("factions.json")
+        # Collect all entries that have base_location_id
+        entries = []
+        if isinstance(fac_raw, dict) and "macro_factions" in fac_raw:
+            entries.extend(fac_raw.get("factions", []))
+        elif isinstance(fac_raw, list):
+            entries.extend(fac_raw)
         missing = []
-        for f in factions:
+        for f in entries:
             base = f.get("base_location_id")
             if base and base not in location_ids:
-                missing.append((f["id"], base))
+                missing.append((f.get("id", f.get("name", "?")), base))
         assert not missing, f"Factions reference unknown base locations: {missing}"
 
 
@@ -85,7 +115,8 @@ class TestRelationEntities:
         """Every source_id and target_id in relations.json exists in
         characters, factions, or locations."""
         all_ids = _all_entity_ids()
-        relations = _load_json("relations.json")
+        relations_raw = _load_json_raw("relations.json")
+        relations = relations_raw.get("relations", relations_raw) if isinstance(relations_raw, dict) else relations_raw
         missing = []
         for r in relations:
             if r["source_id"] not in all_ids:
@@ -111,7 +142,7 @@ class TestEventRules:
 
     @pytest.fixture(scope="class")
     def char_map(self) -> dict[str, str]:
-        maps = _load_json("timeline_maps.json")
+        maps = _load_json_raw("timeline_maps.json")
         return maps["character_map"]
 
     @pytest.fixture(scope="class")
@@ -120,7 +151,17 @@ class TestEventRules:
 
     @pytest.fixture(scope="class")
     def faction_ids(self) -> set[str]:
-        return {f["id"] for f in _load_json("factions.json")}
+        ids: set[str] = set()
+        fac_raw = _load_json_raw("factions.json")
+        if isinstance(fac_raw, dict) and "macro_factions" in fac_raw:
+            for mf in fac_raw["macro_factions"]:
+                ids.add(mf["id"])
+            for f in fac_raw.get("factions", []):
+                ids.add(f["id"])
+        elif isinstance(fac_raw, list):
+            for f in fac_raw:
+                ids.add(f["id"])
+        return ids
 
     def test_event_rules_reference_valid_events(
         self,

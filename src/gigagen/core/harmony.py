@@ -3,11 +3,14 @@
 All functions operate on notes (str) and intervals (list[int]).
 No faction names, no worldpack-specific data. The engine doesn't know
 what "Anti Group" or "Phrygian" means — it only knows note sets.
+
+The universal foundation is `harmonic_affinity(note_a, note_b)` from
+relation.py. Functions here add scale-aware context on top of it.
 """
 
 from __future__ import annotations
 
-from .relation import _NOTE_TO_SEMITONE, _INTERVAL_AFFINITY
+from .relation import _NOTE_TO_SEMITONE, harmonic_affinity
 
 # Canonical note names in chromatic order
 CHROMATIC_NOTES: list[str] = [
@@ -27,11 +30,6 @@ def _note_to_semitone(note: str) -> int:
 def _semitone_to_note(semitone: int) -> str:
     """Convert a semitone index (0-11) to its canonical note name."""
     return CHROMATIC_NOTES[semitone % 12]
-
-
-def _interval_affinity(semitones: int) -> float:
-    """Get the affinity value for a given interval in semitones."""
-    return _INTERVAL_AFFINITY[semitones % 12]
 
 
 # ---------------------------------------------------------------------------
@@ -63,37 +61,26 @@ def build_scale(root_note: str, intervals: list[int]) -> list[str]:
 
 def character_faction_affinity(
     character_note: str,
-    faction_intervals: list[int],
-    subdivision_root: str | None,
+    macro_faction_intervals: list[int],
+    faction_root: str | None,
 ) -> float:
-    """Calculate a character's affinity with a faction subdivision.
+    """Calculate a character's affinity with a faction.
 
-    If subdivision_root is None, returns 0.0 (no calculation possible).
+    Uses harmonic_affinity(char, root) as base, then applies a bonus if
+    the character's note falls inside the faction's scale, or a penalty
+    if outside.
 
-    The affinity is the interval-based score between the character's note
-    and the subdivision root. If the character's note falls inside the
-    subdivision's scale, the score is boosted; outside the scale, it's penalized.
-
-    Returns a float in [-1.0, 1.0].
+    Returns a float in [-1.0, 1.0]. Returns 0.0 if faction_root is None.
     """
-    if subdivision_root is None or not faction_intervals:
+    if faction_root is None or not macro_faction_intervals:
         return 0.0
 
-    # Base: interval affinity between character note and subdivision root
-    char_semi = _note_to_semitone(character_note)
-    root_semi = _note_to_semitone(subdivision_root)
-    interval = (char_semi - root_semi) % 12
-    base = _interval_affinity(interval)
+    base = harmonic_affinity(character_note, faction_root)
+    in_scale = character_note in build_scale(faction_root, macro_faction_intervals)
 
-    # Bonus/penalty: is the character's note in the subdivision's scale?
-    scale = build_scale(subdivision_root, faction_intervals)
-    scale_semitones = {_note_to_semitone(n) for n in scale}
-
-    if char_semi in scale_semitones:
-        # In scale: boost toward positive (min +0.1 push)
+    if in_scale:
         return min(1.0, base + 0.2) if base >= 0 else base * 0.5
     else:
-        # Out of scale: push toward negative (min -0.1 push)
         return max(-1.0, base - 0.2) if base <= 0 else base * 0.5
 
 
@@ -104,13 +91,13 @@ def character_faction_affinity(
 def character_location_affinity(
     character_note: str,
     location_tonic: str | None,
-    controlling_faction_intervals: list[int] | None,
+    controlling_macro_faction_intervals: list[int] | None,
     structural_weight: float = 0.3,
     modal_weight: float = 0.7,
 ) -> float | None:
     """Calculate a character's total affinity with a location.
 
-    Combined structural (note vs tonic) + modal (note vs location scale).
+    Combined structural (harmonic_affinity vs tonic) + modal (in/out of scale).
 
     Returns None if location has no tonic (no harmonic calculation possible).
     Returns float in [-1.0, 1.0] otherwise.
@@ -118,60 +105,17 @@ def character_location_affinity(
     if location_tonic is None:
         return None
 
-    # Structural: interval between character note and location tonic
-    structural = _interval_affinity(
-        (_note_to_semitone(character_note) - _note_to_semitone(location_tonic)) % 12
-    )
+    structural = harmonic_affinity(character_note, location_tonic)
 
-    # Modal: does the character's note fall in the location's current scale?
-    if controlling_faction_intervals:
-        scale = build_scale(location_tonic, controlling_faction_intervals)
-        scale_semitones = {_note_to_semitone(n) for n in scale}
-        char_semi = _note_to_semitone(character_note)
-        # In scale → positive, out → negative
-        modal = 0.5 if char_semi in scale_semitones else -0.5
-    else:
-        # No controlling faction → neutral ground, only structural matters
+    if not controlling_macro_faction_intervals:
         return structural
+
+    scale = build_scale(location_tonic, controlling_macro_faction_intervals)
+    modal = 0.5 if character_note in scale else -0.5
 
     return max(-1.0, min(1.0,
         structural_weight * structural + modal_weight * modal
     ))
-
-
-# ---------------------------------------------------------------------------
-# Dual membership cost
-# ---------------------------------------------------------------------------
-
-def dual_membership_cost(
-    faction_a_intervals: list[int],
-    sub_a_root: str | None,
-    faction_b_intervals: list[int],
-    sub_b_root: str | None,
-) -> float:
-    """Calculate the tension of belonging to two factions simultaneously.
-
-    Based on scale overlap: high overlap → low cost, low overlap → high cost.
-
-    Returns a float in [0.0, 1.0] where 0 = no tension, 1 = maximum tension.
-    """
-    if sub_a_root is None or sub_b_root is None:
-        return 0.5  # unknown — moderate default
-
-    if not faction_a_intervals or not faction_b_intervals:
-        return 0.5
-
-    scale_a = set(build_scale(sub_a_root, faction_a_intervals))
-    scale_b = set(build_scale(sub_b_root, faction_b_intervals))
-
-    if not scale_a or not scale_b:
-        return 0.5
-
-    overlap = len(scale_a & scale_b)
-    max_possible = min(len(scale_a), len(scale_b))
-
-    # High overlap → low cost
-    return 1.0 - (overlap / max_possible)
 
 
 # ---------------------------------------------------------------------------
@@ -180,7 +124,7 @@ def dual_membership_cost(
 
 def location_instability(
     location_tonic: str | None,
-    faction_intervals_list: list[list[int]],
+    macro_faction_intervals_list: list[list[int]],
 ) -> float:
     """Calculate instability for a disputed location.
 
@@ -193,12 +137,11 @@ def location_instability(
     if location_tonic is None:
         return 0.0
 
-    if len(faction_intervals_list) < 2:
+    if len(macro_faction_intervals_list) < 2:
         return 0.0
 
-    # Build all scales from the location's tonic
     scales = []
-    for intervals in faction_intervals_list:
+    for intervals in macro_faction_intervals_list:
         if intervals:
             scale_set = {_note_to_semitone(n) for n in build_scale(location_tonic, intervals)}
             scales.append(scale_set)
@@ -206,7 +149,6 @@ def location_instability(
     if len(scales) < 2:
         return 0.0
 
-    # Pairwise overlap — average the disagreement
     total_disagreement = 0.0
     pairs = 0
     for i in range(len(scales)):
@@ -220,33 +162,25 @@ def location_instability(
 
 
 # ---------------------------------------------------------------------------
-# Subdivision weight
+# Faction weight
 # ---------------------------------------------------------------------------
 
-def subdivision_weight(
-    subdivision_root: str,
+def faction_weight(
+    faction_root: str,
     other_roots: list[str],
 ) -> float:
-    """Calculate a subdivision's political weight within its faction.
+    """Calculate a faction's political weight within its macro-faction.
 
-    Based on consonance with other subdivisions. A subdivision whose root
+    Uses harmonic_affinity with each other root. A faction whose root
     forms perfect fifths with many others is the political center.
 
     Returns a float in [0.0, 1.0]. Higher = more central.
     """
     if not other_roots:
-        return 1.0  # only subdivision → maximum weight
+        return 1.0
 
-    sub_semi = _note_to_semitone(subdivision_root)
-    total_affinity = 0.0
-    for other in other_roots:
-        other_semi = _note_to_semitone(other)
-        interval = (other_semi - sub_semi) % 12
-        aff = _interval_affinity(interval)
-        total_affinity += aff
-
-    # Normalize from [-1, 1] average to [0, 1]
-    avg = total_affinity / len(other_roots)
+    total = sum(harmonic_affinity(faction_root, other) for other in other_roots)
+    avg = total / len(other_roots)
     return max(0.0, min(1.0, (avg + 1.0) / 2.0))
 
 
@@ -258,7 +192,7 @@ def faction_compatibility(
     intervals_a: list[int],
     intervals_b: list[int],
 ) -> float:
-    """Calculate structural compatibility between two factions' modes.
+    """Calculate structural compatibility between two macro-factions' modes.
 
     Compares interval patterns directly (no root needed).
     Identical patterns → 1.0. Completely different → 0.0.
@@ -268,19 +202,13 @@ def faction_compatibility(
     if not intervals_a or not intervals_b:
         return 0.0
 
-    # Normalize to same length for comparison
     len_a = len(intervals_a)
     len_b = len(intervals_b)
 
     if len_a != len_b:
-        # Different scale families — base compatibility is lower
-        # Compare note counts as a rough measure
         max_notes = max(len_a, len_b)
         min_notes = min(len_a, len_b)
         return min_notes / max_notes * 0.5
 
-    # Same length: compare how many intervals match position by position
-    # No rotation — modes are compared as-is. Ionian [2,2,1,2,2,2,1]
-    # vs Mixolydian [2,2,1,2,2,1,2] differ at positions 5,6 → 5/7 ≈ 0.71.
     matches = sum(1 for a, b in zip(intervals_a, intervals_b) if a == b)
     return matches / len_a

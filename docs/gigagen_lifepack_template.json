@@ -1,0 +1,536 @@
+{
+  "$schema": "lifepack_v1",
+  "$doc": "Life Pack template — all octaves, all slots. unlocked_at indicates which step of the Escalera de Descendencia activates each octave.",
+
+  "meta": {
+    "entity_id": "",
+    "entity_name": "",
+    "collection": "",
+    "tonic": "",
+    "tonic_semitone": null
+  },
+
+  "infrasonidos": {
+    "$doc": "Pasado muerto. Theogony, Chronica. Frecuencias por debajo del umbral.",
+    "unlocked_at": "genesis",
+    "slots": {}
+  },
+
+  "octave_0_lore": {
+    "$doc": "Definicion arquetipica. 12 slots fijos por arquetipo, iguales para todos. JSON de referencia que Gigagen consulta para resolver comportamiento. No rota con la tonica.",
+    "unlocked_at": "genesis",
+    "logic": "fixed_12_archetypes",
+    "slots": {
+      "0_C_gobernante":   { "archetype": "gobernante",  "note": "C",  "semitone": 0,  "definition": "" },
+      "1_Cs_sabio":       { "archetype": "sabio",       "note": "C#", "semitone": 1,  "definition": "" },
+      "2_D_explorador":   { "archetype": "explorador",  "note": "D",  "semitone": 2,  "definition": "" },
+      "3_Ds_rebelde":     { "archetype": "rebelde",     "note": "D#", "semitone": 3,  "definition": "" },
+      "4_E_mago":         { "archetype": "mago",        "note": "E",  "semitone": 4,  "definition": "" },
+      "5_F_inocente":     { "archetype": "inocente",    "note": "F",  "semitone": 5,  "definition": "" },
+      "6_Fs_bufon":       { "archetype": "bufon",       "note": "F#", "semitone": 6,  "definition": "" },
+      "7_G_cuidador":     { "archetype": "cuidador",    "note": "G",  "semitone": 7,  "definition": "" },
+      "8_Gs_heroe":       { "archetype": "heroe",       "note": "G#", "semitone": 8,  "definition": "" },
+      "9_A_amante":       { "archetype": "amante",      "note": "A",  "semitone": 9,  "definition": "" },
+      "10_As_creador":    { "archetype": "creador",     "note": "A#", "semitone": 10, "definition": "" },
+      "11_B_huerfano":    { "archetype": "huerfano",    "note": "B",  "semitone": 11, "definition": "" }
+    }
+  },
+
+  "octave_1_animas": {
+    "$doc": "Espiritus elementales. Variable por personaje. Depende de elementos innatos y desbloqueados. La fusion anade slots, no reemplaza.",
+    "unlocked_at": "theogony",
+    "logic": "variable_by_elements",
+    "innate_elements": [],
+    "dominated_elements": [],
+    "unlocked_fusions": [],
+    "slots": {
+      "$doc": "Cada slot se crea cuando se desbloquea un elemento/fusion. Key = element_id. El arquetipo del anima se gamblea al inicio de la simulacion.",
+      "example_slot": {
+        "element": "",
+        "element_tier": "",
+        "anima_archetype": "",
+        "anima_note": "",
+        "anima_semitone": null,
+        "dominated": false
+      }
+    }
+  },
+
+  "octave_2_linajes": {
+    "$doc": "Linaje. Slot unico. La tonica del personaje en esta octava = su linaje.",
+    "unlocked_at": "theogony",
+    "logic": "single_slot",
+    "slots": {
+      "0_tonica": { "lineage_id": "", "lineage_name": "", "note": "", "semitone": null }
+    }
+  },
+
+  "octave_3_locations": {
+    "$doc": "Locations. Acorde interno: el intervalo desde la tonica define el tipo de vinculo. 4 slots iniciales, expandibles.",
+    "unlocked_at": "contempo",
+    "logic": "internal_chord",
+    "slots": {
+      "0_tonica": {
+        "interval": "unison",
+        "semitones": 0,
+        "role": "location_raiz",
+        "role_desc": "Donde naces o empiezas",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "perfect"
+      },
+      "3_tercera_menor": {
+        "interval": "3m",
+        "semitones": 3,
+        "role": "location_menor",
+        "role_desc": "Tension, prision emocional",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "minor"
+      },
+      "4_tercera_mayor": {
+        "interval": "3M",
+        "semitones": 4,
+        "role": "location_mayor",
+        "role_desc": "Refugio, luminoso",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "major"
+      },
+      "7_quinta_justa": {
+        "interval": "5J",
+        "semitones": 7,
+        "role": "location_pilar",
+        "role_desc": "El sitio estable, tu base",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "perfect"
+      },
+      "6_tritono": {
+        "interval": "tritone",
+        "semitones": 6,
+        "role": "location_perdida",
+        "role_desc": "Destruida o perdida",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "diminished",
+        "locked": true
+      },
+      "1_segunda_menor": {
+        "interval": "2m",
+        "semitones": 1,
+        "role": "location_friccion",
+        "role_desc": "Demasiado cerca, roza",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "minor",
+        "locked": true
+      },
+      "2_segunda_mayor": {
+        "interval": "2M",
+        "semitones": 2,
+        "role": "location_vecina",
+        "role_desc": "Cercana, tension suave",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "major",
+        "locked": true
+      },
+      "5_cuarta_justa": {
+        "interval": "4J",
+        "semitones": 5,
+        "role": "location_soporte",
+        "role_desc": "Cimiento, base secundaria",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "perfect",
+        "locked": true
+      },
+      "8_sexta_menor": {
+        "interval": "6m",
+        "semitones": 8,
+        "role": "location_agridulce",
+        "role_desc": "Vinculo ambivalente con el lugar",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "minor",
+        "locked": true
+      },
+      "9_sexta_mayor": {
+        "interval": "6M",
+        "semitones": 9,
+        "role": "location_calida",
+        "role_desc": "Vinculo calido con el lugar",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "major",
+        "locked": true
+      },
+      "10_septima_menor": {
+        "interval": "7m",
+        "semitones": 10,
+        "role": "location_de_paso",
+        "role_desc": "Lugar transitorio, no resuelto",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "minor",
+        "locked": true
+      },
+      "11_septima_mayor": {
+        "interval": "7M",
+        "semitones": 11,
+        "role": "location_reveladora",
+        "role_desc": "Lugar que te cambia, casi resuelve",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "major",
+        "locked": true
+      }
+    }
+  },
+
+  "octave_4_objetos": {
+    "$doc": "Objetos. Acorde interno. Alteraciones = estado del objeto.",
+    "unlocked_at": "contempo",
+    "logic": "internal_chord",
+    "slots": {
+      "0_tonica": {
+        "interval": "unison",
+        "semitones": 0,
+        "role": "objeto_identitario",
+        "role_desc": "Te define",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "perfect"
+      },
+      "3_tercera_menor": {
+        "interval": "3m",
+        "semitones": 3,
+        "role": "objeto_carga",
+        "role_desc": "Lo cargas con dolor",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "minor"
+      },
+      "4_tercera_mayor": {
+        "interval": "3M",
+        "semitones": 4,
+        "role": "objeto_dominio",
+        "role_desc": "Lo dominas",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "major"
+      },
+      "7_quinta_justa": {
+        "interval": "5J",
+        "semitones": 7,
+        "role": "objeto_pilar",
+        "role_desc": "Herramienta principal",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "perfect"
+      },
+      "6_tritono": {
+        "interval": "tritone",
+        "semitones": 6,
+        "role": "objeto_roto",
+        "role_desc": "Roto o perdido",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "diminished",
+        "locked": true
+      },
+      "1_segunda_menor": { "interval": "2m", "semitones": 1, "role": "objeto_friccion", "role_desc": "Objeto incomodo", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "minor", "locked": true },
+      "2_segunda_mayor": { "interval": "2M", "semitones": 2, "role": "objeto_cercano", "role_desc": "Objeto familiar", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "major", "locked": true },
+      "5_cuarta_justa": { "interval": "4J", "semitones": 5, "role": "objeto_soporte", "role_desc": "Herramienta secundaria", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "perfect", "locked": true },
+      "8_sexta_menor": { "interval": "6m", "semitones": 8, "role": "objeto_agridulce", "role_desc": "Objeto con vinculo ambivalente", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "minor", "locked": true },
+      "9_sexta_mayor": { "interval": "6M", "semitones": 9, "role": "objeto_calido", "role_desc": "Objeto con vinculo positivo", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "major", "locked": true },
+      "10_septima_menor": { "interval": "7m", "semitones": 10, "role": "objeto_tension", "role_desc": "Objeto no resuelto", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "minor", "locked": true },
+      "11_septima_mayor": { "interval": "7M", "semitones": 11, "role": "objeto_revelador", "role_desc": "Objeto que te cambia", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "major", "locked": true }
+    }
+  },
+
+  "octave_5_skills": {
+    "$doc": "Skills. Acorde interno. Para personajes sin animas (Dev), esta octava emula funciones de octava 1 via objetos de octava 4.",
+    "unlocked_at": "contempo",
+    "logic": "internal_chord",
+    "slots": {
+      "0_tonica": {
+        "interval": "unison",
+        "semitones": 0,
+        "role": "skill_innata",
+        "role_desc": "Talento natural",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "perfect"
+      },
+      "3_tercera_menor": {
+        "interval": "3m",
+        "semitones": 3,
+        "role": "skill_dolorosa",
+        "role_desc": "Aprendida con dolor",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "minor"
+      },
+      "4_tercera_mayor": {
+        "interval": "3M",
+        "semitones": 4,
+        "role": "skill_disfrute",
+        "role_desc": "La que disfrutas, dominio natural",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "major"
+      },
+      "7_quinta_justa": {
+        "interval": "5J",
+        "semitones": 7,
+        "role": "skill_principal",
+        "role_desc": "Tu fuerte",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "alteration": "perfect"
+      },
+      "6_tritono": { "interval": "tritone", "semitones": 6, "role": "skill_rota", "role_desc": "Habilidad perdida o bloqueada", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "diminished", "locked": true },
+      "1_segunda_menor": { "interval": "2m", "semitones": 1, "role": "skill_friccion", "role_desc": "Habilidad incomoda", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "minor", "locked": true },
+      "2_segunda_mayor": { "interval": "2M", "semitones": 2, "role": "skill_cercana", "role_desc": "Habilidad familiar", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "major", "locked": true },
+      "5_cuarta_justa": { "interval": "4J", "semitones": 5, "role": "skill_soporte", "role_desc": "Habilidad secundaria", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "perfect", "locked": true },
+      "8_sexta_menor": { "interval": "6m", "semitones": 8, "role": "skill_agridulce", "role_desc": "Habilidad con coste", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "minor", "locked": true },
+      "9_sexta_mayor": { "interval": "6M", "semitones": 9, "role": "skill_calida", "role_desc": "Habilidad que te conecta", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "major", "locked": true },
+      "10_septima_menor": { "interval": "7m", "semitones": 10, "role": "skill_tension", "role_desc": "Habilidad no resuelta", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "minor", "locked": true },
+      "11_septima_mayor": { "interval": "7M", "semitones": 11, "role": "skill_reveladora", "role_desc": "Habilidad que te transforma", "entity_id": "", "entity_name": "", "entity_note": "", "alteration": "major", "locked": true }
+    }
+  },
+
+  "octave_6_reservada": {
+    "$doc": "Palomita suelta. Cuando surja una entidad que no tenga casa en otra octava, va aqui.",
+    "unlocked_at": null,
+    "logic": "tbd",
+    "slots": {}
+  },
+
+  "octave_7_personajes": {
+    "$doc": "Relaciones con otros personajes. 12 slots completos, todos activos. La distancia intervalica desde la tonica define el tipo de vinculo.",
+    "unlocked_at": "chronica",
+    "logic": "full_12_by_interval",
+    "slots": {
+      "0_unisono": {
+        "interval": "unison",
+        "semitones": 0,
+        "role": "espejo",
+        "role_desc": "Tu mismo, espejo, mentor",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      },
+      "1_segunda_menor": {
+        "interval": "2m",
+        "semitones": 1,
+        "role": "friccion_maxima",
+        "role_desc": "1 semitono, roza",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      },
+      "2_segunda_mayor": {
+        "interval": "2M",
+        "semitones": 2,
+        "role": "vecino",
+        "role_desc": "Tension suave",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      },
+      "3_tercera_menor": {
+        "interval": "3m",
+        "semitones": 3,
+        "role": "aliado_menor",
+        "role_desc": "Vinculo con peso, oscuro",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      },
+      "4_tercera_mayor": {
+        "interval": "3M",
+        "semitones": 4,
+        "role": "aliado_mayor",
+        "role_desc": "Vinculo luminoso, positivo",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      },
+      "5_cuarta_justa": {
+        "interval": "4J",
+        "semitones": 5,
+        "role": "soporte",
+        "role_desc": "Cimiento, base",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      },
+      "6_tritono": {
+        "interval": "tritone",
+        "semitones": 6,
+        "role": "nemesis",
+        "role_desc": "Maxima tension armonica",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      },
+      "7_quinta_justa": {
+        "interval": "5J",
+        "semitones": 7,
+        "role": "relacion_principal",
+        "role_desc": "Pilar, el mas fuerte",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      },
+      "8_sexta_menor": {
+        "interval": "6m",
+        "semitones": 8,
+        "role": "agridulce",
+        "role_desc": "Relacion agridulce",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      },
+      "9_sexta_mayor": {
+        "interval": "6M",
+        "semitones": 9,
+        "role": "calida",
+        "role_desc": "Relacion calida",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      },
+      "10_septima_menor": {
+        "interval": "7m",
+        "semitones": 10,
+        "role": "tension_no_resuelta",
+        "role_desc": "Tension no resuelta",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      },
+      "11_septima_mayor": {
+        "interval": "7M",
+        "semitones": 11,
+        "role": "tension_luminosa",
+        "role_desc": "Casi resuelve, no del todo",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      }
+    }
+  },
+
+  "octave_8_eventos": {
+    "$doc": "Cicatrices narrativas. Se desbloquean conforme avanza la narrativa. Logica de llenado pendiente de cerrar.",
+    "unlocked_at": "chronica",
+    "logic": "tbd_hybrid",
+    "slots": {
+      "0_tonica": {
+        "interval": "unison",
+        "semitones": 0,
+        "role": "evento_fundacional",
+        "role_desc": "Lo que te lanza a la historia",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": ""
+      },
+      "3_tercera_menor": {
+        "interval": "3m",
+        "semitones": 3,
+        "role": "evento_doloroso",
+        "role_desc": "Evento doloroso",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "locked": true
+      },
+      "4_tercera_mayor": {
+        "interval": "3M",
+        "semitones": 4,
+        "role": "evento_luminoso",
+        "role_desc": "Evento luminoso",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "locked": true
+      },
+      "6_tritono": {
+        "interval": "tritone",
+        "semitones": 6,
+        "role": "evento_ruptura",
+        "role_desc": "Ruptura total",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "locked": true
+      },
+      "7_quinta_justa": {
+        "interval": "5J",
+        "semitones": 7,
+        "role": "evento_clave",
+        "role_desc": "El que mas te define",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "locked": true
+      },
+      "10_septima_menor": {
+        "interval": "7m",
+        "semitones": 10,
+        "role": "evento_sin_resolver",
+        "role_desc": "Evento sin resolver",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "locked": true
+      },
+      "11_septima_mayor": {
+        "interval": "7M",
+        "semitones": 11,
+        "role": "evento_revelador",
+        "role_desc": "Evento revelador",
+        "entity_id": "",
+        "entity_name": "",
+        "entity_note": "",
+        "locked": true
+      },
+      "1_segunda_menor": { "interval": "2m", "semitones": 1, "role": "evento_friccion", "role_desc": "Evento que roza", "entity_id": "", "entity_name": "", "entity_note": "", "locked": true },
+      "2_segunda_mayor": { "interval": "2M", "semitones": 2, "role": "evento_cercano", "role_desc": "Evento cercano", "entity_id": "", "entity_name": "", "entity_note": "", "locked": true },
+      "5_cuarta_justa": { "interval": "4J", "semitones": 5, "role": "evento_soporte", "role_desc": "Evento que sostiene", "entity_id": "", "entity_name": "", "entity_note": "", "locked": true },
+      "8_sexta_menor": { "interval": "6m", "semitones": 8, "role": "evento_agridulce", "role_desc": "Evento agridulce", "entity_id": "", "entity_name": "", "entity_note": "", "locked": true },
+      "9_sexta_mayor": { "interval": "6M", "semitones": 9, "role": "evento_calido", "role_desc": "Evento calido", "entity_id": "", "entity_name": "", "entity_note": "", "locked": true }
+    }
+  },
+
+  "ultrasonidos": {
+    "$doc": "Futuro. Variantes, bifurcaciones, arcos potenciales. Se activan cuando la simulacion genera bifurcaciones.",
+    "unlocked_at": null,
+    "slots": {}
+  }
+}

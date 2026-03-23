@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import pathlib
 
-from gigagen.core.entity import Character, Faction, Location
+from gigagen.core.entity import Character, MacroFaction, Location
 from gigagen.core.world_state import WorldState
 
 
@@ -45,7 +45,7 @@ def save_worldpack(
     facs = [
         e.model_dump(mode="json")
         for e in sorted(ws.entities.values(), key=lambda e: e.id)
-        if isinstance(e, Faction)
+        if isinstance(e, MacroFaction)
     ]
     locs = [
         e.model_dump(mode="json")
@@ -64,3 +64,14 @@ def save_worldpack(
             json.dumps(data, indent=indent, ensure_ascii=False),
             encoding="utf-8",
         )
+
+    # -- Lifepacks --
+    if ws.lifepacks:
+        lp_dir = wp / "lifepacks"
+        lp_dir.mkdir(exist_ok=True)
+        for char_id, lp in ws.lifepacks.items():
+            filename = f"{char_id}.json"
+            (lp_dir / filename).write_text(
+                lp.model_dump_json(indent=indent),
+                encoding="utf-8",
+            )

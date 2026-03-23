@@ -6,7 +6,7 @@ import pathlib
 
 import pytest
 
-from gigagen.core.entity import Character, Faction, Location
+from gigagen.core.entity import Character, MacroFaction, Location
 from gigagen.core.world_state import WorldState
 from gigagen.core.seed import apply_seed_variation
 from gigagen.core.invariants import validate_invariants
@@ -156,14 +156,14 @@ class TestInvariantValidation:
 
     def test_detect_missing_character(self) -> None:
         ws = load_worldpack(WORLDS_DIR, seed=1, apply_variation=False)
-        del ws.entities["char.rebel"]
+        del ws.entities["kilima_in12_rebel"]
         result = validate_invariants(ws, INVARIANTS_PATH)
         assert not result.valid
-        assert any("char.rebel" in e for e in result.errors)
+        assert any("kilima_in12_rebel" in e for e in result.errors)
 
     def test_detect_wrong_archetype(self) -> None:
         ws = load_worldpack(WORLDS_DIR, seed=1, apply_variation=False)
-        rebel = ws.entities["char.rebel"]
+        rebel = ws.entities["kilima_in12_rebel"]
         assert isinstance(rebel, Character)
         # Bypass pydantic validation to simulate corruption
         rebel.__dict__["archetype"] = "HER"

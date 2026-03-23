@@ -4,14 +4,13 @@
   "description": "Rules of what cannot change, what can vary, and what is forbidden.",
   "fixed": {
     "world_structure": [
-      "The Mountain exists with hierarchy: Capital (top), City (mid), Village (bottom)",
-      "The Cage exists as semi-autonomous floating city",
+      "Kilima exists as the main region with hierarchy: Capitol (top), Agora (mid), Pobla 2 (bottom)",
+      "Golden Cage exists as semi-autonomous floating region",
       "The Cave exists as Resistance headquarters (historically impenetrable, breached in NB1)",
-      "The Net exists as digital metaverse controlled by The AI",
-      "The Limbo exists as subzone within The Net for transferred consciousnesses",
-      "The Forno exists as artistic quarter, Kive and Luka's childhood place"
+      "The Net exists as digital metaverse area controlled by The AI",
+      "The Limbo exists as location within The Net for transferred consciousnesses",
+      "The Recess exists as abandoned school, artists quarter, Cris territory"
     ],
-    "faction_count": 10,
     "factions": [
       "10 factions: Union Corp, Agency SL, Anti Group, Amparo Foundation, Bohemian Academy, Cult Order, Guard Force, Backdoor, Kilima Lines, Kilima Mail",
       "Each has a fixed harmonic mode, intervals, and base location",
@@ -22,53 +21,245 @@
       "count": 12,
       "rule": "Equal in ontological rank. Relative centrality varies by seed/phase.",
       "roster": [
-        {"id": "char.rebel",    "name": "Kive",   "archetype": "REB", "note": "D#", "hero_type": "tragic_hero"},
-        {"id": "char.orphan",   "name": "Len",    "archetype": "ORP", "note": "E",  "hero_type": "mythological_hero"},
-        {"id": "char.hacker",   "name": "Dev",    "archetype": "HCK", "note": "F#", "hero_type": "action_hero"},
-        {"id": "char.leader",   "name": "Saarah", "archetype": "LEA", "note": "G",  "hero_type": "anti_villain"},
-        {"id": "char.creator",  "name": "Cris",   "archetype": "CRE", "note": "A#", "hero_type": "urban_hero"},
-        {"id": "char.innocent", "name": "Brais",  "archetype": "INN", "note": "G#", "hero_type": "redemption_hero"},
-        {"id": "char.lover",    "name": "Ali",    "archetype": "LOV", "note": "F",  "hero_type": "romantic_hero"},
-        {"id": "char.jester",   "name": "Pau",    "archetype": "JES", "note": "C#", "hero_type": "fantasy_hero"},
-        {"id": "char.hero",     "name": "Luka",   "archetype": "HER", "note": "D",  "hero_type": "archetypal_hero"},
-        {"id": "char.explorer", "name": "Yeri",   "archetype": "EXP", "note": "A",  "hero_type": "post_apocalyptic_hero"},
-        {"id": "char.caregiver","name": "Nora",   "archetype": "CAR", "note": "C",  "hero_type": "protector_hero"},
-        {"id": "char.deity",    "name": "Freya",  "archetype": "DEI", "note": "B",  "hero_type": "criminal_hero"}
+        {
+          "id": "kilima_in12_rebel",
+          "name": "Kive",
+          "archetype": "REB",
+          "note": "D#",
+          "hero_type": "tragic_hero"
+        },
+        {
+          "id": "kilima_in12_orphan",
+          "name": "Len",
+          "archetype": "ORP",
+          "note": "E",
+          "hero_type": "mythological_hero"
+        },
+        {
+          "id": "kilima_in12_hacker",
+          "name": "Dev",
+          "archetype": "HCK",
+          "note": "F#",
+          "hero_type": "action_hero"
+        },
+        {
+          "id": "kilima_in12_leader",
+          "name": "Saarah",
+          "archetype": "LEA",
+          "note": "G",
+          "hero_type": "anti_villain"
+        },
+        {
+          "id": "kilima_in12_creator",
+          "name": "Cris",
+          "archetype": "CRE",
+          "note": "A#",
+          "hero_type": "urban_hero"
+        },
+        {
+          "id": "kilima_in12_innocent",
+          "name": "Brais",
+          "archetype": "INN",
+          "note": "G#",
+          "hero_type": "redemption_hero"
+        },
+        {
+          "id": "kilima_in12_lover",
+          "name": "Ali",
+          "archetype": "LOV",
+          "note": "F",
+          "hero_type": "romantic_hero"
+        },
+        {
+          "id": "kilima_in12_jester",
+          "name": "Pau",
+          "archetype": "JES",
+          "note": "C#",
+          "hero_type": "fantasy_hero"
+        },
+        {
+          "id": "kilima_in12_hero",
+          "name": "Luka",
+          "archetype": "HER",
+          "note": "D",
+          "hero_type": "archetypal_hero"
+        },
+        {
+          "id": "kilima_in12_explorer",
+          "name": "Yeri",
+          "archetype": "EXP",
+          "note": "A",
+          "hero_type": "post_apocalyptic_hero"
+        },
+        {
+          "id": "kilima_in12_caregiver",
+          "name": "Nora",
+          "archetype": "CAR",
+          "note": "C",
+          "hero_type": "protector_hero"
+        },
+        {
+          "id": "kilima_in12_deity",
+          "name": "Freya",
+          "archetype": "DEI",
+          "note": "B",
+          "hero_type": "criminal_hero"
+        }
       ]
     },
     "relationships": [
-      {"source": "char.rebel",    "target": "char.orphan",   "kind": "sibling"},
-      {"source": "char.hacker",   "target": "char.orphan",   "kind": "partner"},
-      {"source": "char.rebel",    "target": "char.lover",    "kind": "ex_partner"},
-      {"source": "char.rebel",    "target": "char.caregiver","kind": "ex_partner"},
-      {"source": "char.rebel",    "target": "char.jester",   "kind": "close_friend"},
-      {"source": "char.rebel",    "target": "char.innocent", "kind": "close_friend"},
-      {"source": "char.rebel",    "target": "char.hero",     "kind": "childhood_best_friends"},
-      {"source": "char.rebel",    "target": "char.leader",   "kind": "former_friend"},
-      {"source": "char.innocent", "target": "char.caregiver","kind": "partner"},
-      {"source": "char.caregiver","target": "char.orphan",   "kind": "maternal_figure"},
-      {"source": "char.deity",    "target": "char.hacker",   "kind": "leadership_succession"},
-      {"source": "char.rebel",    "target": "char.deity",    "kind": "oneiric_bond"},
-      {"source": "char.orphan",   "target": "char.innocent", "kind": "reunited_in_limbo"},
-      {"source": "char.hero",     "target": "char.leader",   "kind": "partner"},
-      {"source": "char.deity",    "target": "char.orphan",   "kind": "mentor"}
+      {
+        "source": "kilima_in12_rebel",
+        "target": "kilima_in12_orphan",
+        "kind": "sibling"
+      },
+      {
+        "source": "kilima_in12_hacker",
+        "target": "kilima_in12_orphan",
+        "kind": "partner"
+      },
+      {
+        "source": "kilima_in12_rebel",
+        "target": "kilima_in12_lover",
+        "kind": "ex_partner"
+      },
+      {
+        "source": "kilima_in12_rebel",
+        "target": "kilima_in12_caregiver",
+        "kind": "ex_partner"
+      },
+      {
+        "source": "kilima_in12_rebel",
+        "target": "kilima_in12_jester",
+        "kind": "close_friend"
+      },
+      {
+        "source": "kilima_in12_rebel",
+        "target": "kilima_in12_innocent",
+        "kind": "close_friend"
+      },
+      {
+        "source": "kilima_in12_rebel",
+        "target": "kilima_in12_hero",
+        "kind": "childhood_best_friends"
+      },
+      {
+        "source": "kilima_in12_rebel",
+        "target": "kilima_in12_leader",
+        "kind": "former_friend"
+      },
+      {
+        "source": "kilima_in12_innocent",
+        "target": "kilima_in12_caregiver",
+        "kind": "partner"
+      },
+      {
+        "source": "kilima_in12_caregiver",
+        "target": "kilima_in12_orphan",
+        "kind": "maternal_figure"
+      },
+      {
+        "source": "kilima_in12_deity",
+        "target": "kilima_in12_hacker",
+        "kind": "leadership_succession"
+      },
+      {
+        "source": "kilima_in12_rebel",
+        "target": "kilima_in12_deity",
+        "kind": "oneiric_bond"
+      },
+      {
+        "source": "kilima_in12_orphan",
+        "target": "kilima_in12_innocent",
+        "kind": "reunited_in_limbo"
+      },
+      {
+        "source": "kilima_in12_hero",
+        "target": "kilima_in12_leader",
+        "kind": "partner"
+      },
+      {
+        "source": "kilima_in12_deity",
+        "target": "kilima_in12_orphan",
+        "kind": "mentor"
+      }
     ],
     "faction_memberships": [
-      {"character": "char.rebel",    "faction": "fac.anti_group",  "kind": "member_of"},
-      {"character": "char.deity",    "faction": "fac.anti_group",  "kind": "leader_of"},
-      {"character": "char.hacker",   "faction": "fac.anti_group",  "kind": "former_friend", "note": "former leader, now independent in Backdoor"},
-      {"character": "char.hero",     "faction": "fac.agency",      "kind": "member_of", "note": "turns during NB1"},
-      {"character": "char.innocent", "faction": "fac.guard",       "kind": "member_of", "note": "Guard Force member, secretly spying for Agency"}
+      {
+        "character": "kilima_in12_rebel",
+        "faction": "fac.red_fist_dragons",
+        "kind": "member_of"
+      },
+      {
+        "character": "kilima_in12_deity",
+        "faction": "fac.direnis_cell",
+        "kind": "leader_of"
+      },
+      {
+        "character": "kilima_in12_hacker",
+        "faction": "mfac.anti_group",
+        "kind": "former_friend",
+        "note": "former leader, now independent in Backdoor"
+      },
+      {
+        "character": "kilima_in12_hero",
+        "faction": "fac.master_council",
+        "kind": "member_of",
+        "note": "turns during NB1"
+      },
+      {
+        "character": "kilima_in12_innocent",
+        "faction": "fac.arena_corps",
+        "kind": "member_of",
+        "note": "Guard Force member, secretly spying for Agency"
+      }
     ],
     "faction_locations": [
-      {"faction": "fac.anti_group",  "location": "loc.cave",    "kind": "based_in"},
-      {"faction": "fac.agency",      "location": "loc.capital",  "kind": "based_in"},
-      {"faction": "fac.union_corp",  "location": "loc.capital",  "kind": "based_in"}
-    ]
+      {
+        "faction": "fac.direnis_cell",
+        "location": "loc.cave",
+        "kind": "based_in"
+      },
+      {
+        "faction": "fac.master_council",
+        "location": "loc.tower",
+        "kind": "based_in"
+      },
+      {
+        "faction": "fac.uc_interior",
+        "location": "loc.headquarters",
+        "kind": "based_in"
+      },
+      {
+        "faction": "fac.backdoor",
+        "location": "loc.backdoor",
+        "kind": "based_in"
+      },
+      {
+        "faction": "fac.grand_library",
+        "location": "loc.library",
+        "kind": "based_in"
+      },
+      {
+        "faction": "fac.red_fist_dragons",
+        "location": "loc.workshop",
+        "kind": "based_in"
+      },
+      {
+        "faction": "fac.dust_parade",
+        "location": "loc.oasis",
+        "kind": "based_in"
+      }
+    ],
+    "macro_faction_count": 10
   },
   "nb1_invariants": {
     "duration_hours": 62,
-    "three_dawns": ["H00 (funeral)", "H30 (travel)", "H62 (death)"],
+    "three_dawns": [
+      "H00 (funeral)",
+      "H30 (travel)",
+      "H62 (death)"
+    ],
     "fixed_events": [
       "Len is already dead physically at NB1 start",
       "Her consciousness exists in The Limbo",
@@ -94,8 +285,14 @@
       "event": "E09",
       "hour": 35,
       "type": "binary",
-      "options": ["participates", "refuses"],
-      "probability": {"participates": 0.5, "refuses": 0.5}
+      "options": [
+        "participates",
+        "refuses"
+      ],
+      "probability": {
+        "participates": 0.5,
+        "refuses": 0.5
+      }
     },
     {
       "id": "VAR_BRAIS",
@@ -103,8 +300,14 @@
       "event": "E07B",
       "hour": 16,
       "type": "binary",
-      "options": ["lies", "betrays"],
-      "probability": {"lies": 0.5, "betrays": 0.5}
+      "options": [
+        "lies",
+        "betrays"
+      ],
+      "probability": {
+        "lies": 0.5,
+        "betrays": 0.5
+      }
     },
     {
       "id": "VAR_ENDING",
@@ -112,8 +315,14 @@
       "event": "E24",
       "hour": 62,
       "type": "binary",
-      "options": ["kive_dies", "pau_dies"],
-      "probability": {"kive_dies": 0.5, "pau_dies": 0.5}
+      "options": [
+        "kive_dies",
+        "pau_dies"
+      ],
+      "probability": {
+        "kive_dies": 0.5,
+        "pau_dies": 0.5
+      }
     }
   ],
   "forbidden": [

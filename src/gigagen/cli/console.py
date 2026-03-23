@@ -6,7 +6,7 @@ import sys
 from dataclasses import dataclass, field
 from typing import Any, TextIO
 
-from gigagen.core.entity import Character, Faction, Location
+from gigagen.core.entity import Character, MacroFaction, Location
 from gigagen.core.relation import Relation, harmonic_affinity
 from gigagen.core.world_state import WorldState
 from gigagen.core.simulator import (
@@ -50,7 +50,7 @@ class ConsoleContext:
 def _show_world(ctx: ConsoleContext, out: TextIO) -> None:
     ws = ctx.ws
     chars = [e for e in ws.entities.values() if e.entity_type == "character"]
-    facs = [e for e in ws.entities.values() if e.entity_type == "faction"]
+    facs = [e for e in ws.entities.values() if e.entity_type == "macro_faction"]
     locs = [e for e in ws.entities.values() if e.entity_type == "location"]
     out.write(f"\n  World: {ws.world_id}\n")
     out.write(f"  Seed:  {ws.seed}\n")
@@ -83,7 +83,7 @@ def _list_characters(ws: WorldState, out: TextIO) -> None:
 
 def _list_factions(ws: WorldState, out: TextIO) -> None:
     facs = sorted(
-        (e for e in ws.entities.values() if isinstance(e, Faction)),
+        (e for e in ws.entities.values() if isinstance(e, MacroFaction)),
         key=lambda f: f.name,
     )
     out.write(f"\n  {'Name':<20} {'Mode':<14} {'Family':<12} {'Status':<14} {'Power':>6} {'Cohesion':>9}\n")
@@ -105,7 +105,7 @@ def _list_locations(ws: WorldState, out: TextIO) -> None:
     out.write(f"\n  {'Name':<22} {'Zone':<10} {'Tonic':<6} {'Status':<12} {'Tension':>8} {'Controller'}\n")
     out.write(f"  {'-'*22} {'-'*10} {'-'*6} {'-'*12} {'-'*8} {'-'*16}\n")
     for loc in locs:
-        ctrl = loc.controlling_faction_id or "(none)"
+        ctrl = loc.controlling_macro_faction_id or "(none)"
         tonic = loc.tonic or "-"
         out.write(
             f"  {loc.name:<22} {loc.zone_level:<10} {tonic:<6} {loc.status:<12} "
@@ -140,15 +140,15 @@ def _inspect_entity(ws: WorldState, entity_id: str, out: TextIO) -> None:
         out.write(f"\n  State:\n")
         out.write(f"    Status:   {ent.status}  Emotion: {ent.emotional_load}\n")
         out.write(f"    Location: {ent.current_location_id}\n")
-        out.write(f"    Faction:  {ent.current_faction_id or '(none)'}\n")
-    elif isinstance(ent, Faction):
+        out.write(f"    Faction:  {ent.current_macro_faction_id or '(none)'}\n")
+    elif isinstance(ent, MacroFaction):
         out.write(f"\n  Harmonic:\n")
         out.write(f"    Mode: {ent.mode or '(none)'}  Family: {ent.scale_family or '(none)'}  Notes: {ent.note_count}\n")
         if ent.intervals:
             out.write(f"    Intervals: {ent.intervals}\n")
-        if ent.subdivisions:
-            out.write(f"\n  Subdivisions ({len(ent.subdivisions)}):\n")
-            for sub in ent.subdivisions:
+        if ent.factions:
+            out.write(f"\n  Factions ({len(ent.factions)}):\n")
+            for sub in ent.factions:
                 name = sub.name or "(unnamed)"
                 note = sub.note or "-"
                 leader = sub.leader_id or "-"
@@ -160,11 +160,11 @@ def _inspect_entity(ws: WorldState, entity_id: str, out: TextIO) -> None:
         out.write(f"\n  Zone: {ent.zone_level}  Biome: {', '.join(ent.biome_tags)}\n")
         tonic_str = ent.tonic or "(none)"
         out.write(f"  Tonic: {tonic_str}  Status: {ent.status}  Tension: {ent.tension:.2f}  Access: {ent.access}\n")
-        out.write(f"  Controller: {ent.controlling_faction_id or '(none)'}\n")
+        out.write(f"  Controller: {ent.controlling_macro_faction_id or '(none)'}\n")
         if ent.parent_location_id:
             out.write(f"  Parent: {ent.parent_location_id}\n")
-        if ent.secondary_faction_ids:
-            out.write(f"  Secondary factions: {', '.join(ent.secondary_faction_ids)}\n")
+        if ent.secondary_macro_faction_ids:
+            out.write(f"  Secondary factions: {', '.join(ent.secondary_macro_faction_ids)}\n")
 
     rels = _get_entity_relations(ws, entity_id)
     if rels:

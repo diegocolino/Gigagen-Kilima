@@ -1,259 +1,600 @@
 {
+  "$schema": "kilima_locations_v2",
+  "$doc": "Definitive locations for Kilima BN1. 7 levels. Updated 2026-03-23.",
+
+  "hierarchy": {
+    "levels": ["world", "territory", "region", "area", "location", "room", "locker"],
+    "tonic_logic": {
+      "world": "Fixed por arco narrativo. Cambia segun BN.",
+      "territory": "Derived (media o gambling de niveles inferiores).",
+      "region": "Seeded en Chronica.",
+      "area": "Seeded en Chronica. Facciones dominantes influyen.",
+      "location": "Mix fixed/seeded. 4 fixed (Workshop D#, Backdoor F#, Cave B, Recess A#), resto seeded.",
+      "room": "Fixed por naturaleza/uso. No cambia entre seeds.",
+      "locker": "Fixed por contenido. Movil entre rooms."
+    },
+    "zone_tags": {
+      "capitol": {
+        "type": "district",
+        "count": 7,
+        "values": ["Morecuri", "Nuve Este", "Terramar", "Triple Sur", "Santo Norte", "Oeste Auron", "Neotown"],
+        "assignment": "seeded"
+      },
+      "agora": {
+        "type": "barrio",
+        "count": 13,
+        "values": ["Culture", "Education", "Energy", "Defense", "Katalin Kariko", "Structures", "Systems", "Interior", "Memory", "Materials", "Engineering", "Exterior", "Levi-Montalcini"],
+        "notes": "12 barrios = 12 ministerios Union Corp + 1 outsider (Levi-Montalcini). Barrio names TBD: will be renamed to women who revolutionized each sector. Katalin Kariko = Biotechnology barrio (The Nest). Levi-Montalcini = outsider barrio (The Recess).",
+        "assignment": "seeded, except The Recess which is fixed to Levi-Montalcini"
+      },
+      "pobla2": {
+        "type": "section",
+        "count": 8,
+        "values": ["N", "NE", "E", "SE", "S", "SW", "W", "NW"],
+        "assignment": "seeded"
+      }
+    }
+  },
+
   "locations": [
+
     {
-      "id": "loc.cage",
-      "entity_type": "location",
-      "name": "The Cage",
-      "tags": ["external", "artistic", "semi_autonomous"],
-      "canon_level": "fixed",
-      "description": "Semi-autonomous floating city. Artists, thinkers, Savages. Bohemian Academy base.",
+      "id": "world",
+      "name": "World",
+      "level": "world",
+      "parent": null,
       "tonic": null,
-      "zone_level": "external",
-      "parent_location_id": null,
-      "biome_tags": ["floating", "artistic"],
-      "status": "stable",
-      "controlling_faction_id": "fac.bohemian",
-      "secondary_faction_ids": [],
-      "tension": 0.3,
+      "tonic_type": "fixed_by_arc"
+    },
+
+    {
+      "id": "territory",
+      "name": "Territory",
+      "level": "territory",
+      "parent": "world",
+      "tonic": null,
+      "tonic_type": "derived"
+    },
+
+    {
+      "id": "kilima",
+      "name": "Kilima",
+      "level": "region",
+      "parent": "territory",
+      "tonic": null,
+      "tonic_type": "seeded"
+    },
+    {
+      "id": "last_road",
+      "name": "Last Road",
+      "level": "region",
+      "parent": "territory",
+      "tonic": null,
+      "tonic_type": "seeded"
+    },
+    {
+      "id": "golden_cage",
+      "name": "Golden Cage",
+      "level": "region",
+      "parent": "territory",
+      "tonic": null,
+      "tonic_type": "seeded"
+    },
+    {
+      "id": "the_train",
+      "name": "The Train",
+      "level": "region",
+      "parent": "territory",
+      "tonic": null,
+      "tonic_type": "seeded"
+    },
+
+    {
+      "id": "capitol",
+      "name": "Capitol",
+      "level": "area",
+      "parent": "kilima",
+      "tonic": null,
+      "tonic_type": "seeded",
+      "faction_control": "union_corp",
+      "modal_influence": "ionian",
       "access": "restricted"
     },
     {
-      "id": "loc.capital",
-      "entity_type": "location",
-      "name": "The Capital",
-      "tags": ["high", "elite", "technological"],
-      "canon_level": "fixed",
-      "description": "Seat of power at the top of The Mountain. Union Corp + Agency SL shared control. 7 districts for Plan Despega.",
+      "id": "agora",
+      "name": "Agora",
+      "level": "area",
+      "parent": "kilima",
       "tonic": null,
-      "zone_level": "high",
-      "parent_location_id": null,
-      "biome_tags": ["mountain", "technological", "elite"],
-      "status": "stable",
-      "controlling_faction_id": "fac.union_corp",
-      "secondary_faction_ids": ["fac.agency"],
-      "tension": 0.4,
+      "tonic_type": "seeded",
+      "faction_control": "union_corp",
+      "modal_influence": "ionian",
+      "access": "open"
+    },
+    {
+      "id": "pobla2",
+      "name": "Pobla 2",
+      "level": "area",
+      "parent": "kilima",
+      "tonic": null,
+      "tonic_type": "seeded",
+      "faction_control": null,
+      "modal_influence": null,
+      "access": "open"
+    },
+    {
+      "id": "wall",
+      "name": "Wall",
+      "level": "area",
+      "parent": "kilima",
+      "tonic": null,
+      "tonic_type": "seeded",
+      "faction_control": "guard_force",
+      "modal_influence": "dorian",
       "access": "restricted"
     },
     {
-      "id": "loc.city",
-      "entity_type": "location",
-      "name": "The City",
-      "tags": ["mid", "contested", "urban"],
-      "canon_level": "fixed",
-      "description": "Middle class zone. Politically contested between Union Corp and Anti Group.",
+      "id": "net",
+      "name": "Net",
+      "level": "area",
+      "parent": "kilima",
       "tonic": null,
-      "zone_level": "mid",
-      "parent_location_id": null,
-      "biome_tags": ["mountain", "urban", "slope"],
-      "status": "tense",
-      "controlling_faction_id": "fac.union_corp",
-      "secondary_faction_ids": ["fac.anti_group"],
-      "tension": 0.6,
+      "tonic_type": "seeded",
+      "faction_control": null,
+      "modal_influence": null,
       "access": "open"
     },
-    {
-      "id": "loc.village",
-      "entity_type": "location",
-      "name": "The Village",
-      "tags": ["low", "marginal", "modular"],
-      "canon_level": "fixed",
-      "description": "Marginal zone. Flooded. Modular platforms. Population lives mostly in The Net through cubicles.",
-      "tonic": null,
-      "zone_level": "low",
-      "parent_location_id": null,
-      "biome_tags": ["mountain", "flooded", "modular"],
-      "status": "fragile",
-      "controlling_faction_id": null,
-      "secondary_faction_ids": [],
-      "tension": 0.5,
-      "access": "open"
-    },
-    {
-      "id": "loc.cave",
-      "entity_type": "location",
-      "name": "The Cave",
-      "tags": ["hidden", "anti_group_hq", "historically_impenetrable"],
-      "canon_level": "fixed",
-      "description": "Tunnel network. Anti Group HQ. Direnis Cell command center. Historically impenetrable — breached for first time at H52-H56.",
-      "tonic": null,
-      "zone_level": "hidden",
-      "parent_location_id": null,
-      "biome_tags": ["mountain", "tunnels", "underground"],
-      "status": "hidden",
-      "controlling_faction_id": "fac.anti_group",
-      "secondary_faction_ids": [],
-      "tension": 0.2,
-      "access": "clandestine"
-    },
-    {
-      "id": "loc.net",
-      "entity_type": "location",
-      "name": "The Net",
-      "tags": ["virtual", "metaverse", "flai_controlled"],
-      "canon_level": "fixed",
-      "description": "Vast digital metaverse. Controlled by Flai (not a faction). Virtual environments built by Agency SL Net Service.",
-      "tonic": null,
-      "zone_level": "virtual",
-      "parent_location_id": null,
-      "biome_tags": ["digital", "metaverse"],
-      "status": "active",
-      "controlling_faction_id": null,
-      "secondary_faction_ids": ["fac.agency"],
-      "tension": 0.3,
-      "access": "open"
-    },
-    {
-      "id": "loc.limbo",
-      "entity_type": "location",
-      "name": "The Limbo",
-      "tags": ["virtual", "subzone", "transferred_souls"],
-      "canon_level": "fixed",
-      "description": "Subzone within The Net. Where transferred consciousnesses truly exist. Len and Brais end up here.",
-      "tonic": null,
-      "zone_level": "virtual",
-      "parent_location_id": "loc.net",
-      "biome_tags": ["digital", "between_space"],
-      "status": "hidden",
-      "controlling_faction_id": null,
-      "secondary_faction_ids": [],
-      "tension": 0.1,
-      "access": "sealed"
-    },
+
     {
       "id": "loc.tower",
-      "entity_type": "location",
       "name": "The Tower",
-      "tags": ["building", "agency_hq"],
-      "canon_level": "fixed",
-      "description": "Agency SL headquarters. Master Council seat. Where artists and celebrities are created and controlled.",
+      "level": "location",
+      "parent": "capitol",
       "tonic": null,
-      "zone_level": "high",
-      "parent_location_id": "loc.capital",
-      "biome_tags": ["mountain", "corporate"],
-      "status": "stable",
-      "controlling_faction_id": "fac.agency",
-      "secondary_faction_ids": [],
-      "tension": 0.2,
-      "access": "restricted"
+      "tonic_type": "seeded",
+      "zone_tag": null,
+      "zone_tag_type": "seeded",
+      "faction_control": "agency_sl",
+      "modal_influence": "aeolian",
+      "bn1_relevance": "Luka trabaja aqui. Agency SL HQ."
     },
     {
-      "id": "loc.sede",
-      "entity_type": "location",
-      "name": "La Sede",
-      "tags": ["building", "union_corp_hq"],
-      "canon_level": "fixed",
-      "description": "Union Corp headquarters. All 12 ministries operate from here. Saarah leads Interior.",
+      "id": "loc.cathedral",
+      "name": "The Cathedral",
+      "level": "location",
+      "parent": "capitol",
       "tonic": null,
-      "zone_level": "mid",
-      "parent_location_id": "loc.city",
-      "biome_tags": ["urban", "institutional"],
-      "status": "tense",
-      "controlling_faction_id": "fac.union_corp",
-      "secondary_faction_ids": [],
-      "tension": 0.5,
-      "access": "restricted"
+      "tonic_type": "seeded",
+      "zone_tag": null,
+      "zone_tag_type": "seeded",
+      "faction_control": "cult_order",
+      "modal_influence": "locrian",
+      "bn1_relevance": "Funeral ocultista. Len iniciada en Cult Order."
     },
     {
-      "id": "loc.forno",
-      "entity_type": "location",
-      "name": "The Forno",
-      "tags": ["social", "childhood_place", "anti_group_cell"],
-      "canon_level": "fixed",
-      "description": "Artistic quarter. Giosme lineage territory. Kive/Luka/Cris band origin. Anti Group Forno cell base. Reunion dinner H20.",
+      "id": "loc.central_station",
+      "name": "The Central Station",
+      "level": "location",
+      "parent": "capitol",
       "tonic": null,
-      "zone_level": "mid",
-      "parent_location_id": "loc.city",
-      "biome_tags": ["urban", "artistic", "nightlife"],
-      "status": "stable",
-      "controlling_faction_id": "fac.anti_group",
-      "secondary_faction_ids": [],
-      "tension": 0.1,
-      "access": "open"
+      "tonic_type": "seeded",
+      "zone_tag": null,
+      "zone_tag_type": "seeded",
+      "faction_control": "kilima_lines",
+      "modal_influence": "pentatonic_major",
+      "bn1_relevance": "Kive + Yeri llegan del Train. Se separan."
+    },
+    {
+      "id": "loc.avenue",
+      "name": "The Avenue",
+      "level": "location",
+      "parent": "capitol",
+      "tonic": null,
+      "tonic_type": "seeded",
+      "zone_tag": null,
+      "zone_tag_type": "seeded",
+      "faction_control": null,
+      "modal_influence": null,
+      "bn1_relevance": "Cabinas de carga a Net. Kive reunion con Agency SL. Dev le encuentra."
+    },
+
+    {
+      "id": "loc.headquarters",
+      "name": "The Headquarters",
+      "level": "location",
+      "parent": "agora",
+      "tonic": null,
+      "tonic_type": "seeded",
+      "zone_tag": null,
+      "zone_tag_type": "seeded",
+      "faction_control": "union_corp",
+      "modal_influence": "ionian",
+      "bn1_relevance": "Union Corp HQ. Saarah + Cris huyen H18."
     },
     {
       "id": "loc.nest",
-      "entity_type": "location",
       "name": "The Nest",
-      "tags": ["hospital", "medical", "amparo"],
-      "canon_level": "fixed",
-      "description": "Hospital / medical zone. Amparo Foundation Vital Care base. Nora's world. Group hides here after Forno.",
+      "level": "location",
+      "parent": "agora",
       "tonic": null,
-      "zone_level": "mid",
-      "parent_location_id": "loc.city",
-      "biome_tags": ["urban", "medical"],
-      "status": "hidden",
-      "controlling_faction_id": "fac.amparo",
-      "secondary_faction_ids": [],
-      "tension": 0.1,
-      "access": "clandestine"
+      "tonic_type": "seeded",
+      "zone_tag": "Katalin Kariko",
+      "zone_tag_type": "fixed",
+      "faction_control": "amparo_foundation",
+      "modal_influence": "lydian",
+      "bn1_relevance": "Amparo Foundation / Vital Care. Nora. Grupo se esconde."
     },
+    {
+      "id": "loc.recess",
+      "name": "The Recess",
+      "level": "location",
+      "parent": "agora",
+      "tonic": "A#",
+      "tonic_type": "fixed",
+      "zone_tag": "Levi-Montalcini",
+      "zone_tag_type": "fixed",
+      "faction_control": "anti_group",
+      "modal_influence": "phrygian",
+      "bn1_relevance": "Escuela abandonada. Base artistas. Cris. Fiesta interrumpida."
+    },
+
     {
       "id": "loc.backdoor",
-      "entity_type": "location",
       "name": "The Backdoor",
-      "tags": ["access_point", "net", "clandestine", "backdoor_hq"],
-      "canon_level": "fixed",
-      "description": "Clandestine Net access point. Backdoor faction HQ. Dev's territory. Near The Cave.",
-      "tonic": null,
-      "zone_level": "hidden",
-      "parent_location_id": "loc.village",
-      "biome_tags": ["technological", "clandestine"],
-      "status": "hidden",
-      "controlling_faction_id": "fac.backdoor",
-      "secondary_faction_ids": [],
-      "tension": 0.1,
-      "access": "clandestine"
+      "level": "location",
+      "parent": "pobla2",
+      "tonic": "F#",
+      "tonic_type": "fixed",
+      "zone_tag": null,
+      "zone_tag_type": "seeded",
+      "faction_control": "backdoor",
+      "modal_influence": "whole_tone",
+      "bn1_relevance": "Acceso clandestino a Net. Dev. Kive pasa."
     },
     {
-      "id": "loc.wall",
-      "entity_type": "location",
-      "name": "The Wall",
-      "tags": ["border", "structural", "guard_force"],
-      "canon_level": "fixed",
-      "description": "Border between The City and The Village. Guard Force Wall Command base.",
-      "tonic": null,
-      "zone_level": "mid",
-      "parent_location_id": null,
-      "biome_tags": ["mountain", "border"],
-      "status": "stable",
-      "controlling_faction_id": "fac.guard",
-      "secondary_faction_ids": [],
-      "tension": 0.3,
-      "access": "restricted"
+      "id": "loc.cave",
+      "name": "The Cave",
+      "level": "location",
+      "parent": "pobla2",
+      "tonic": "B",
+      "tonic_type": "fixed",
+      "zone_tag": null,
+      "zone_tag_type": "seeded",
+      "faction_control": "anti_group",
+      "modal_influence": "phrygian",
+      "bn1_relevance": "Anti Group HQ. Grupo converge. Breached H56."
     },
     {
-      "id": "loc.road",
-      "entity_type": "location",
-      "name": "The Road",
-      "tags": ["route", "dangerous", "lawless"],
-      "canon_level": "fixed",
-      "description": "Desolate wasteland route. Bandits, extreme weather. Only surface connection between zones.",
-      "tonic": null,
-      "zone_level": "external",
-      "parent_location_id": null,
-      "biome_tags": ["wasteland", "route"],
-      "status": "unstable",
-      "controlling_faction_id": null,
-      "secondary_faction_ids": [],
-      "tension": 0.7,
-      "access": "open"
+      "id": "loc.workshop",
+      "name": "The Workshop",
+      "level": "location",
+      "parent": "pobla2",
+      "tonic": "D#",
+      "tonic_type": "fixed",
+      "zone_tag": null,
+      "zone_tag_type": "seeded",
+      "faction_control": "anti_group",
+      "modal_influence": "phrygian",
+      "bn1_relevance": "Base de Kive. Red Fist Dragons. Dentro de The Cave."
     },
     {
-      "id": "loc.kilima",
-      "entity_type": "location",
-      "name": "Kilima",
-      "tags": ["hub", "transit"],
-      "canon_level": "fixed",
-      "description": "Transit hub on The Mountain. Where Kive and Yeri arrive and split.",
+      "id": "loc.cemetery",
+      "name": "The Cemetery",
+      "level": "location",
+      "parent": "pobla2",
       "tonic": null,
-      "zone_level": "mid",
-      "parent_location_id": null,
-      "biome_tags": ["mountain", "transit"],
-      "status": "tense",
-      "controlling_faction_id": null,
-      "secondary_faction_ids": [],
-      "tension": 0.4,
-      "access": "open"
+      "tonic_type": "seeded",
+      "zone_tag": null,
+      "zone_tag_type": "seeded",
+      "faction_control": null,
+      "modal_influence": null,
+      "bn1_relevance": "Desguace de robots obsoletos. Dev pasa entre Cave y Backdoor."
+    },
+
+    {
+      "id": "loc.first_wall",
+      "name": "The First Wall",
+      "level": "location",
+      "parent": "wall",
+      "tonic": null,
+      "tonic_type": "seeded",
+      "faction_control": "guard_force",
+      "modal_influence": "dorian",
+      "bn1_relevance": "Frontera Capitol - Agora."
+    },
+    {
+      "id": "loc.second_wall",
+      "name": "The Second Wall",
+      "level": "location",
+      "parent": "wall",
+      "tonic": null,
+      "tonic_type": "seeded",
+      "faction_control": "guard_force",
+      "modal_influence": "dorian",
+      "bn1_relevance": "Frontera Agora - Pobla 2."
+    },
+
+    {
+      "id": "loc.plaza",
+      "name": "The Plaza",
+      "level": "location",
+      "parent": "net",
+      "tonic": null,
+      "tonic_type": "seeded",
+      "faction_control": null,
+      "modal_influence": null,
+      "bn1_relevance": "Funeral virtual. Dev/Freya/Len."
+    },
+    {
+      "id": "loc.limbo",
+      "name": "The Limbo",
+      "level": "location",
+      "parent": "net",
+      "tonic": null,
+      "tonic_type": "seeded",
+      "faction_control": null,
+      "modal_influence": null,
+      "bn1_relevance": "Len existe aqui. Brais transferido H20."
+    },
+
+    {
+      "id": "loc.oasis",
+      "name": "The Oasis Suspiro",
+      "level": "location",
+      "parent": "last_road",
+      "tonic": null,
+      "tonic_type": "seeded",
+      "faction_control": "anti_group",
+      "modal_influence": "phrygian",
+      "bn1_relevance": "Dust Parade. Kive + Yeri pasan."
+    },
+
+    {
+      "id": "loc.library",
+      "name": "The Library",
+      "level": "location",
+      "parent": "golden_cage",
+      "tonic": null,
+      "tonic_type": "seeded",
+      "faction_control": "bohemian_academy",
+      "modal_influence": "mixolydian",
+      "bn1_relevance": "Grand Library. Pau."
+    },
+    {
+      "id": "loc.mortuary",
+      "name": "The Mortuary",
+      "level": "location",
+      "parent": "golden_cage",
+      "tonic": null,
+      "tonic_type": "seeded",
+      "faction_control": null,
+      "modal_influence": null,
+      "bn1_relevance": "Pertenencias de Len post-incineracion."
+    },
+
+    {
+      "id": "loc.tower:meeting_room",
+      "name": "Meeting Room",
+      "level": "room",
+      "parent": "loc.tower",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.cathedral:main_hall",
+      "name": "Main Hall",
+      "level": "room",
+      "parent": "loc.cathedral",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.central_station:platform04",
+      "name": "Platform 04",
+      "level": "room",
+      "parent": "loc.central_station",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.avenue:cabin04",
+      "name": "Cabin 04",
+      "level": "room",
+      "parent": "loc.avenue",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.headquarters:office",
+      "name": "Interior Office",
+      "level": "room",
+      "parent": "loc.headquarters",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.nest:operating_room",
+      "name": "Operating Room",
+      "level": "room",
+      "parent": "loc.nest",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.recess:studio",
+      "name": "Studio",
+      "level": "room",
+      "parent": "loc.recess",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.recess:rooftop",
+      "name": "Rooftop",
+      "level": "room",
+      "parent": "loc.recess",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.backdoor:hub",
+      "name": "Hub",
+      "level": "room",
+      "parent": "loc.backdoor",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.cave:entrance",
+      "name": "Entrance",
+      "level": "room",
+      "parent": "loc.cave",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.cave:assembly",
+      "name": "Assembly",
+      "level": "room",
+      "parent": "loc.cave",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.cave:daycare",
+      "name": "Daycare",
+      "level": "room",
+      "parent": "loc.cave",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.workshop:garage",
+      "name": "Garage",
+      "level": "room",
+      "parent": "loc.workshop",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.workshop:living_room",
+      "name": "Living Room",
+      "level": "room",
+      "parent": "loc.workshop",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.cemetery:sector07",
+      "name": "Sector 07",
+      "level": "room",
+      "parent": "loc.cemetery",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.first_wall:checkpoint",
+      "name": "Checkpoint",
+      "level": "room",
+      "parent": "loc.first_wall",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.second_wall:checkpoint",
+      "name": "Checkpoint",
+      "level": "room",
+      "parent": "loc.second_wall",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.plaza:stage",
+      "name": "Stage",
+      "level": "room",
+      "parent": "loc.plaza",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.limbo:lobby",
+      "name": "Lobby",
+      "level": "room",
+      "parent": "loc.limbo",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.oasis:cafe",
+      "name": "Cafe",
+      "level": "room",
+      "parent": "loc.oasis",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "the_train:wagon04",
+      "name": "Wagon 04",
+      "level": "room",
+      "parent": "the_train",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "golden_cage:plaza",
+      "name": "Plaza",
+      "level": "room",
+      "parent": "golden_cage",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "golden_cage:port",
+      "name": "Port",
+      "level": "room",
+      "parent": "golden_cage",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+    {
+      "id": "loc.mortuary:belongings_room",
+      "name": "Belongings Room",
+      "level": "room",
+      "parent": "loc.mortuary",
+      "tonic": null,
+      "tonic_type": "fixed"
+    },
+
+    {
+      "id": "loc.mortuary:belongings_room:locker05",
+      "name": "Locker 05",
+      "level": "locker",
+      "parent": "loc.mortuary:belongings_room",
+      "tonic": null,
+      "tonic_type": "fixed",
+      "contents_note": "Pertenencias de Len post-incineracion. Falta la Pinza del Pelo."
+    },
+    {
+      "id": "loc.workshop:garage:chest04",
+      "name": "Chest 04",
+      "level": "locker",
+      "parent": "loc.workshop:garage",
+      "tonic": null,
+      "tonic_type": "fixed",
+      "contents_note": "Zapas Viejas de Kive cuando se pone las botas de moto."
     }
-  ]
+  ],
+
+  "future_locations": {
+    "$doc": "Locations del lore no operables en BN1. Se implementan cuando haga falta.",
+    "capitol": ["The Table", "La Junta", "El Jardin Real", "The Clinic", "The Coliseum", "The Server", "The Academy", "The Rotation"],
+    "agora": ["The Church", "Lujuria", "El Rancho", "The Zone", "Los Pisos"],
+    "pobla2": ["Los Bloques", "The Port", "El Desguace", "Los Servidores", "La Colina"],
+    "cave_rooms": ["El Comedor", "La Enfermeria", "El Aula", "Sala de Maquinas", "Centro de Mando"],
+    "golden_cage": ["El Museo", "El Parque"],
+    "last_road": ["Los Amarres", "La Escuela Militar", "La Urbanizacion", "El Zepelin"],
+    "net": ["The Void", "The Infrared", "El Crucero", "El Estadio", "El Cole", "El Jardin", "El Launcher", "El Refugio"],
+    "space": ["The Colony", "The Frontier"],
+    "earth": ["La Selva", "El Copo", "La Brecha", "Las Tres Islas", "Atlantis", "La Flota"]
+  }
 }

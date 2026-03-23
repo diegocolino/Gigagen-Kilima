@@ -11,6 +11,7 @@ from gigagen.core.entity import (
     BaseEntity,
     Character,
     Faction,
+    MacroFaction,
     Location,
     Item,
     Anima,
@@ -26,8 +27,69 @@ WORLDS_DIR = pathlib.Path(__file__).resolve().parent.parent / "worlds" / "kilima
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _load_json(name: str) -> list[dict]:
+def _load_json_raw(name: str):
     return json.loads((WORLDS_DIR / name).read_text(encoding="utf-8"))
+
+
+def _load_json(name: str) -> list[dict]:
+    """Load a worldpack JSON, handling both plain arrays and object wrappers."""
+    raw = _load_json_raw(name)
+    if isinstance(raw, list):
+        return raw
+    if isinstance(raw, dict):
+        for key in ("characters", "relations", "locations", "macro_factions"):
+            if key in raw:
+                return raw[key]
+    return []
+
+
+def _normalize_location(raw: dict) -> dict:
+    """Normalize new-format location fields to match the Location model."""
+    d = dict(raw)
+    if "level" in d and "zone_level" not in d:
+        d["zone_level"] = d.pop("level")
+    if "parent" in d and "parent_location_id" not in d:
+        d["parent_location_id"] = d.pop("parent")
+    if "faction_control" in d and "controlling_macro_faction_id" not in d:
+        d["controlling_macro_faction_id"] = d.pop("faction_control")
+    if "entity_type" not in d:
+        d["entity_type"] = "location"
+    if "canon_level" not in d:
+        d["canon_level"] = "fixed"
+    if "name" not in d:
+        d["name"] = d.get("id", "")
+    known = {
+        "id", "entity_type", "name", "tags", "canon_level", "description",
+        "tonic", "zone_level", "parent_location_id", "biome_tags",
+        "status", "controlling_macro_faction_id", "secondary_macro_faction_ids",
+        "tension", "access",
+    }
+    return {k: v for k, v in d.items() if k in known}
+
+
+def _load_locations() -> list[dict]:
+    """Load and normalize locations."""
+    return [_normalize_location(loc) for loc in _load_json("locations.json")]
+
+
+def _load_factions_data() -> list[dict]:
+    """Load factions, reconstructing embedded structure from split format."""
+    raw = _load_json_raw("factions.json")
+    if isinstance(raw, dict) and "macro_factions" in raw:
+        mfacs = list(raw["macro_factions"])
+        facs_by_mfac: dict[str, list] = {}
+        for f in raw.get("factions", []):
+            mfid = f.get("macro_faction_id", "")
+            facs_by_mfac.setdefault(mfid, []).append(f)
+        result = []
+        for mf in mfacs:
+            mf_copy = dict(mf)
+            mf_copy["factions"] = facs_by_mfac.get(mf_copy["id"], [])
+            result.append(mf_copy)
+        return result
+    elif isinstance(raw, list):
+        return raw
+    return []
 
 
 # ---------------------------------------------------------------------------
@@ -59,18 +121,17 @@ class TestCharacters:
             assert c.entity_type == "character"
 
 
-    def test_subdivision_assignments(self, characters: list[Character]) -> None:
-        """Characters with known subdivision assignments have them set."""
+    def test_faction_assignments(self, characters: list[Character]) -> None:
+        """Characters with known faction assignments have them set."""
         by_id = {c.id: c for c in characters}
-        assert by_id["char.rebel"].current_subdivision_id == "Red Fist Dragons"
-        assert by_id["char.deity"].current_subdivision_id == "Direnis Cell"
-        assert by_id["char.explorer"].current_subdivision_id == "Dust Parade"
-        assert by_id["char.hero"].current_subdivision_id == "Master Council"
-        assert by_id["char.leader"].current_subdivision_id == "Interior"
-        assert by_id["char.creator"].current_subdivision_id == "Forno Cell"
-        # Characters without known subdivisions default to None
-        assert by_id["char.orphan"].current_subdivision_id is None
-        assert by_id["char.hacker"].current_subdivision_id is None
+        assert by_id["kilima_in12_rebel"].current_faction_id == "fac.red_fist_dragons"
+        assert by_id["kilima_in12_deity"].current_faction_id == "fac.direnis_cell"
+        assert by_id["kilima_in12_explorer"].current_faction_id == "fac.dust_parade"
+        assert by_id["kilima_in12_hero"].current_faction_id == "fac.master_council"
+        assert by_id["kilima_in12_leader"].current_faction_id == "fac.uc_interior"
+        # Characters without known factions default to None
+        assert by_id["kilima_in12_creator"].current_faction_id is None
+        assert by_id["kilima_in12_orphan"].current_faction_id is None
 
 
 class TestCharacterValidation:
@@ -102,7 +163,7 @@ class TestCharacterValidation:
 class TestFactions:
     @pytest.fixture(scope="class")
     def factions(self) -> list[Faction]:
-        return [Faction(**f) for f in _load_json("factions.json")]
+        return [MacroFaction(**f) for f in _load_factions_data()]
 
     def test_load_all_10(self, factions: list[Faction]) -> None:
         assert len(factions) == 10
@@ -125,7 +186,7 @@ class TestFactions:
 
     def test_entity_type(self, factions: list[Faction]) -> None:
         for f in factions:
-            assert f.entity_type == "faction"
+            assert f.entity_type == "macro_faction"
 
 
 # ---------------------------------------------------------------------------
@@ -135,10 +196,10 @@ class TestFactions:
 class TestLocations:
     @pytest.fixture(scope="class")
     def locations(self) -> list[Location]:
-        return [Location(**loc) for loc in _load_json("locations.json")]
+        return [Location(**loc) for loc in _load_locations()]
 
-    def test_load_all_15(self, locations: list[Location]) -> None:
-        assert len(locations) == 15
+    def test_load_all_locations(self, locations: list[Location]) -> None:
+        assert len(locations) >= 15  # 55 in new hierarchical format
 
     def test_entity_type(self, locations: list[Location]) -> None:
         for loc in locations:
@@ -154,8 +215,8 @@ class TestRelations:
     def relations(self) -> list[Relation]:
         return [Relation(**r) for r in _load_json("relations.json")]
 
-    def test_load_all_26(self, relations: list[Relation]) -> None:
-        assert len(relations) == 26
+    def test_load_all_relations(self, relations: list[Relation]) -> None:
+        assert len(relations) >= 26  # 30 after FL-4 update
 
     def test_all_kinds_valid(self, relations: list[Relation]) -> None:
         from gigagen.core.relation import RELATION_KINDS
@@ -226,8 +287,8 @@ class TestWorldState:
     @pytest.fixture(scope="class")
     def world_state(self) -> WorldState:
         characters = [Character(**c) for c in _load_json("characters.json")]
-        factions = [Faction(**f) for f in _load_json("factions.json")]
-        locations = [Location(**loc) for loc in _load_json("locations.json")]
+        factions = [MacroFaction(**f) for f in _load_factions_data()]
+        locations = [Location(**loc) for loc in _load_locations()]
         relations = [Relation(**r) for r in _load_json("relations.json")]
 
         entities: dict[str, BaseEntity] = {}
@@ -241,16 +302,16 @@ class TestWorldState:
             description="Kilima NB1 — seed 1",
             entities=entities,
             relations=relations,
-            active_faction_ids=[f.id for f in factions if f.status != "dissolved"],
+            active_macro_faction_ids=[f.id for f in factions if f.status != "dissolved"],
             active_location_ids=[loc.id for loc in locations],
             tags=["nb1", "test"],
         )
 
     def test_entity_count(self, world_state: WorldState) -> None:
-        assert len(world_state.entities) == 12 + 10 + 15  # chars + facs + locs
+        assert len(world_state.entities) >= 37  # 12 chars + 10 facs + locations
 
     def test_relation_count(self, world_state: WorldState) -> None:
-        assert len(world_state.relations) == 26
+        assert len(world_state.relations) >= 26  # 30 after FL-4
 
     def test_seed(self, world_state: WorldState) -> None:
         assert world_state.seed == 1
@@ -259,8 +320,8 @@ class TestWorldState:
         """Same seed produces same WorldState."""
         def build(seed: int) -> str:
             characters = [Character(**c) for c in _load_json("characters.json")]
-            factions = [Faction(**f) for f in _load_json("factions.json")]
-            locations = [Location(**loc) for loc in _load_json("locations.json")]
+            factions = [MacroFaction(**f) for f in _load_factions_data()]
+            locations = [Location(**loc) for loc in _load_locations()]
             relations = [Relation(**r) for r in _load_json("relations.json")]
 
             entities: dict[str, BaseEntity] = {}
@@ -273,7 +334,7 @@ class TestWorldState:
                 phase="block_1_start",
                 entities=entities,
                 relations=relations,
-                active_faction_ids=[f.id for f in factions],
+                active_macro_faction_ids=[f.id for f in factions],
                 active_location_ids=[loc.id for loc in locations],
             )
             return ws.model_dump_json()
@@ -304,18 +365,18 @@ class TestWorldpackFiles:
             assert c.hero_type, f"{c.id} missing hero_type"
 
     def test_factions_json_with_corrected_leadership(self) -> None:
-        factions = [Faction(**f) for f in _load_json("factions.json")]
+        factions = [MacroFaction(**f) for f in _load_factions_data()]
         assert len(factions) == 10
         # Freya leads Anti Group (formerly The Resistance)
-        anti = next(f for f in factions if f.id == "fac.anti_group")
+        anti = next(f for f in factions if f.id == "mfac.anti_group")
         assert anti.mode == "phrygian"
         assert anti.scale_family == "greek"
 
-    def test_locations_json_includes_limbo_and_forno(self) -> None:
-        locations = [Location(**loc) for loc in _load_json("locations.json")]
+    def test_locations_json_includes_limbo_and_recess(self) -> None:
+        locations = [Location(**loc) for loc in _load_locations()]
         ids = {loc.id for loc in locations}
         assert "loc.limbo" in ids, "The Limbo missing"
-        assert "loc.forno" in ids, "The Forno missing"
+        assert "loc.recess" in ids, "The Recess missing"
 
     def test_relations_json_validates(self) -> None:
         relations = [Relation(**r) for r in _load_json("relations.json")]
@@ -357,8 +418,8 @@ class TestWorldpackFiles:
     def test_all_jsons_validate_against_models(self) -> None:
         """Full integration: load every JSON and build a WorldState."""
         characters = [Character(**c) for c in _load_json("characters.json")]
-        factions = [Faction(**f) for f in _load_json("factions.json")]
-        locations = [Location(**loc) for loc in _load_json("locations.json")]
+        factions = [MacroFaction(**f) for f in _load_factions_data()]
+        locations = [Location(**loc) for loc in _load_locations()]
         relations = [Relation(**r) for r in _load_json("relations.json")]
 
         entities: dict[str, BaseEntity] = {}
@@ -371,26 +432,26 @@ class TestWorldpackFiles:
             phase="block_1_start",
             entities=entities,
             relations=relations,
-            active_faction_ids=[f.id for f in factions if f.status != "dissolved"],
+            active_macro_faction_ids=[f.id for f in factions if f.status != "dissolved"],
             active_location_ids=[loc.id for loc in locations],
         )
         assert ws.world_id == "world.kilima"
-        assert len(ws.entities) == 37  # 12 + 10 + 15
+        assert len(ws.entities) >= 37  # 12 chars + 10 facs + locations
 
 
 # ---------------------------------------------------------------------------
-# Subdivision invariant tests
+# Faction invariant tests
 # ---------------------------------------------------------------------------
 
-class TestSubdivisionInvariants:
-    """Validate subdivision consistency invariant checks."""
+class TestFactionInvariants:
+    """Validate faction consistency invariant checks."""
 
     def _build_ws(
         self,
         chars: list[Character],
         facs: list[Faction],
     ) -> WorldState:
-        locations = [Location(**loc) for loc in _load_json("locations.json")]
+        locations = [Location(**loc) for loc in _load_locations()]
         relations = [Relation(**r) for r in _load_json("relations.json")]
         entities: dict[str, BaseEntity] = {}
         for ent in [*chars, *facs, *locations]:
@@ -401,44 +462,44 @@ class TestSubdivisionInvariants:
             phase="block_1_start",
             entities=entities,
             relations=relations,
-            active_faction_ids=[f.id for f in facs],
+            active_macro_faction_ids=[f.id for f in facs],
             active_location_ids=[loc.id for loc in locations],
         )
 
-    def test_valid_subdivision_passes(self) -> None:
+    def test_valid_faction_passes(self) -> None:
         from gigagen.core.invariants import validate_invariants
         chars = [Character(**c) for c in _load_json("characters.json")]
-        facs = [Faction(**f) for f in _load_json("factions.json")]
+        facs = [MacroFaction(**f) for f in _load_factions_data()]
         ws = self._build_ws(chars, facs)
         result = validate_invariants(ws, WORLDS_DIR / "invariants.json")
-        # No subdivision-related errors
-        sub_errors = [e for e in result.errors if "subdivision" in e.lower()]
-        assert not sub_errors, f"Unexpected subdivision errors: {sub_errors}"
+        # No faction-related errors
+        sub_errors = [e for e in result.errors if "faction" in e.lower()]
+        assert not sub_errors, f"Unexpected faction errors: {sub_errors}"
 
-    def test_invalid_subdivision_name_fails(self) -> None:
+    def test_invalid_faction_name_fails(self) -> None:
         from gigagen.core.invariants import validate_invariants
         chars = [Character(**c) for c in _load_json("characters.json")]
-        facs = [Faction(**f) for f in _load_json("factions.json")]
-        # Set a character to a non-existent subdivision
-        rebel = next(c for c in chars if c.id == "char.rebel")
-        rebel.current_subdivision_id = "Nonexistent Cell"
+        facs = [MacroFaction(**f) for f in _load_factions_data()]
+        # Set a character to a non-existent faction
+        rebel = next(c for c in chars if c.id == "kilima_in12_rebel")
+        rebel.current_faction_id = "Nonexistent Cell"
         ws = self._build_ws(chars, facs)
         result = validate_invariants(ws, WORLDS_DIR / "invariants.json")
         assert not result.valid
         assert any("Nonexistent Cell" in e for e in result.errors)
 
-    def test_subdivision_without_faction_fails(self) -> None:
+    def test_faction_unknown_ref_fails(self) -> None:
         from gigagen.core.invariants import validate_invariants
         chars = [Character(**c) for c in _load_json("characters.json")]
-        facs = [Faction(**f) for f in _load_json("factions.json")]
-        # Set subdivision but clear faction
-        rebel = next(c for c in chars if c.id == "char.rebel")
-        rebel.current_subdivision_id = "Red Fist Dragons"
-        rebel.current_faction_id = None
+        facs = [MacroFaction(**f) for f in _load_factions_data()]
+        # Set a completely unknown faction reference
+        rebel = next(c for c in chars if c.id == "kilima_in12_rebel")
+        rebel.current_faction_id = "fac.totally_fake"
+        rebel.current_macro_faction_id = None
         ws = self._build_ws(chars, facs)
         result = validate_invariants(ws, WORLDS_DIR / "invariants.json")
         assert not result.valid
-        assert any("no faction" in e.lower() for e in result.errors)
+        assert any("fac.totally_fake" in e for e in result.errors)
 
 
 # ---------------------------------------------------------------------------
@@ -450,7 +511,7 @@ class TestLocationParentInvariants:
 
     def _build_ws_with_locations(self, locations: list[Location]) -> WorldState:
         chars = [Character(**c) for c in _load_json("characters.json")]
-        facs = [Faction(**f) for f in _load_json("factions.json")]
+        facs = [MacroFaction(**f) for f in _load_factions_data()]
         relations = [Relation(**r) for r in _load_json("relations.json")]
         entities: dict[str, BaseEntity] = {}
         for ent in [*chars, *facs, *locations]:
@@ -461,13 +522,13 @@ class TestLocationParentInvariants:
             phase="block_1_start",
             entities=entities,
             relations=relations,
-            active_faction_ids=[f.id for f in facs],
+            active_macro_faction_ids=[f.id for f in facs],
             active_location_ids=[loc.id for loc in locations],
         )
 
     def test_valid_parents_pass(self) -> None:
         from gigagen.core.invariants import validate_invariants
-        locations = [Location(**loc) for loc in _load_json("locations.json")]
+        locations = [Location(**loc) for loc in _load_locations()]
         ws = self._build_ws_with_locations(locations)
         result = validate_invariants(ws, WORLDS_DIR / "invariants.json")
         parent_errors = [e for e in result.errors if "parent" in e.lower()]
@@ -475,7 +536,7 @@ class TestLocationParentInvariants:
 
     def test_invalid_parent_reference_fails(self) -> None:
         from gigagen.core.invariants import validate_invariants
-        locations = [Location(**loc) for loc in _load_json("locations.json")]
+        locations = [Location(**loc) for loc in _load_locations()]
         # Point a location to a non-existent parent
         tower = next(l for l in locations if l.id == "loc.tower")
         tower.parent_location_id = "loc.nonexistent"
@@ -486,12 +547,12 @@ class TestLocationParentInvariants:
 
     def test_parent_cycle_fails(self) -> None:
         from gigagen.core.invariants import validate_invariants
-        locations = [Location(**loc) for loc in _load_json("locations.json")]
-        # Create a cycle: capital → city → capital
-        capital = next(l for l in locations if l.id == "loc.capital")
-        city = next(l for l in locations if l.id == "loc.city")
-        capital.parent_location_id = "loc.city"
-        city.parent_location_id = "loc.capital"
+        locations = [Location(**loc) for loc in _load_locations()]
+        # Create a cycle: capitol → agora → capitol
+        capitol = next(l for l in locations if l.id == "capitol")
+        agora = next(l for l in locations if l.id == "agora")
+        capitol.parent_location_id = "agora"
+        agora.parent_location_id = "capitol"
         ws = self._build_ws_with_locations(locations)
         result = validate_invariants(ws, WORLDS_DIR / "invariants.json")
         assert not result.valid

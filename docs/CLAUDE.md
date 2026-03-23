@@ -41,106 +41,166 @@ Kilima  = poema / mundo / instancia concreta
 
 ---
 
-## Los dos ejes del sistema
+## Principio ontológico fundamental
 
-### 1. Eje arquetípico-musical (mente)
+### Todo es entidad. Toda entidad está arquetipizada.
 
-- 12 arquetipos = 12 lógicas cognitivas base
-- 12 notas musicales
-- La singularidad de cada NPC no nace de tener una IA distinta, sino de: relaciones, contexto, objetos, facción, linaje, elemento/ánima, estado tonal
-- La música no es adorno: es lenguaje operativo (resonancia, disonancia, triadas, modos, tensiones, resoluciones)
-- Mayor = expresión integrada/expansiva. Menor = expresión tensionada/contractiva. No es moral fija.
+Esta es la idea más importante del proyecto. No hay jerarquía de tipos donde unos son "nodos" y otros son "registros" o "catálogos". Todo — personajes, objetos, locations, ánimas, skills, eventos, facciones — es una entidad con un arquetipo asignado. Un arquetipo = una nota cromática. Hay 12 arquetipos universales, 12 notas.
 
-#### Sistema armónico de intervalos (ya probado)
+Esto significa que cualquier entidad puede relacionarse armónicamente con cualquier otra. Un personaje tiene afinidad con un objeto, con una location, con otro personaje, con un evento — y esa afinidad se calcula exactamente igual en todos los casos: intervalo entre sus notas.
 
-En un mod previo de Hytale se implementó y funcionó un sistema donde:
-- Cada entidad tiene una nota base (por su arquetipo)
-- El **intervalo musical** entre dos entidades determina su **afinidad base** (un float)
-- Ese índice base se modifica por: facción compartida, relaciones comunes, historial, estado actual
-- Ejemplo: tritono (6 semitonos) = némesis / tensión máxima. Quinta justa (7 semitonos) = aliado natural. Tercera menor/mayor = tensiones naturales en grupo.
-- El sistema era sencillo y funcional. Debe portarse a Gigagen como función calculada en la capa de relaciones.
+### El sistema es relacional, no taxonómico
 
-La función objetivo sería algo como: `harmonic_affinity(note_a, note_b) → float base`, que luego se ajusta por contexto.
+Una entidad no vale por sí sola; vale por cómo se relaciona con las demás. La singularidad de cada entidad nace de su posición en la red de relaciones, no de propiedades internas.
 
-### 2. Eje elemental-anímico (poder)
+### Clasificación de estado
 
-- Las Ánimas son **entidades plenas**: tienen personalidad, apariencia, historia propia. Son personajes como los humanos, pero no viven en el plano físico de la misma manera.
-- En La Red se manifiestan con facilidad. En el mundo físico, se necesita un don (por herencia o aprendizaje). Len nació con ese don (Sensible Suprema).
-- Separan: arquetipo = mente/conducta vs. ánima = poder/stats/física/afinidad
-- Un Caregiver Agua y un Caregiver Fuego comparten lógica profunda, pero no se manifiestan igual
-- Hay **16 elementos** en jerarquía: 4 Fundamentales (Agua, Fuego, Tierra, Aire) → 6 Mixtos → 4 Truncados → Éter (Supremo, en dos formas: natural y sintético). Las ánimas son **instancias** de estos elementos.
-- La tensión Éter natural vs. Éter sintético es un eje de conflicto central (Sensibles vs. Capital).
-- Las ánimas tienen relaciones con su portador, con otras ánimas, con localizaciones donde se manifiestan.
-- Las ánimas se asignan a NPCs, influyen en facciones, afectan locations, dejan rastro en objetos
+Las entidades tienen propiedades que se clasifican según su mutabilidad:
+
+| Categoría | Significado |
+|-----------|-------------|
+| **fixed** | No puede cambiar entre seeds. Identidad. |
+| **seeded** | Se decide al iniciar la simulación, permanece coherente en esa run |
+| **derived** | Emerge de relaciones y reglas durante la simulación |
+| **forbidden** | Trayectorias que el sistema NO debe producir |
+
+---
+
+## El sistema armónico
+
+### Base: nota contra nota
+
+La función armónica fundamental es simple: dadas dos notas, calcula el intervalo en semitonos y devuelve una afinidad base (float). Es universal. No cambia.
+
+```
+harmonic_affinity(note_a, note_b) → float
+```
+
+Unísono = máxima resonancia. Quinta justa = pilar. Tercera = color. Tritono = máxima tensión. Semitono = fricción.
+
+### La armonía es universal
+
+Al estar todo arquetipizado, la misma función calcula la afinidad entre cualquier par de entidades: personaje ↔ personaje, personaje ↔ objeto, personaje ↔ location, objeto ↔ evento, etc. No hacen falta funciones específicas por tipo. La nota es la nota.
+
+### La octava no afecta a la afinidad
+
+La octava (en qué registro del Life Pack vive una entidad) es organización, no resonancia. D# contra A# siempre es quinta justa, da igual si uno es un personaje y el otro es un objeto. La octava determina el tipo de slot y la lógica de llenado, pero no el cálculo armónico.
+
+### Modo global
+
+Cada Life Pack tiene un modo (mayor o menor) que afecta a cómo se interpretan los intervalos de tercera, sexta y séptima en todos los slots. Mayor = expresión integrada/expansiva. Menor = expresión tensionada/contractiva. No es moral: es color armónico. Un personaje puede cambiar de modo durante la narrativa — y cuando lo hace, todo su espectro se recalcula.
+
+### Alteraciones
+
+Las alteraciones (mayor/menor/aumentada/disminuida) cambian la cualidad del vínculo entre una entidad y un slot, sin cambiar qué entidad ocupa el slot. Son dinámicas: mutan durante la narrativa.
+
+- Mayor → vínculo luminoso, dominio
+- Menor → vínculo con peso, carga
+- Aumentada → obsesión, dependencia, descontrol
+- Disminuida → roto, perdido, traicionado
+
+---
+
+## El Life Pack
+
+El Life Pack es el espectro completo de existencia de un personaje, organizado por octavas de frecuencia. Un personaje es: su tónica + las entidades en cada grado de su Life Pack.
+
+### Mapa de octavas
+
+| Octava | Tipo | Lógica de llenado | Se activa en |
+|--------|------|-------------------|-------------|
+| infrasonidos | Pasado muerto (Theogony, Chronica) | Por definir | — |
+| 0 | Lore (definición arquetípica) | 12 slots fijos por arquetipo, iguales para todos | Genesis |
+| 1 | Ánimas (espíritus elementales) | Variable por elementos del personaje | Theogony |
+| 2 | Linajes | Slot único | Theogony |
+| 3 | Locations | Acorde interno (tónica, 3m, 5J + desbloqueables) | Contempo |
+| 4 | Objetos | Acorde interno | Contempo |
+| 5 | Skills | Acorde interno | Contempo |
+| 6 | Reservada | Por definir | — |
+| 7 | Personajes (relaciones) | 12 slots completos por intervalo | Chronica |
+| 8 | Eventos (cicatrices narrativas) | Invariantes + variables por resolver | Chronica |
+| ultrasonidos | Futuro (variantes, bifurcaciones) | Por definir | — |
+
+### Reglas del Life Pack
+
+- Cada octava tiene su propia lógica de llenado. No hay regla universal.
+- Los slots se desbloquean durante la narrativa (eventos → unlock de locations, objetos, etc.)
+- La octava 0 es constitucional: define cómo el personaje se relaciona con cada arquetipo. No muta.
+- La octava 1 depende de los elementos innatos. Dominar un elemento desbloquea un slot de ánima. Fusionar elementos desbloquea más slots sin eliminar los anteriores.
+- Las octavas 3, 4, 5 usan lógica de acorde interno: 4 slots iniciales (tónica, 3m, 3M, 5J), el resto se desbloquea.
+- La octava 7 se auto-calcula desde el roster de personajes disponible.
+- La octava 8 contiene invariantes (siempre pasan) y variables (la simulación debe resolverlas).
+
+### Documentación del Life Pack
+
+| Archivo | Contenido |
+|---------|-----------|
+| `lifepack_estructura.md` | Definición conceptual de todas las entidades y relaciones |
+| `lifepack_template.json` | Plantilla JSON vacía con todos los slots |
+| `gigagen_roadmap_lifepack.md` | Milestones de implementación LP-0 a LP-8 |
+| `kilima_in12_rebel_lifepack.json` | Life Pack de Kive (primer ejemplo, parcialmente rellenado) |
+
+---
+
+## El eje elemental-anímico
+
+- Las Ánimas son entidades plenas: tienen personalidad, arquetipo, nota. Son personajes como los humanos, pero no viven en el plano físico de la misma manera.
+- En La Red se manifiestan con facilidad. En el mundo físico, se necesita un don.
+- Hay 16 elementos en jerarquía: 4 Fundamentales (Agua, Fuego, Tierra, Aire) → 6 Mixtos → 4 Truncados → Éter (Supremo).
+- Los elementos son condiciones de acceso a la octava 1 del Life Pack. No son entidades en sí.
+- Caso especial: Len tiene Éter de base (sensible suprema, espectro elemental completo). Dev tiene octava 1 vacía (emula efectos elementales vía skills + objetos tecnológicos — poder condicional).
 
 ---
 
 ## La escalera de descendencia (arquitectura de capas)
 
-El universo no aparece de golpe. Se genera por capas:
+El universo no aparece de golpe. Se genera por capas. Cada capa activa octavas del Life Pack:
 
-1. **Genesis** — Define qué puede medirse. No valores concretos: parámetros posibles.
-2. **Theogony** — Fuerzas invisibles: ánimas, elements, skills, rules, symbols, gramática mágica.
-3. **Chronica** — Re-simula el pasado usando las mismas lógicas que Contempo/Existence, pero hacia atrás. No genera historia aleatoria: redibuja una historia que ya tiene esqueleto canónico.
-   - En Kilima: parte de los 12 linajes fundadores (familias de poder que financiaron La Montaña) y la Primera Revolución como eventos estructurales.
-   - Chronica produce un pasado con consecuencias reales que desemboca en el presente de Contempo.
-4. **Contempo** — Materializa el presente visible: estado actual del mundo.
-   - En Gigagen: estructura genérica del presente.
-   - En Kilima: el presente concreto con los 12 protagonistas.
+1. **Genesis** — Define qué puede medirse. Parámetros posibles. Activa octava 0 (lore).
+2. **Theogony** — Fuerzas invisibles: ánimas, elementos, linajes. Activa octavas 1 y 2.
+3. **Chronica** — Re-simula el pasado. Parte de esqueleto canónico, no genera historia aleatoria. Activa octavas 7 y 8.
+4. **Contempo** — Materializa el presente visible. Activa octavas 3, 4 y 5. El Life Pack completo cobra sentido.
 5. **Existence** — Introduce al jugador en el sistema.
 
 No tocar esta arquitectura. Conservarla como esqueleto maestro.
 
 ---
 
-## Principios ontológicos fundamentales
+## Nomenclatura (IMPORTANTE)
 
-### Una entidad no vale por sí sola; vale por cómo se relaciona
+| Término correcto | Definición | Término obsoleto |
+|-----------------|-----------|-----------------|
+| **Macro-facción** | Modo armónico (Dórico, Frigio...). Sin tónica. Plantilla. | "facción" en código antiguo |
+| **Facción** | Macro-facción + tónica = escala concreta. Operativa. Tiene líder, miembros, territorio. | "subdivisión" en código antiguo |
+| **kilima_in12_{archetype}** | Patrón de ID para personajes de la primera colección de 12 | `kilima_{archetype}` |
 
-Esta es la idea más importante del proyecto. El sistema es **relacional**, no taxonómico.
-
-### Separación sagrada de planos
-
-Cada vez que aparezca una duda, preguntar: ¿esto es identidad, estado, relación, capacidad o consecuencia?
-
-| Plano | Qué es | Ejemplo |
-|-------|--------|---------|
-| **Identidad** | Lo que una cosa *es* | Kive es El Rebelde, arquetipo REB, nota D# |
-| **Estado** | Cómo *está* ahora | alive, active, location: loc.jaula |
-| **Relación** | Cómo está *vinculada* con otra cosa | sibling con La Huérfana |
-| **Capacidad** | Qué *puede hacer* | skills, poderes |
-| **Acción** | Qué *ejecuta* en runtime | intervención en evento |
-| **Efecto** | Qué *cambia* al ejecutarse | daño, alianza rota |
-| **Consecuencia** | Qué persistencia deja ese cambio | herencia, memoria |
-| **Historia** | Registro encadenado de consecuencias | chronica |
-
-### Clasificación fixed / seeded / derived / forbidden
-
-| Categoría | Significado |
-|-----------|-------------|
-| **fixed** | No puede cambiar entre seeds |
-| **seeded** | Se decide al iniciar la simulación, permanece coherente en esa run |
-| **derived** | No se decide al inicio, emerge de relaciones y reglas |
-| **forbidden** | Trayectorias que el sistema NO debe producir |
+El renombrado en código es LP-0 (primer milestone del roadmap del Life Pack).
 
 ---
 
-## Vocabulario ontológico
+## Metas
 
-No todo es "Entity". Hay cuatro clases de cosas:
+### Meta faro
 
-1. **Entidades** — Nodos del universo: Character, Faction, Location, Item, Anima
-2. **Relaciones** — Vínculos entre entidades (objeto de primera clase, no lista embebida)
-3. **Capacidades/definiciones** — Skill, Rule, SymbolSet, Archetype, Element (catálogos, no entidades)
-4. **Sucesos** — Event, ChronicleEntry, Transition (registros temporales)
+Conseguir la primera simulación que relacione todos los tipos de entidades en todo el espectro armónico. Cargar el Life Pack del Rebelde (Kive) y ver cómo muta e interactúa durante la simulación del BN1. **Cerrar el sistema armónico global antes de seguir metiendo lore, personajes, locations, eventos.**
 
----
+### Meta a corto plazo
 
-## Meta inmediata
+Redefinir los indicadores de armonía ahora que la armonía es universal y trabaja con todas las entidades. El motor armónico actual (`harmony.py`) tiene funciones específicas por tipo (`character_faction_affinity`, `character_location_affinity`). Estas deberían simplificarse hacia una función universal `harmonic_affinity(note_a, note_b)` donde el contexto lo pone el caller, no la función. Esto es un refactor que simplifica en vez de complicar.
 
-Conseguir que Gigagen pueda **cargar Kilima y generar una versión válida de su presente**.
+### Milestones técnicos
 
-No perfecta. No jugable aún. Pero sí coherente y reproducible por seed.
+Detalle completo en `gigagen_roadmap_lifepack.md`. Resumen:
+
+1. **LP-0** — Renombrado global (subdivision → faction, faction → macro_faction, IDs con in12)
+2. **LP-1** — Modelo LifePack en Pydantic (genérico, sin datos de Kilima)
+3. **LP-2** — Loader de lifepacks desde worldpack
+4. **LP-3** — Modo global (mayor/menor) como propiedad del Life Pack
+5. **LP-4** — Octava 7 auto-calculada desde roster de personajes
+6. **LP-5** — Unlock de slots durante simulación via event rules
+7. **LP-6** — Octava 8 integrada con sistema invariant/variable
+8. **LP-7** — TUI para inspección del Life Pack
+9. **LP-8** — Ánimas (octava 1, estructura base)
 
 ### Lo que NO toca ahora
 
@@ -149,74 +209,87 @@ No perfecta. No jugable aún. Pero sí coherente y reproducible por seed.
 - Godot
 - Metaverso
 - Tercera revolución
-- Sistema narrativo final
-- Ánimas completas
-- Skills completas
-
-### Lo que SÍ toca
-
-1. Modelos canónicos: BaseEntity, Relation, WorldState
-2. Worldpack de Kilima con JSON mínimos
-3. Loader que cargue el worldpack y valide
-4. Primer export reproducible por seed
-
-### Criterios de validación del primer hito
-
-Un world_state exportado está bien si cumple:
-
-1. **Separación limpia** — No hay datos de Kilima incrustados en Gigagen
-2. **Entidades coherentes** — Identidad y estado claramente separados
-3. **Relaciones como primer ciudadano** — No son decoración ni listas arbitrarias
-4. **Seed con variación controlada** — La seed cambia estados y tensiones, no destruye identidad
+- Skills completas (diccionario pendiente)
 
 ---
 
-## Estructura de carpetas objetivo
+## Diagnóstico del código (marzo 2026)
+
+El sistema base es lo bastante escalable. No hay que empezar de cero. El cimiento aguanta:
+
+- Separación Gigagen/Kilima limpia
+- Modelos Pydantic extensibles
+- Simulador data-driven
+- 205 tests pasando
+
+Lo que hay que hacer:
+
+- **Simplificar** `harmony.py`: menos funciones específicas, más función universal
+- **Añadir** modelo LifePack al lado de lo existente (no dentro de Character — referenciado por ID, JSON separado en `lifepacks/`)
+- **Extender** el simulador sin tocar su lógica core (nuevo event rule type: `unlock_lifepack_slot`)
+- **Renombrar** nomenclatura (LP-0, lo más arriesgado pero mecánico)
+
+**Alerta permanente:** si en algún momento una decisión contradice el algoritmo base o complica lo que debería ser simple, parar y replantear. Mejor reconstruir sobre terreno firme que parchear.
+
+---
+
+## Estructura de carpetas
 
 ```
-D:\Gigagen_Kilima\
-├── docs/                          # Project documentation
-│   ├── CLAUDE.md                  # ← THIS FILE
-│   ├── ontology.md                # Formal models: entity, relation, state
-│   ├── kilima_bible.md            # INDEX pointing to all kilima_ files
-│   ├── kilima_lore.md             # World background, ether, elements, etc.
-│   ├── kilima_characters.md       # The 12 principals
-│   ├── kilima_locations.md        # All locations
-│   ├── kilima_factions.md         # The 4 factions
-│   ├── kilima_hero_*.md           # 12 hero arc files (one per archetype)
-│   ├── invariants.md              # Fixed / seeded / derived / forbidden
-│   └── roadmap.md                 # Milestones
-├── src/
-│   └── gigagen/
-│       ├── core/                  # Core models
-│       │   ├── entity.py
-│       │   ├── relation.py
-│       │   └── world_state.py
-│       ├── catalogs/              # Master catalogs (Gigagen, not Kilima)
-│       │   ├── archetypes.json
-│       │   ├── notes.json
-│       │   ├── elements.json
-│       │   └── relation_types.json
-│       ├── layers/                # The 5 layers
-│       │   ├── genesis.py
-│       │   ├── theogony.py
-│       │   ├── chronica.py
-│       │   ├── contempo.py
-│       │   └── existence.py
-│       └── io/                    # Load and export
-│           ├── load_worldpack.py
-│           └── export_world_state.py
-├── worlds/
-│   └── kilima/
-│       ├── world.json
+docs/
+├── CLAUDE.md                      # ← ESTE ARCHIVO
+├── README.md                      # Índice de documentación
+├── gigagen/                       # Docs del motor
+│   ├── gigagen_ontology.md
+│   ├── gigagen_faction_system.md
+│   ├── gigagen_roadmap_lifepack.md
+│   └── ...
+├── kilima/                        # Docs del worldpack
+│   ├── kilima_bible.md
+│   ├── kilima_lore.md
+│   ├── kilima_characters.md
+│   ├── kilima_factions.md
+│   ├── kilima_locations.md
+│   ├── kilima_invariants.md
+│   ├── lifepack_estructura.md
+│   └── data/
 │       ├── characters.json
 │       ├── factions.json
 │       ├── locations.json
 │       ├── relations.json
-│       ├── invariants.json
-│       └── timelines/
-│           └── bn1.yaml           # The 62-hour NB1 master (v5.0)
-└── outputs/
+│       └── world.json
+
+src/gigagen/
+├── core/
+│   ├── entity.py
+│   ├── relation.py
+│   ├── harmony.py
+│   ├── lifepack.py                # NUEVO
+│   ├── world_state.py
+│   ├── simulator.py
+│   ├── seed.py
+│   └── invariants.py
+├── io/
+│   ├── load_worldpack.py
+│   └── export_world_state.py
+├── cli/
+│   ├── console.py
+│   └── tui/
+└── __main__.py
+
+worlds/kilima/
+├── world.json
+├── characters.json
+├── factions.json
+├── locations.json
+├── relations.json
+├── invariants.json
+├── event_rules.json
+├── lifepacks/                     # NUEVO
+│   ├── kilima_in12_rebel.json
+│   └── ...
+└── timelines/
+    └── bn1.yaml
 ```
 
 ---
@@ -224,9 +297,11 @@ D:\Gigagen_Kilima\
 ## Stack técnico
 
 - **Lenguaje:** Python 3.11+
-- **Modelos de datos:** Pydantic v2 (recomendado para validación fuerte de JSON contra modelos)
+- **Modelos de datos:** Pydantic v2
 - **Formato de datos:** JSON
-- **Sin dependencias pesadas** al principio. Sin frameworks web, sin BD, sin Godot todavía.
+- **TUI:** Textual
+- **Tests:** pytest (205 passing)
+- **Sin dependencias pesadas.** Sin frameworks web, sin BD, sin Godot todavía.
 
 ---
 
@@ -238,23 +313,23 @@ D:\Gigagen_Kilima\
 - Se beneficia mucho de **diccionarios y vocabularios cerrados**.
 - El criterio de verdad no es solo técnico: una decisión es buena si es programable, jugable, y parece derivada del propio universo.
 
-**Instrucción clave:** no intentes impresionar ni completar demasiado rápido. Ayúdale a descubrir la forma mínima correcta de cada pieza, una por una.
+**Instrucción clave:** no intentes impresionar ni completar demasiado rápido. Ayúdale a descubrir la forma mínima correcta de cada pieza, una por una. Si algo contradice el algoritmo base o complica lo que debería ser simple, dilo.
 
 ---
 
 ## Referencia rápida: los 12 arquetipos
 
-| Código | Arquetipo | Nota |
-|--------|-----------|------|
-| CAR | Caregiver | C |
-| JES | Jester | C# / Db |
-| HER | Hero | D |
-| REB | Rebel | D# / Eb |
-| ORP | Orphan | E |
-| LOV | Lover | F |
-| HCK | Hacker | F# / Gb |
-| LEA | Leader | G |
-| INN | Innocent | G# / Ab |
-| EXP | Explorer | A |
-| CRE | Creator | A# / Bb |
-| DEI | Deity | B |
+| Código | Arquetipo | Nota | Personaje (kilima_in12) |
+|--------|-----------|------|------------------------|
+| CAR | Caregiver | C | Nora |
+| JES | Jester | C# | Pau |
+| HER | Hero | D | Luka |
+| REB | Rebel | D# | Kive |
+| ORP | Orphan | E | Len |
+| LOV | Lover | F | Ali |
+| HCK | Hacker | F# | Dev |
+| LEA | Leader | G | Saarah |
+| INN | Innocent | G# | Brais |
+| EXP | Explorer | A | Yeri |
+| CRE | Creator | A# | Cris |
+| DEI | Deity | B | Freya |

@@ -113,12 +113,12 @@ class TestSimulation:
     ) -> None:
         """At H20, Brais dies and Nora+Pau are kidnapped."""
         advance_to(ws, sim, 20, events, ws.seed)
-        brais = ws.entities.get("char.innocent")
+        brais = ws.entities.get("kilima_in12_innocent")
         assert isinstance(brais, Character)
         assert brais.status == "dead"
-        assert sim.outcomes["char.innocent"].life_state == "dead"
+        assert sim.outcomes["kilima_in12_innocent"].life_state == "dead"
 
-        nora = ws.entities.get("char.caregiver")
+        nora = ws.entities.get("kilima_in12_caregiver")
         assert isinstance(nora, Character)
         assert nora.status == "captive"
 
@@ -135,7 +135,7 @@ class TestSimulation:
     ) -> None:
         """At H37, Nora+Pau are rescued by Yeri."""
         advance_to(ws, sim, 37, events, ws.seed)
-        nora = ws.entities.get("char.caregiver")
+        nora = ws.entities.get("kilima_in12_caregiver")
         assert isinstance(nora, Character)
         assert nora.status == "active"
         assert nora.current_location_id == "loc.cave"
@@ -159,11 +159,11 @@ class TestSimulation:
 
         ending = sim.resolved_variables["VAR_ENDING"]
         if ending == "kive_dies":
-            kive = ws.entities.get("char.rebel")
+            kive = ws.entities.get("kilima_in12_rebel")
             assert isinstance(kive, Character)
             assert kive.status == "dead"
         else:
-            pau = ws.entities.get("char.jester")
+            pau = ws.entities.get("kilima_in12_jester")
             assert isinstance(pau, Character)
             assert pau.status == "dead"
 
@@ -222,8 +222,8 @@ class TestOutcomes:
     ) -> None:
         advance_to(ws, sim, 62, events, ws.seed)
         # After full simulation, outcomes reflect event-driven state changes
-        assert sim.outcomes["char.innocent"].life_state in ("alive", "dead", "automaton")
-        assert sim.outcomes["char.orphan"].life_state in ("alive", "dead")
+        assert sim.outcomes["kilima_in12_innocent"].life_state in ("alive", "dead", "automaton")
+        assert sim.outcomes["kilima_in12_orphan"].life_state in ("alive", "dead")
 
 
 # ---------------------------------------------------------------------------
@@ -332,14 +332,13 @@ class TestHarmonicIntegration:
             if isinstance(ent, Character):
                 assert eid in sim.character_affinities
 
-    def test_null_tonics_handled_gracefully(
+    def test_tonics_handled_gracefully(
         self, ws: WorldState, sim: SimulatorState,
     ) -> None:
-        """With null tonics, affinities should be None — no crashes."""
+        """Character affinities calculated without crashes. None for null-tonic locations."""
         for eid in sim.character_affinities:
             aff = sim.character_affinities[eid]
-            # All tonics are null in Phase 3-skip, so all affinities are None
-            assert aff is None
+            assert aff is None or isinstance(aff, float)
 
     def test_event_log_has_harmonic_fields(
         self, ws: WorldState, sim: SimulatorState, events: list[dict[str, Any]],

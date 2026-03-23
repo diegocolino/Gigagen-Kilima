@@ -35,6 +35,9 @@ from .screens import (
     NewRelationScreen,
     ValidationResultScreen,
     HarmonicDashboardScreen,
+    MapScreen,
+    TimelineScreen,
+    LifePackInspectorScreen,
 )
 
 
@@ -72,6 +75,9 @@ class GigagenApp(App):
         Binding("ctrl+s", "save_worldpack", "Save", show=True, key_display="^S"),
         Binding("v", "validate", "Validate", show=True),
         Binding("h", "harmonic", "Harmonic", show=True),
+        Binding("m", "map", "Map", show=True),
+        Binding("t", "timeline", "Timeline", show=True),
+        Binding("L", "lifepack", "LifePack", show=True, key_display="L"),
     ]
 
     def __init__(self, bridge: SimulatorBridge) -> None:
@@ -161,31 +167,87 @@ class GigagenApp(App):
 
     # --- Time control actions ---
 
+    def _get_active_map(self) -> "MapScreen | None":
+        """Return the active MapScreen if one is on top, else None."""
+        if len(self.screen_stack) > 1:
+            top = self.screen_stack[-1]
+            if isinstance(top, MapScreen):
+                return top
+        return None
+
+    def _has_modal(self) -> bool:
+        """Check if a non-map modal screen is currently active."""
+        if len(self.screen_stack) <= 1:
+            return False
+        return not isinstance(self.screen_stack[-1], MapScreen)
+
     def action_step_forward_1(self) -> None:
-        self.bridge.step_forward(1)
-        self._refresh_all()
+        if self._has_modal():
+            return
+        map_screen = self._get_active_map()
+        if map_screen:
+            map_screen.step_and_refresh(1)
+        else:
+            self.bridge.step_forward(1)
+            self._refresh_all()
 
     def action_step_forward_5(self) -> None:
-        self.bridge.step_forward(5)
-        self._refresh_all()
+        if self._has_modal():
+            return
+        map_screen = self._get_active_map()
+        if map_screen:
+            map_screen.step_and_refresh(5)
+        else:
+            self.bridge.step_forward(5)
+            self._refresh_all()
 
     def action_step_backward_1(self) -> None:
-        self.bridge.step_backward(1)
-        self._refresh_all()
+        if self._has_modal():
+            return
+        map_screen = self._get_active_map()
+        if map_screen:
+            map_screen.step_and_refresh(-1)
+        else:
+            self.bridge.step_backward(1)
+            self._refresh_all()
 
     def action_step_backward_5(self) -> None:
-        self.bridge.step_backward(5)
-        self._refresh_all()
+        if self._has_modal():
+            return
+        map_screen = self._get_active_map()
+        if map_screen:
+            map_screen.step_and_refresh(-5)
+        else:
+            self.bridge.step_backward(5)
+            self._refresh_all()
 
     def action_jump_start(self) -> None:
+        if self._has_modal():
+            return
         self.bridge.jump_to(0)
-        self._refresh_all()
+        map_screen = self._get_active_map()
+        if map_screen:
+            map_screen.refresh_map()
+        else:
+            self._refresh_all()
 
     def action_jump_end(self) -> None:
+        if self._has_modal():
+            return
         self.bridge.jump_to(self.bridge.max_hour)
-        self._refresh_all()
+        map_screen = self._get_active_map()
+        if map_screen:
+            map_screen.refresh_map()
+        else:
+            self._refresh_all()
 
     def action_toggle_play(self) -> None:
+        map_screen = self._get_active_map()
+        if map_screen:
+            map_screen.action_toggle_play()
+            return
+        if self._has_modal():
+            return
         if self._playing:
             self._stop_play()
         else:
@@ -408,6 +470,30 @@ class GigagenApp(App):
 
     def action_harmonic(self) -> None:
         self.push_screen(HarmonicDashboardScreen(self.bridge.ws))
+
+    def action_map(self) -> None:
+        def on_dismiss(_: None) -> None:
+            self._refresh_all()
+        self.push_screen(MapScreen(self.bridge), on_dismiss)
+
+    def action_timeline(self) -> None:
+        def on_dismiss(hour: int | None) -> None:
+            if hour is not None:
+                self.bridge.jump_to(hour)
+            self._refresh_all()
+        self.push_screen(TimelineScreen(self.bridge), on_dismiss)
+
+    def action_lifepack(self) -> None:
+        """Open the Life Pack inspector for the selected character."""
+        try:
+            char_table = self.query_one("#characters", CharacterTable)
+            char_id = char_table.get_selected_id()
+            if char_id:
+                self.push_screen(
+                    LifePackInspectorScreen(char_id, self.bridge.ws)
+                )
+        except Exception:
+            pass
 
     def action_help(self) -> None:
         self.push_screen(HelpScreen())

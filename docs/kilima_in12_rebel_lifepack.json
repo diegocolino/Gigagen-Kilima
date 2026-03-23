@@ -1,0 +1,364 @@
+{
+  "$schema": "lifepack_v1",
+
+  "meta": {
+    "entity_id": "kilima_in12_rebel",
+    "entity_name": "Kive",
+    "collection": "kilima_in12",
+    "tonic": "D#",
+    "tonic_semitone": 3,
+    "mode": "minor",
+    "archetype": "rebelde"
+  },
+
+  "infrasonidos": {
+    "unlocked_at": "genesis",
+    "slots": {}
+  },
+
+  "octave_0_lore": {
+    "unlocked_at": "genesis",
+    "logic": "fixed_12_archetypes",
+    "$note": "Preset por defecto. Si no se rellena, Gigagen usa las definiciones arquetipicas standard.",
+    "slots": {
+      "0_C_gobernante":   { "archetype": "gobernante",  "note": "C",  "semitone": 0,  "definition": "" },
+      "1_Cs_sabio":       { "archetype": "sabio",       "note": "C#", "semitone": 1,  "definition": "" },
+      "2_D_explorador":   { "archetype": "explorador",  "note": "D",  "semitone": 2,  "definition": "" },
+      "3_Ds_rebelde":     { "archetype": "rebelde",     "note": "D#", "semitone": 3,  "definition": "" },
+      "4_E_mago":         { "archetype": "mago",        "note": "E",  "semitone": 4,  "definition": "" },
+      "5_F_inocente":     { "archetype": "inocente",    "note": "F",  "semitone": 5,  "definition": "" },
+      "6_Fs_bufon":       { "archetype": "bufon",       "note": "F#", "semitone": 6,  "definition": "" },
+      "7_G_cuidador":     { "archetype": "cuidador",    "note": "G",  "semitone": 7,  "definition": "" },
+      "8_Gs_heroe":       { "archetype": "heroe",       "note": "G#", "semitone": 8,  "definition": "" },
+      "9_A_amante":       { "archetype": "amante",      "note": "A",  "semitone": 9,  "definition": "" },
+      "10_As_creador":    { "archetype": "creador",     "note": "A#", "semitone": 10, "definition": "" },
+      "11_B_huerfano":    { "archetype": "huerfano",    "note": "B",  "semitone": 11, "definition": "" }
+    }
+  },
+
+  "octave_1_animas": {
+    "unlocked_at": "theogony",
+    "logic": "variable_by_elements",
+    "innate_elements": ["fuego", "tierra"],
+    "dominated_elements": ["fuego"],
+    "latent_elements": ["tierra"],
+    "unlocked_fusions": [],
+    "$note": "Fuego dominado = 1 slot de anima activo. Tierra latente = slot disponible pero no activo hasta dominar. Metal (fuego+tierra) = slot futuro. Sistema de animas pendiente de definir.",
+    "slots": {
+      "fuego": {
+        "element": "fuego",
+        "element_tier": "fundamental",
+        "anima_archetype": "",
+        "anima_note": "",
+        "anima_semitone": null,
+        "dominated": true,
+        "active": true,
+        "$note": "Arquetipo del anima se gamblea al inicio de simulacion"
+      },
+      "tierra": {
+        "element": "tierra",
+        "element_tier": "fundamental",
+        "anima_archetype": "",
+        "anima_note": "",
+        "anima_semitone": null,
+        "dominated": false,
+        "active": false,
+        "$note": "Latente. Se activa cuando Kive domina Tierra"
+      },
+      "metal": {
+        "element": "metal",
+        "element_tier": "mixta",
+        "requires": ["fuego", "tierra"],
+        "anima_archetype": "",
+        "anima_note": "",
+        "anima_semitone": null,
+        "dominated": false,
+        "active": false,
+        "$note": "Se desbloquea cuando ambos fundamentales estan dominados"
+      }
+    }
+  },
+
+  "octave_2_linajes": {
+    "unlocked_at": "theogony",
+    "logic": "single_slot",
+    "slots": {
+      "0_tonica": { "lineage_id": "", "lineage_name": "", "note": "D#", "semitone": 3 }
+    }
+  },
+
+  "octave_3_locations": {
+    "unlocked_at": "contempo",
+    "logic": "internal_chord",
+    "mode": "minor",
+    "slots": {
+      "0_tonica": {
+        "interval": "unison",
+        "semitones_from_tonic": 0,
+        "resolved_note": "D#",
+        "role": "location_raiz",
+        "role_desc": "Donde naces o empiezas",
+        "entity_id": "loc_el_taller",
+        "entity_name": "El Taller",
+        "unlocked": true,
+        "unlocked_at_start": true
+      },
+      "3_tercera_menor": {
+        "interval": "3m",
+        "semitones_from_tonic": 3,
+        "resolved_note": "F#",
+        "role": "location_menor",
+        "role_desc": "Tension, vinculo complejo",
+        "entity_id": "loc_backdoor",
+        "entity_name": "Backdoor",
+        "unlocked": false,
+        "unlocked_at_start": false,
+        "unlock_condition": "Dev saca a Kive del poblado"
+      },
+      "7_quinta_justa": {
+        "interval": "5J",
+        "semitones_from_tonic": 7,
+        "resolved_note": "A#",
+        "role": "location_pilar",
+        "role_desc": "El sitio estable, tu base",
+        "entity_id": "loc_recess",
+        "entity_name": "Recess",
+        "unlocked": true,
+        "unlocked_at_start": true,
+        "$note": "NUEVA LOCATION. Punto de encuentro de artistas en la Ciudad. Nota A#."
+      },
+      "8_sexta_menor": {
+        "interval": "6m",
+        "semitones_from_tonic": 8,
+        "resolved_note": "B",
+        "role": "location_agridulce",
+        "role_desc": "Vinculo ambivalente con el lugar",
+        "entity_id": "loc_la_cueva",
+        "entity_name": "La Cueva",
+        "unlocked": false,
+        "unlocked_at_start": false,
+        "unlock_condition": "Kive llega a La Cueva en BN1"
+      },
+      "4_tercera_mayor":    { "interval": "3M", "semitones_from_tonic": 4, "resolved_note": "G",  "role": "location_mayor",      "unlocked": false, "entity_id": "", "entity_name": "" },
+      "5_cuarta_justa":     { "interval": "4J", "semitones_from_tonic": 5, "resolved_note": "G#", "role": "location_soporte",    "unlocked": false, "entity_id": "", "entity_name": "" },
+      "6_tritono":          { "interval": "tritone", "semitones_from_tonic": 6, "resolved_note": "A", "role": "location_perdida", "unlocked": false, "entity_id": "", "entity_name": "" },
+      "1_segunda_menor":    { "interval": "2m", "semitones_from_tonic": 1, "resolved_note": "E",  "role": "location_friccion",   "unlocked": false, "entity_id": "", "entity_name": "" },
+      "2_segunda_mayor":    { "interval": "2M", "semitones_from_tonic": 2, "resolved_note": "F",  "role": "location_vecina",     "unlocked": false, "entity_id": "", "entity_name": "" },
+      "9_sexta_mayor":      { "interval": "6M", "semitones_from_tonic": 9, "resolved_note": "C",  "role": "location_calida",     "unlocked": false, "entity_id": "", "entity_name": "" },
+      "10_septima_menor":   { "interval": "7m", "semitones_from_tonic": 10, "resolved_note": "C#", "role": "location_de_paso",   "unlocked": false, "entity_id": "", "entity_name": "" },
+      "11_septima_mayor":   { "interval": "7M", "semitones_from_tonic": 11, "resolved_note": "D",  "role": "location_reveladora","unlocked": false, "entity_id": "", "entity_name": "" }
+    }
+  },
+
+  "octave_4_objetos": {
+    "unlocked_at": "contempo",
+    "logic": "internal_chord",
+    "mode": "minor",
+    "slots": {
+      "0_tonica": {
+        "interval": "unison",
+        "semitones_from_tonic": 0,
+        "resolved_note": "D#",
+        "role": "objeto_identitario",
+        "role_desc": "Te define",
+        "entity_id": "obj_zapas_viejas",
+        "entity_name": "Zapas Viejas",
+        "unlocked": true,
+        "unlocked_at_start": true,
+        "$note": "Botas de tela marrones tierra, cordones verdes. Item personal. Vinculado a anima de Tierra. Len las hereda (virtualmente) tras la muerte de Kive."
+      },
+      "7_quinta_justa": {
+        "interval": "5J",
+        "semitones_from_tonic": 7,
+        "resolved_note": "A#",
+        "role": "objeto_pilar",
+        "role_desc": "Herramienta principal",
+        "entity_id": "obj_puno_de_hierro",
+        "entity_name": "Puno de Hierro",
+        "unlocked": true,
+        "unlocked_at_start": true,
+        "$note": "Antebrazo bionico rojo. Puede convertirse en arma (definir condicion). Item caracteristico de Red Fist Dragons. Vinculado a anima de Fuego."
+      },
+      "3_tercera_menor":    { "interval": "3m", "semitones_from_tonic": 3, "resolved_note": "F#", "role": "objeto_carga",        "unlocked": false, "entity_id": "", "entity_name": "" },
+      "4_tercera_mayor":    { "interval": "3M", "semitones_from_tonic": 4, "resolved_note": "G",  "role": "objeto_dominio",      "unlocked": false, "entity_id": "", "entity_name": "" },
+      "6_tritono":          { "interval": "tritone", "semitones_from_tonic": 6, "resolved_note": "A", "role": "objeto_roto",      "unlocked": false, "entity_id": "", "entity_name": "" },
+      "1_segunda_menor":    { "interval": "2m", "semitones_from_tonic": 1, "resolved_note": "E",  "role": "objeto_friccion",     "unlocked": false, "entity_id": "", "entity_name": "" },
+      "2_segunda_mayor":    { "interval": "2M", "semitones_from_tonic": 2, "resolved_note": "F",  "role": "objeto_cercano",      "unlocked": false, "entity_id": "", "entity_name": "" },
+      "5_cuarta_justa":     { "interval": "4J", "semitones_from_tonic": 5, "resolved_note": "G#", "role": "objeto_soporte",      "unlocked": false, "entity_id": "", "entity_name": "" },
+      "8_sexta_menor":      { "interval": "6m", "semitones_from_tonic": 8, "resolved_note": "B",  "role": "objeto_agridulce",    "unlocked": false, "entity_id": "", "entity_name": "" },
+      "9_sexta_mayor":      { "interval": "6M", "semitones_from_tonic": 9, "resolved_note": "C",  "role": "objeto_calido",       "unlocked": false, "entity_id": "", "entity_name": "" },
+      "10_septima_menor":   { "interval": "7m", "semitones_from_tonic": 10, "resolved_note": "C#", "role": "objeto_tension",     "unlocked": false, "entity_id": "", "entity_name": "" },
+      "11_septima_mayor":   { "interval": "7M", "semitones_from_tonic": 11, "resolved_note": "D",  "role": "objeto_revelador",  "unlocked": false, "entity_id": "", "entity_name": "" }
+    }
+  },
+
+  "octave_5_skills": {
+    "unlocked_at": "contempo",
+    "logic": "internal_chord",
+    "mode": "minor",
+    "$note": "Sistema de skills pendiente de definir. Placeholders.",
+    "slots": {
+      "0_tonica":           { "interval": "unison",  "semitones_from_tonic": 0,  "resolved_note": "D#", "role": "skill_innata",     "unlocked": false, "entity_id": "", "entity_name": "" },
+      "3_tercera_menor":    { "interval": "3m",      "semitones_from_tonic": 3,  "resolved_note": "F#", "role": "skill_dolorosa",   "unlocked": false, "entity_id": "", "entity_name": "" },
+      "4_tercera_mayor":    { "interval": "3M",      "semitones_from_tonic": 4,  "resolved_note": "G",  "role": "skill_disfrute",   "unlocked": false, "entity_id": "", "entity_name": "" },
+      "7_quinta_justa":     { "interval": "5J",      "semitones_from_tonic": 7,  "resolved_note": "A#", "role": "skill_principal",  "unlocked": false, "entity_id": "", "entity_name": "" },
+      "6_tritono":          { "interval": "tritone",  "semitones_from_tonic": 6,  "resolved_note": "A",  "role": "skill_rota",       "unlocked": false, "entity_id": "", "entity_name": "" },
+      "1_segunda_menor":    { "interval": "2m",      "semitones_from_tonic": 1,  "resolved_note": "E",  "role": "skill_friccion",   "unlocked": false, "entity_id": "", "entity_name": "" },
+      "2_segunda_mayor":    { "interval": "2M",      "semitones_from_tonic": 2,  "resolved_note": "F",  "role": "skill_cercana",    "unlocked": false, "entity_id": "", "entity_name": "" },
+      "5_cuarta_justa":     { "interval": "4J",      "semitones_from_tonic": 5,  "resolved_note": "G#", "role": "skill_soporte",    "unlocked": false, "entity_id": "", "entity_name": "" },
+      "8_sexta_menor":      { "interval": "6m",      "semitones_from_tonic": 8,  "resolved_note": "B",  "role": "skill_agridulce",  "unlocked": false, "entity_id": "", "entity_name": "" },
+      "9_sexta_mayor":      { "interval": "6M",      "semitones_from_tonic": 9,  "resolved_note": "C",  "role": "skill_calida",     "unlocked": false, "entity_id": "", "entity_name": "" },
+      "10_septima_menor":   { "interval": "7m",      "semitones_from_tonic": 10, "resolved_note": "C#", "role": "skill_tension",    "unlocked": false, "entity_id": "", "entity_name": "" },
+      "11_septima_mayor":   { "interval": "7M",      "semitones_from_tonic": 11, "resolved_note": "D",  "role": "skill_reveladora", "unlocked": false, "entity_id": "", "entity_name": "" }
+    }
+  },
+
+  "octave_6_reservada": {
+    "unlocked_at": null,
+    "logic": "tbd",
+    "slots": {}
+  },
+
+  "octave_7_personajes": {
+    "unlocked_at": "chronica",
+    "logic": "full_12_by_interval",
+    "$note": "Solo se rellenan personajes con vinculo narrativo. El calculo de sinergia es automatico y paralelo. Slots vacios = sin vinculo narrativo aun.",
+    "slots": {
+      "0_unisono": {
+        "interval": "unison",
+        "semitones_from_tonic": 0,
+        "resolved_note": "D#",
+        "role": "espejo",
+        "entity_id": "kilima_in12_rebel",
+        "entity_name": "Kive (self)"
+      },
+      "1_segunda_menor": {
+        "interval": "2m",
+        "semitones_from_tonic": 1,
+        "resolved_note": "E",
+        "role": "friccion_maxima",
+        "entity_id": "kilima_in12_mago",
+        "entity_name": "Len",
+        "$note": "1 semitono. Friccion maxima. Kive y Len se rozan — demasiado cerca. Tension constante que alimenta la historia."
+      },
+      "2_segunda_mayor": {
+        "interval": "2M",
+        "semitones_from_tonic": 2,
+        "resolved_note": "F",
+        "role": "vecino",
+        "entity_id": "kilima_in12_inocente",
+        "entity_name": "Ali"
+      },
+      "3_tercera_menor": {
+        "interval": "3m",
+        "semitones_from_tonic": 3,
+        "resolved_note": "F#",
+        "role": "aliado_menor",
+        "entity_id": "kilima_in12_bufon",
+        "entity_name": "Dev",
+        "$note": "Aliado con peso. Dev saca a Kive del poblado. Vinculo oscuro, complejo."
+      },
+      "4_tercera_mayor": {
+        "interval": "3M",
+        "semitones_from_tonic": 4,
+        "resolved_note": "G",
+        "role": "aliado_mayor",
+        "entity_id": "kilima_in12_cuidador",
+        "entity_name": "Saarah"
+      },
+      "5_cuarta_justa": {
+        "interval": "4J",
+        "semitones_from_tonic": 5,
+        "resolved_note": "G#",
+        "role": "soporte",
+        "entity_id": "kilima_in12_heroe",
+        "entity_name": "Brais"
+      },
+      "6_tritono": {
+        "interval": "tritone",
+        "semitones_from_tonic": 6,
+        "resolved_note": "A",
+        "role": "nemesis",
+        "entity_id": "kilima_in12_amante",
+        "entity_name": "Yeri",
+        "$note": "Tritono. Maxima tension armonica. Kive y Yeri = nemesis."
+      },
+      "7_quinta_justa": {
+        "interval": "5J",
+        "semitones_from_tonic": 7,
+        "resolved_note": "A#",
+        "role": "relacion_principal",
+        "entity_id": "kilima_in12_creador",
+        "entity_name": "Cris",
+        "$note": "Pilar relacional. Quinta justa = vinculo mas fuerte."
+      },
+      "8_sexta_menor": {
+        "interval": "6m",
+        "semitones_from_tonic": 8,
+        "resolved_note": "B",
+        "role": "agridulce",
+        "entity_id": "kilima_in12_huerfano",
+        "entity_name": "Freya"
+      },
+      "9_sexta_mayor": {
+        "interval": "6M",
+        "semitones_from_tonic": 9,
+        "resolved_note": "C",
+        "role": "calida",
+        "entity_id": "kilima_in12_gobernante",
+        "entity_name": "Nora"
+      },
+      "10_septima_menor": {
+        "interval": "7m",
+        "semitones_from_tonic": 10,
+        "resolved_note": "C#",
+        "role": "tension_no_resuelta",
+        "entity_id": "kilima_in12_sabio",
+        "entity_name": "Pau"
+      },
+      "11_septima_mayor": {
+        "interval": "7M",
+        "semitones_from_tonic": 11,
+        "resolved_note": "D",
+        "role": "tension_luminosa",
+        "entity_id": "kilima_in12_explorador",
+        "entity_name": "Luka"
+      }
+    }
+  },
+
+  "octave_8_eventos": {
+    "unlocked_at": "chronica",
+    "logic": "invariants_and_variables",
+    "$note": "Invariantes = eventos que siempre ocurren. Variables = la simulacion tiene que resolverlos si o si. Eventos emergentes van al log, no al Life Pack.",
+    "slots": {
+      "0_tonica": {
+        "interval": "unison",
+        "semitones_from_tonic": 0,
+        "resolved_note": "D#",
+        "role": "evento_fundacional",
+        "entity_id": "",
+        "entity_name": "",
+        "type": "invariant",
+        "resolved": false,
+        "$note": "Evento que lanza a Kive a la historia. Definir."
+      },
+      "3_tercera_menor":  { "interval": "3m",      "semitones_from_tonic": 3,  "resolved_note": "F#", "role": "evento_doloroso",    "entity_id": "", "entity_name": "", "type": "", "resolved": false, "unlocked": false },
+      "4_tercera_mayor":  { "interval": "3M",      "semitones_from_tonic": 4,  "resolved_note": "G",  "role": "evento_luminoso",    "entity_id": "", "entity_name": "", "type": "", "resolved": false, "unlocked": false },
+      "6_tritono":        { "interval": "tritone",  "semitones_from_tonic": 6,  "resolved_note": "A",  "role": "evento_ruptura",     "entity_id": "", "entity_name": "", "type": "", "resolved": false, "unlocked": false },
+      "7_quinta_justa":   { "interval": "5J",      "semitones_from_tonic": 7,  "resolved_note": "A#", "role": "evento_clave",       "entity_id": "", "entity_name": "", "type": "", "resolved": false, "unlocked": false },
+      "10_septima_menor": { "interval": "7m",      "semitones_from_tonic": 10, "resolved_note": "C#", "role": "evento_sin_resolver","entity_id": "", "entity_name": "", "type": "", "resolved": false, "unlocked": false },
+      "11_septima_mayor": { "interval": "7M",      "semitones_from_tonic": 11, "resolved_note": "D",  "role": "evento_revelador",   "entity_id": "", "entity_name": "", "type": "", "resolved": false, "unlocked": false },
+      "1_segunda_menor":  { "interval": "2m",      "semitones_from_tonic": 1,  "resolved_note": "E",  "role": "evento_friccion",    "entity_id": "", "entity_name": "", "type": "", "resolved": false, "unlocked": false },
+      "2_segunda_mayor":  { "interval": "2M",      "semitones_from_tonic": 2,  "resolved_note": "F",  "role": "evento_cercano",     "entity_id": "", "entity_name": "", "type": "", "resolved": false, "unlocked": false },
+      "5_cuarta_justa":   { "interval": "4J",      "semitones_from_tonic": 5,  "resolved_note": "G#", "role": "evento_soporte",     "entity_id": "", "entity_name": "", "type": "", "resolved": false, "unlocked": false },
+      "8_sexta_menor":    { "interval": "6m",      "semitones_from_tonic": 8,  "resolved_note": "B",  "role": "evento_agridulce",   "entity_id": "", "entity_name": "", "type": "", "resolved": false, "unlocked": false },
+      "9_sexta_mayor":    { "interval": "6M",      "semitones_from_tonic": 9,  "resolved_note": "C",  "role": "evento_calido",      "entity_id": "", "entity_name": "", "type": "", "resolved": false, "unlocked": false }
+    }
+  },
+
+  "ultrasonidos": {
+    "unlocked_at": null,
+    "slots": {}
+  }
+}

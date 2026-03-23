@@ -65,6 +65,12 @@ docs/
 1. **gigagen/gigagen_roadmap2.md** — Current milestone tracker (consolidation phase).
 2. **kilima/kilima_invariants.md** — Rules the system must never break.
 
+### For the Life Pack system
+1. **lifepack_estructura.md** — Conceptual definition of all entities, relationships, and octave logic.
+2. **lifepack_template.json** — Empty JSON template with all octaves and all slots.
+3. **gigagen_roadmap_lifepack.md** — Implementation milestones LP-0 through LP-8.
+4. **kilima_in12_rebel_lifepack.json** — Kive's Life Pack (first example, partially filled).
+
 ---
 
 ## Conventions
@@ -72,12 +78,25 @@ docs/
 - **Engine docs** use the `gigagen_` prefix and live in `docs/gigagen/`.
 - **Worldpack docs** use the `kilima_` prefix and live in `docs/kilima/`.
 - **JSON data** loaded by code lives in `docs/kilima/data/` (mirrors `worlds/kilima/`).
+- **Life Pack files** live in `worlds/kilima/lifepacks/` (one JSON per character).
 - **CLAUDE.md** stays at `docs/` root — it's the entry point for any AI assistant working on the project.
 
 ---
 
 ## TODO
 
-- [ ] Create `gigagen/gigagen_invariants.md` — generic invariant system (currently mixed into kilima_invariants.md)
+- [x] Create `gigagen/gigagen_invariants.md` — generic invariant system
+- [ ] **LP-0: Rename subdivision → faction, faction → macro_faction globally**
+- [ ] **LP-0: Rename character IDs to kilima_in12_{archetype} pattern**
 - [ ] Update `kilima/data/factions.json` to match the new 10-faction system in kilima_factions.md
 - [ ] Update CLAUDE.md to reflect new directory structure
+- [ ] **LP-1: Create `src/gigagen/core/lifepack.py` — Pydantic models for Life Pack**
+- [ ] **LP-2: Extend loader to load lifepacks from `worlds/kilima/lifepacks/`**
+- [ ] **LP-3: Implement global mode (major/minor) on Life Pack**
+- [ ] **LP-4: Auto-populate octave 7 from character roster**
+- [ ] **LP-5: Unlock slots during simulation via event rules**
+- [ ] **LP-6: Integrate octave 8 events with invariant/variable system**
+- [ ] **LP-7: TUI screen for Life Pack inspection**
+- [ ] **LP-8: Ánimas octave 1 — element config and slot computation**
+- [ ] Create Recess as new location in worldpack (note A#, Ciudad, Kilima)
+- [ ] Create remaining 11 Life Packs for kilima_in12 collection

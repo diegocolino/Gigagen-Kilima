@@ -7,7 +7,7 @@ import pathlib
 from dataclasses import dataclass, field
 from typing import Any
 
-from .entity import BaseEntity, Character, Faction, Location
+from .entity import BaseEntity, Character, MacroFaction, Location
 from .relation import Relation
 from .world_state import WorldState
 
@@ -77,8 +77,8 @@ def validate_invariants(
             )
 
     # -- Faction count --
-    facs = {eid: e for eid, e in ws.entities.items() if isinstance(e, Faction)}
-    faction_count = fixed.get("faction_count")
+    facs = {eid: e for eid, e in ws.entities.items() if isinstance(e, MacroFaction)}
+    faction_count = fixed.get("macro_faction_count")
     if faction_count is not None:
         if len(facs) != faction_count:
             result.fail(f"Expected {faction_count} factions, found {len(facs)}")
@@ -116,32 +116,46 @@ def validate_invariants(
                 f"{fl['location']} ({fl['kind']})"
             )
 
-    # -- Subdivision uniqueness within each faction --
+    # -- Faction uniqueness within each faction --
     for fid, fac in facs.items():
-        names = [s.name for s in fac.subdivisions if s.name is not None]
+        names = [s.name for s in fac.factions if s.name is not None]
         if len(names) != len(set(names)):
             dupes = [n for n in names if names.count(n) > 1]
-            result.fail(f"{fid}: duplicate subdivision names: {sorted(set(dupes))}")
+            result.fail(f"{fid}: duplicate faction names: {sorted(set(dupes))}")
 
-    # -- Character subdivision consistency --
+    # -- Character faction consistency --
+    # Build a set of all known faction identifiers (both names and IDs)
+    all_faction_refs: set[str] = set()
+    for fac in facs.values():
+        for sub in fac.factions:
+            if sub.name:
+                all_faction_refs.add(sub.name)
+            # Support faction IDs from extra fields (new format)
+            sub_id = getattr(sub, "id", None) or (sub.model_extra or {}).get("id")
+            if sub_id:
+                all_faction_refs.add(sub_id)
+
     for cid, char in chars.items():
-        if char.current_subdivision_id is None:
-            continue
         if char.current_faction_id is None:
-            result.fail(
-                f"{cid}: has subdivision '{char.current_subdivision_id}' "
-                f"but no faction"
-            )
             continue
-        fac = facs.get(char.current_faction_id)
-        if fac is None:
-            continue  # faction existence is checked elsewhere
-        sub_names = {s.name for s in fac.subdivisions if s.name is not None}
-        if char.current_subdivision_id not in sub_names:
-            result.fail(
-                f"{cid}: subdivision '{char.current_subdivision_id}' "
-                f"not found in {char.current_faction_id}"
-            )
+        if char.current_macro_faction_id is not None:
+            # Old model: validate faction within macro-faction
+            fac = facs.get(char.current_macro_faction_id)
+            if fac is None:
+                continue
+            sub_names = {s.name for s in fac.factions if s.name is not None}
+            if char.current_faction_id not in sub_names:
+                result.fail(
+                    f"{cid}: faction '{char.current_faction_id}' "
+                    f"not found in {char.current_macro_faction_id}"
+                )
+        else:
+            # New model: faction ID should exist somewhere
+            if char.current_faction_id not in all_faction_refs:
+                result.fail(
+                    f"{cid}: faction '{char.current_faction_id}' "
+                    f"not found in any macro-faction"
+                )
 
     # -- Location parent validity --
     locs = {eid: e for eid, e in ws.entities.items() if isinstance(e, Location)}

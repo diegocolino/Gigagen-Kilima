@@ -13,7 +13,7 @@ import random
 from dataclasses import dataclass, field
 from typing import Any
 
-from .entity import Character, Faction, Location, BaseEntity
+from .entity import Character, MacroFaction, Location, BaseEntity
 from .world_state import WorldState
 
 
@@ -82,7 +82,7 @@ def _init_outcomes(ws: WorldState) -> dict[str, CharacterOutcome]:
             continue
         life = "dead" if ent.status == "dead" else "alive"
         pol = "aligned"
-        if ent.current_faction_id is None:
+        if ent.current_macro_faction_id is None:
             pol = "conflicted"
         outcomes[eid] = CharacterOutcome(
             character_id=eid,
@@ -134,9 +134,9 @@ def _calc_character_location_affinity(
 
     # Get controlling faction's intervals
     faction_intervals = None
-    if loc.controlling_faction_id:
-        fac = ws.entities.get(loc.controlling_faction_id)
-        if isinstance(fac, Faction) and fac.intervals:
+    if loc.controlling_macro_faction_id:
+        fac = ws.entities.get(loc.controlling_macro_faction_id)
+        if isinstance(fac, MacroFaction) and fac.intervals:
             faction_intervals = fac.intervals
 
     return character_location_affinity(
@@ -191,7 +191,7 @@ def _get_event_harmonic_data(
         return loc_id, None, None, {}
 
     tonic = loc.tonic
-    modal = loc.controlling_faction_id
+    modal = loc.controlling_macro_faction_id
 
     affinities: dict[str, float] = {}
     for cid in char_ids:
@@ -328,7 +328,7 @@ def _apply_rule(
         if cid and cid in ws.entities:
             c = ws.entities[cid]
             if isinstance(c, Character):
-                c.current_faction_id = fac_id
+                c.current_macro_faction_id = fac_id
 
     # -- Set political alignment --
     for cname, pol in rule.get("set_political", {}).items():
@@ -366,12 +366,57 @@ def _apply_rule(
                 loc.status = changes["status"]
             if "tension" in changes:
                 loc.tension = changes["tension"]
-            if "controlling_faction_id" in changes:
-                loc.controlling_faction_id = changes["controlling_faction_id"]
+            if "controlling_macro_faction_id" in changes:
+                loc.controlling_macro_faction_id = changes["controlling_macro_faction_id"]
             # Recalculate affinities for all characters at this location
             _update_location_affinities(loc_id, ws, sim)
 
+    # -- Unlock lifepack slots --
+    for unlock in rule.get("unlock_lifepack_slot", []):
+        _cname = unlock.get("character")
+        _octave = unlock.get("octave")
+        _slot_key = unlock.get("slot_key")
+        if _cname and _octave and _slot_key:
+            _cid = sim.char_map.get(_cname)
+            if _cid:
+                _unlock_lifepack_slot(ws, sim, _cid, _octave, _slot_key)
+
     return variable_resolved
+
+
+def _unlock_lifepack_slot(
+    ws: WorldState,
+    sim: SimulatorState,
+    char_id: str,
+    octave_name: str,
+    slot_key: str,
+) -> None:
+    """Unlock a specific slot in a character's Life Pack."""
+    from .lifepack import LifePackSlot
+
+    lp = ws.lifepacks.get(char_id)
+    if lp is None:
+        return
+    octave = getattr(lp, octave_name, None)
+    if octave is None:
+        return
+    slot = octave.slots.get(slot_key)
+    if slot is None or not isinstance(slot, LifePackSlot):
+        return
+    if slot.locked:
+        slot.locked = False
+        slot.unlocked = True
+        # Record in outcomes
+        char_name = ""
+        char = ws.entities.get(char_id)
+        if isinstance(char, Character):
+            char_name = char.civil_name
+        if char_id not in sim.outcomes:
+            return
+        entity_desc = slot.entity_name or slot_key
+        sim.outcomes[char_id].bond_state = (
+            f"unlocked {entity_desc} ({octave_name}, {slot_key})"
+        )
 
 
 def _apply_emotions(

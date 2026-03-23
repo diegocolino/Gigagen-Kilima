@@ -1,0 +1,24 @@
+{
+  "$doc": "Element catalog — 16 elements in hierarchy. Conditions of access to octave 1 (animas).",
+  "elements": [
+    {"id": "agua",     "name": "Agua",     "tier": "fundamental", "requires": []},
+    {"id": "fuego",    "name": "Fuego",    "tier": "fundamental", "requires": []},
+    {"id": "tierra",   "name": "Tierra",   "tier": "fundamental", "requires": []},
+    {"id": "aire",     "name": "Aire",     "tier": "fundamental", "requires": []},
+
+    {"id": "nube",     "name": "Nube",     "tier": "mixed", "requires": ["agua", "aire"]},
+    {"id": "barro",    "name": "Barro",    "tier": "mixed", "requires": ["agua", "tierra"]},
+    {"id": "hielo",    "name": "Hielo",    "tier": "mixed", "requires": ["agua", "fuego"]},
+    {"id": "metal",    "name": "Metal",    "tier": "mixed", "requires": ["fuego", "tierra"]},
+    {"id": "humo",     "name": "Humo",     "tier": "mixed", "requires": ["fuego", "aire"]},
+    {"id": "polvo",    "name": "Polvo",    "tier": "mixed", "requires": ["tierra", "aire"]},
+
+    {"id": "lava",     "name": "Lava",     "tier": "truncated", "requires": ["fuego", "tierra", "aire"]},
+    {"id": "humedad",  "name": "Humedad",  "tier": "truncated", "requires": ["agua", "tierra", "aire"]},
+    {"id": "ceniza",   "name": "Ceniza",   "tier": "truncated", "requires": ["fuego", "agua", "tierra"]},
+    {"id": "tormenta", "name": "Tormenta", "tier": "truncated", "requires": ["agua", "fuego", "aire"]},
+
+    {"id": "eter_natural",   "name": "Éter Natural",   "tier": "supreme", "requires": ["agua", "fuego", "tierra", "aire"]},
+    {"id": "eter_sintetico", "name": "Éter Sintético", "tier": "supreme", "requires": ["agua", "fuego", "tierra", "aire"]}
+  ]
+}

@@ -9,12 +9,12 @@ from textual.containers import Vertical, Horizontal, Center, VerticalScroll
 from textual.screen import ModalScreen
 from textual.widgets import Static, Label, Input, Button, DataTable, Select
 
-from gigagen.core.entity import Character, Faction, Location
+from gigagen.core.entity import Character, MacroFaction, Location
 from gigagen.core.harmony import (
     character_faction_affinity,
     character_location_affinity,
     location_instability,
-    subdivision_weight,
+    faction_weight,
 )
 from gigagen.core.relation import harmonic_affinity
 from gigagen.core.world_state import WorldState
@@ -72,8 +72,8 @@ class HelpScreen(ModalScreen[None]):
 
 [b]Editing[/b]
   Enter      Open editor (Char/Faction/Location)
-  a          Add subdivision (in faction editor)
-  d          Delete subdivision (in faction editor)
+  a          Add faction (in faction editor)
+  d          Delete faction (in faction editor)
 
 [b]Relations Browser (R)[/b]
   0/1/2/3    Filter: All / Char↔Char / Char→Fac / Fac→Loc
@@ -84,6 +84,8 @@ class HelpScreen(ModalScreen[None]):
   Ctrl+S     Save worldpack to JSON
   v          Validate invariants
   h          Harmonic dashboard
+  m          Map (character positions)
+  t          Timeline (all events, jump to hour)
   s          Change seed
   x          Export world state JSON
   ?          Help (this screen)
@@ -219,7 +221,7 @@ class InspectorScreen(ModalScreen[None]):
             lines.append("[b]State[/b]")
             lines.append(f"  Status:   {ent.status}  Emotion: {ent.emotional_load}")
             lines.append(f"  Location: {ent.current_location_id}")
-            lines.append(f"  Faction:  {ent.current_faction_id or '(none)'}")
+            lines.append(f"  Faction:  {ent.current_macro_faction_id or '(none)'}")
 
             # Outcome
             oc = self.sim.outcomes.get(self.entity_id)
@@ -229,16 +231,16 @@ class InspectorScreen(ModalScreen[None]):
                 lines.append(f"  Life: {oc.life_state}  Bond: {oc.bond_state}")
                 lines.append(f"  Politics: {oc.political_alignment}  Location: {oc.location}")
 
-        elif isinstance(ent, Faction):
+        elif isinstance(ent, MacroFaction):
             lines.append("")
             lines.append("[b]Harmonic[/b]")
             lines.append(f"  Mode: {ent.mode or '(none)'}  Family: {ent.scale_family or '(none)'}  Notes: {ent.note_count}")
             if ent.intervals:
                 lines.append(f"  Intervals: {ent.intervals}")
-            if ent.subdivisions:
+            if ent.factions:
                 lines.append("")
-                lines.append(f"[b]Subdivisions ({len(ent.subdivisions)})[/b]")
-                for sub in ent.subdivisions:
+                lines.append(f"[b]Factions ({len(ent.factions)})[/b]")
+                for sub in ent.factions:
                     name = sub.name or "(unnamed)"
                     note = sub.note or "-"
                     leader = sub.leader_id or "-"
@@ -253,11 +255,11 @@ class InspectorScreen(ModalScreen[None]):
             tonic = ent.tonic or "(none)"
             lines.append(f"Zone: {ent.zone_level}  Tonic: {tonic}  Biome: {', '.join(ent.biome_tags)}")
             lines.append(f"Status: {ent.status}  Tension: {ent.tension:.2f}  Access: {ent.access}")
-            lines.append(f"Controller: {ent.controlling_faction_id or '(none)'}")
+            lines.append(f"Controller: {ent.controlling_macro_faction_id or '(none)'}")
             if ent.parent_location_id:
                 lines.append(f"Parent: {ent.parent_location_id}")
-            if ent.secondary_faction_ids:
-                lines.append(f"Secondary: {', '.join(ent.secondary_faction_ids)}")
+            if ent.secondary_macro_faction_ids:
+                lines.append(f"Secondary: {', '.join(ent.secondary_macro_faction_ids)}")
 
         # Relations
         rels = [
@@ -505,12 +507,12 @@ class GlobalRelationsScreen(ModalScreen[None]):
 
 
 class FactionEditorScreen(ModalScreen[bool]):
-    """Full editor for a faction: status, power, cohesion, subdivisions, members."""
+    """Full editor for a faction: status, power, cohesion, factions, members."""
 
     BINDINGS = [
         ("escape", "cancel", "Cancel"),
-        ("a", "add_subdivision", "Add Sub"),
-        ("d", "delete_subdivision", "Del Sub"),
+        ("a", "add_faction", "Add Sub"),
+        ("d", "delete_faction", "Del Sub"),
     ]
 
     DEFAULT_CSS = """
@@ -551,7 +553,7 @@ class FactionEditorScreen(ModalScreen[bool]):
     def compose(self) -> ComposeResult:
         ws = self.bridge.ws
         fac = ws.entities[self.faction_id]
-        if not isinstance(fac, Faction):
+        if not isinstance(fac, MacroFaction):
             return
 
         with VerticalScroll(id="fac-editor-dialog"):
@@ -567,7 +569,7 @@ class FactionEditorScreen(ModalScreen[bool]):
             yield Static("[b]Properties[/b]", classes="fac-section-title")
             catalogs = self.bridge.catalogs
             fac_statuses = catalogs.get("faction_statuses") or sorted({
-                e.status for e in ws.entities.values() if isinstance(e, Faction)
+                e.status for e in ws.entities.values() if isinstance(e, MacroFaction)
             })
             status_options = [(s, s) for s in fac_statuses]
             with Horizontal(classes="fac-field-row"):
@@ -587,7 +589,7 @@ class FactionEditorScreen(ModalScreen[bool]):
             # Leader select
             members = [
                 e for e in ws.entities.values()
-                if isinstance(e, Character) and e.current_faction_id == self.faction_id
+                if isinstance(e, Character) and e.current_macro_faction_id == self.faction_id
             ]
             leader_opts: list[tuple[str, str | None]] = [("(none)", None)]
             for m in sorted(members, key=lambda c: c.civil_name):
@@ -600,18 +602,18 @@ class FactionEditorScreen(ModalScreen[bool]):
                     id="fac-leader",
                 )
 
-            # Subdivisions table with political weight
+            # Factions table with political weight
             yield Static(
-                f"[b]Subdivisions ({len(fac.subdivisions)})[/b]  "
+                f"[b]Factions ({len(fac.factions)})[/b]  "
                 f"[dim]a=add  d=delete[/dim]",
                 classes="fac-section-title",
             )
             sub_table = DataTable(id="fac-sub-table")
             sub_table.cursor_type = "row"
             sub_table.add_columns("Name", "Root Note", "Leader", "Type", "Members", "Weight")
-            # Compute subdivision weights
-            all_sub_roots = [s.note for s in fac.subdivisions if s.note]
-            for sub in fac.subdivisions:
+            # Compute faction weights
+            all_sub_roots = [s.note for s in fac.factions if s.note]
+            for sub in fac.factions:
                 sub_name = sub.name or "(unnamed)"
                 sub_note = sub.note or "-"
                 sub_leader = "-"
@@ -621,37 +623,37 @@ class FactionEditorScreen(ModalScreen[bool]):
                 member_count = sum(
                     1 for e in ws.entities.values()
                     if isinstance(e, Character)
-                    and e.current_faction_id == self.faction_id
-                    and e.current_subdivision_id == sub.name
+                    and e.current_macro_faction_id == self.faction_id
+                    and e.current_faction_id == sub.name
                 )
                 # Political weight
                 if sub.note:
                     others = [r for r in all_sub_roots if r != sub.note]
-                    weight = subdivision_weight(sub.note, others)
+                    weight = faction_weight(sub.note, others)
                     weight_str = f"{weight:.2f}"
                 else:
                     weight_str = "-"
                 sub_table.add_row(
                     sub_name, sub_note, sub_leader, sub_type,
                     str(member_count), weight_str,
-                    key=sub.name or f"_sub_{fac.subdivisions.index(sub)}",
+                    key=sub.name or f"_sub_{fac.factions.index(sub)}",
                 )
             yield sub_table
 
-            # Members table with affinity — Enter to reassign subdivision
+            # Members table with affinity — Enter to reassign faction
             yield Static(
-                "[b]Members[/b]  [dim]Enter on member to reassign subdivision[/dim]",
+                "[b]Members[/b]  [dim]Enter on member to reassign faction[/dim]",
                 classes="fac-section-title",
             )
             mem_table = DataTable(id="fac-mem-table")
             mem_table.cursor_type = "row"
-            mem_table.add_columns("Character", "Note", "Archetype", "Subdivision", "Affinity")
+            mem_table.add_columns("Character", "Note", "Archetype", "Faction", "Affinity")
             for m in sorted(members, key=lambda c: c.civil_name):
-                sub_id = m.current_subdivision_id or "-"
+                sub_id = m.current_faction_id or "-"
                 sub_root = None
-                if m.current_subdivision_id:
-                    for s in fac.subdivisions:
-                        if s.name == m.current_subdivision_id:
+                if m.current_faction_id:
+                    for s in fac.factions:
+                        if s.name == m.current_faction_id:
                             sub_root = s.note
                             break
                 aff = character_faction_affinity(m.note, fac.intervals, sub_root)
@@ -686,21 +688,21 @@ class FactionEditorScreen(ModalScreen[bool]):
         self.dismiss(False)
 
     def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
-        """Handle Enter on member table → reassign subdivision."""
+        """Handle Enter on member table → reassign faction."""
         if event.data_table.id != "fac-mem-table":
             return
         char_id = str(event.row_key.value)
         ws = self.bridge.ws
         fac = ws.entities.get(self.faction_id)
-        if not isinstance(fac, Faction):
+        if not isinstance(fac, MacroFaction):
             return
         char = ws.entities.get(char_id)
         if not isinstance(char, Character):
             return
 
-        # Build subdivision options with affinity scores
+        # Build faction options with affinity scores
         sub_opts: list[tuple[str, str | None]] = [("(none)", None)]
-        for sub in fac.subdivisions:
+        for sub in fac.factions:
             if sub.name is None:
                 continue
             aff = character_faction_affinity(char.note, fac.intervals, sub.note)
@@ -708,11 +710,11 @@ class FactionEditorScreen(ModalScreen[bool]):
             sub_opts.append((f"{sub.name} [{aff_label}]", sub.name))
 
         self.app.push_screen(
-            SubdivisionPickerScreen(char.civil_name, sub_opts, char.current_subdivision_id),
-            callback=lambda result: self._apply_subdivision_change(char_id, result),
+            FactionPickerScreen(char.civil_name, sub_opts, char.current_faction_id),
+            callback=lambda result: self._apply_faction_change(char_id, result),
         )
 
-    def _apply_subdivision_change(self, char_id: str, new_sub: str | None | bool) -> None:
+    def _apply_faction_change(self, char_id: str, new_sub: str | None | bool) -> None:
         if new_sub is False:
             return  # cancelled
         faction_id = self.faction_id
@@ -720,7 +722,7 @@ class FactionEditorScreen(ModalScreen[bool]):
         def mutator(ws: WorldState) -> None:
             c = ws.entities.get(char_id)
             if isinstance(c, Character):
-                c.current_subdivision_id = new_sub
+                c.current_faction_id = new_sub
 
         result = self.bridge.apply_edit(mutator)
         if result.valid:
@@ -728,23 +730,23 @@ class FactionEditorScreen(ModalScreen[bool]):
         else:
             self._show_error("\n".join(result.errors))
 
-    def action_add_subdivision(self) -> None:
+    def action_add_faction(self) -> None:
         self.app.push_screen(
-            AddSubdivisionScreen(),
-            callback=self._apply_add_subdivision,
+            AddFactionScreen(),
+            callback=self._apply_add_faction,
         )
 
-    def _apply_add_subdivision(self, result: tuple[str, str | None] | None) -> None:
+    def _apply_add_faction(self, result: tuple[str, str | None] | None) -> None:
         if result is None:
             return
         name, note = result
         faction_id = self.faction_id
 
         def mutator(ws: WorldState) -> None:
-            from gigagen.core.entity import Subdivision
+            from gigagen.core.entity import Faction
             fac = ws.entities.get(faction_id)
-            if isinstance(fac, Faction):
-                fac.subdivisions.append(Subdivision(name=name, note=note))
+            if isinstance(fac, MacroFaction):
+                fac.factions.append(Faction(name=name, note=note))
 
         res = self.bridge.apply_edit(mutator)
         if res.valid:
@@ -752,7 +754,7 @@ class FactionEditorScreen(ModalScreen[bool]):
         else:
             self._show_error("\n".join(res.errors))
 
-    def action_delete_subdivision(self) -> None:
+    def action_delete_faction(self) -> None:
         sub_table = self.query_one("#fac-sub-table", DataTable)
         if sub_table.cursor_row is None:
             return
@@ -764,11 +766,11 @@ class FactionEditorScreen(ModalScreen[bool]):
 
         def mutator(ws: WorldState) -> None:
             fac = ws.entities.get(faction_id)
-            if isinstance(fac, Faction):
-                fac.subdivisions = [s for s in fac.subdivisions if s.name != sub_name]
+            if isinstance(fac, MacroFaction):
+                fac.factions = [s for s in fac.factions if s.name != sub_name]
                 for e in ws.entities.values():
-                    if isinstance(e, Character) and e.current_subdivision_id == sub_name:
-                        e.current_subdivision_id = None
+                    if isinstance(e, Character) and e.current_faction_id == sub_name:
+                        e.current_faction_id = None
 
         result = self.bridge.apply_edit(mutator)
         if result.valid:
@@ -799,7 +801,7 @@ class FactionEditorScreen(ModalScreen[bool]):
 
         def mutator(ws: WorldState) -> None:
             fac = ws.entities[faction_id]
-            if isinstance(fac, Faction):
+            if isinstance(fac, MacroFaction):
                 fac.status = status
                 fac.power = power
                 fac.cohesion = cohesion
@@ -816,13 +818,13 @@ class FactionEditorScreen(ModalScreen[bool]):
         error.update(f"[red]{msg}[/red]")
 
 
-class SubdivisionPickerScreen(ModalScreen[str | None | bool]):
-    """Quick picker for reassigning a character's subdivision."""
+class FactionPickerScreen(ModalScreen[str | None | bool]):
+    """Quick picker for reassigning a character's faction."""
 
     BINDINGS = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
-    SubdivisionPickerScreen {
+    FactionPickerScreen {
         align: center middle;
     }
     #subpicker-dialog {
@@ -848,7 +850,7 @@ class SubdivisionPickerScreen(ModalScreen[str | None | bool]):
 
     def compose(self) -> ComposeResult:
         with Vertical(id="subpicker-dialog"):
-            yield Label(f"Reassign [b]{self.char_name}[/b] to subdivision:")
+            yield Label(f"Reassign [b]{self.char_name}[/b] to faction:")
             yield Select(
                 self.options,
                 value=self.current,
@@ -869,13 +871,13 @@ class SubdivisionPickerScreen(ModalScreen[str | None | bool]):
         self.dismiss(False)
 
 
-class AddSubdivisionScreen(ModalScreen[tuple[str, str | None] | None]):
-    """Form to add a new subdivision to a faction."""
+class AddFactionScreen(ModalScreen[tuple[str, str | None] | None]):
+    """Form to add a new faction to a faction."""
 
     BINDINGS = [("escape", "cancel", "Cancel")]
 
     DEFAULT_CSS = """
-    AddSubdivisionScreen {
+    AddFactionScreen {
         align: center middle;
     }
     #addsub-dialog {
@@ -895,7 +897,7 @@ class AddSubdivisionScreen(ModalScreen[tuple[str, str | None] | None]):
         # Chromatic notes — generic musical alphabet
         chromatic = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
         with Vertical(id="addsub-dialog"):
-            yield Label("[b]Add Subdivision[/b]")
+            yield Label("[b]Add Faction[/b]")
             with Horizontal(classes="addsub-row"):
                 yield Label("Name: ")
                 yield Input(placeholder="e.g. New Cell", id="addsub-name")
@@ -973,7 +975,7 @@ class LocationEditorScreen(ModalScreen[bool]):
 
         # Gather all factions for selects
         all_facs = sorted(
-            (e for e in ws.entities.values() if isinstance(e, Faction)),
+            (e for e in ws.entities.values() if isinstance(e, MacroFaction)),
             key=lambda f: f.name,
         )
 
@@ -1029,7 +1031,7 @@ class LocationEditorScreen(ModalScreen[bool]):
                 yield Label("Controller: ")
                 yield Select(
                     ctrl_opts,
-                    value=loc.controlling_faction_id,
+                    value=loc.controlling_macro_faction_id,
                     id="loc-controller",
                 )
 
@@ -1037,8 +1039,8 @@ class LocationEditorScreen(ModalScreen[bool]):
             yield Static("[b]Secondary Factions[/b]", classes="loc-section-title")
             sec_table = DataTable(id="loc-sec-table")
             sec_table.cursor_type = "row"
-            sec_table.add_columns("", "Faction", "Mode")
-            current_secondary = set(loc.secondary_faction_ids)
+            sec_table.add_columns("", "MacroFaction", "Mode")
+            current_secondary = set(loc.secondary_macro_faction_ids)
             for f in all_facs:
                 check = "\u2611" if f.id in current_secondary else "\u2610"
                 sec_table.add_row(check, f.name, f.mode or "-", key=f.id)
@@ -1057,7 +1059,7 @@ class LocationEditorScreen(ModalScreen[bool]):
             yield Static("[b]Residents[/b]", classes="loc-section-title")
             res_table = DataTable(id="loc-res-table")
             res_table.cursor_type = "row"
-            res_table.add_columns("Character", "Note", "Faction", "Affinity")
+            res_table.add_columns("Character", "Note", "MacroFaction", "Affinity")
             residents = sorted(
                 (e for e in ws.entities.values()
                  if isinstance(e, Character) and e.current_location_id == self.location_id),
@@ -1065,15 +1067,15 @@ class LocationEditorScreen(ModalScreen[bool]):
             )
             # Get controlling faction intervals for affinity calc
             ctrl_intervals = None
-            if loc.controlling_faction_id:
-                ctrl_fac = ws.entities.get(loc.controlling_faction_id)
-                if isinstance(ctrl_fac, Faction):
+            if loc.controlling_macro_faction_id:
+                ctrl_fac = ws.entities.get(loc.controlling_macro_faction_id)
+                if isinstance(ctrl_fac, MacroFaction):
                     ctrl_intervals = ctrl_fac.intervals
 
             for c in residents:
                 fac_name = "-"
-                if c.current_faction_id and c.current_faction_id in ws.entities:
-                    fac_name = ws.entities[c.current_faction_id].name
+                if c.current_macro_faction_id and c.current_macro_faction_id in ws.entities:
+                    fac_name = ws.entities[c.current_macro_faction_id].name
                 aff = character_location_affinity(c.note, loc.tonic, ctrl_intervals)
                 if aff is None:
                     aff_str = "[dim]n/a[/dim]"
@@ -1100,13 +1102,13 @@ class LocationEditorScreen(ModalScreen[bool]):
     def _compute_instability(self, loc: Location, ws: WorldState) -> float:
         """Compute location instability from all factions present."""
         faction_ids = []
-        if loc.controlling_faction_id:
-            faction_ids.append(loc.controlling_faction_id)
-        faction_ids.extend(loc.secondary_faction_ids)
+        if loc.controlling_macro_faction_id:
+            faction_ids.append(loc.controlling_macro_faction_id)
+        faction_ids.extend(loc.secondary_macro_faction_ids)
         intervals_list = []
         for fid in faction_ids:
             fac = ws.entities.get(fid)
-            if isinstance(fac, Faction) and fac.intervals:
+            if isinstance(fac, MacroFaction) and fac.intervals:
                 intervals_list.append(fac.intervals)
         return location_instability(loc.tonic, intervals_list)
 
@@ -1181,8 +1183,8 @@ class LocationEditorScreen(ModalScreen[bool]):
                 loc.status = status
                 loc.tension = tension
                 loc.access = access
-                loc.controlling_faction_id = controller
-                loc.secondary_faction_ids = secondary_ids
+                loc.controlling_macro_faction_id = controller
+                loc.secondary_macro_faction_ids = secondary_ids
 
         result = self.bridge.apply_edit(mutator)
         if result.valid:
@@ -1240,7 +1242,7 @@ class CharacterEditorScreen(ModalScreen[bool]):
             return
 
         all_facs = sorted(
-            (e for e in ws.entities.values() if isinstance(e, Faction)),
+            (e for e in ws.entities.values() if isinstance(e, MacroFaction)),
             key=lambda f: f.name,
         )
         all_locs = sorted(
@@ -1289,21 +1291,21 @@ class CharacterEditorScreen(ModalScreen[bool]):
                 fac_opts.append((f.name, f.id))
             with Horizontal(classes="ced-field-row"):
                 yield Label("Faction: ")
-                yield Select(fac_opts, value=char.current_faction_id, id="ced-faction")
+                yield Select(fac_opts, value=char.current_macro_faction_id, id="ced-faction")
 
-            # Subdivision
+            # Faction
             sub_opts: list[tuple[str, str | None]] = [("(none)", None)]
-            if char.current_faction_id:
-                fac = ws.entities.get(char.current_faction_id)
-                if isinstance(fac, Faction):
-                    for s in fac.subdivisions:
+            if char.current_macro_faction_id:
+                fac = ws.entities.get(char.current_macro_faction_id)
+                if isinstance(fac, MacroFaction):
+                    for s in fac.factions:
                         if s.name:
                             aff = character_faction_affinity(char.note, fac.intervals, s.note)
                             label = f"{s.name} [{aff:+.2f}]" if s.note else s.name
                             sub_opts.append((label, s.name))
             with Horizontal(classes="ced-field-row"):
-                yield Label("Subdivision: ")
-                yield Select(sub_opts, value=char.current_subdivision_id, id="ced-subdivision")
+                yield Label("Faction: ")
+                yield Select(sub_opts, value=char.current_faction_id, id="ced-faction")
 
             yield Static("", id="ced-error")
             with Center():
@@ -1325,7 +1327,7 @@ class CharacterEditorScreen(ModalScreen[bool]):
         emotion = self.query_one("#ced-emotion", Select).value
         location = self.query_one("#ced-location", Select).value
         faction = self.query_one("#ced-faction", Select).value
-        subdivision = self.query_one("#ced-subdivision", Select).value
+        faction = self.query_one("#ced-faction", Select).value
 
         char_id = self.char_id
 
@@ -1335,8 +1337,8 @@ class CharacterEditorScreen(ModalScreen[bool]):
                 c.status = status
                 c.emotional_load = emotion
                 c.current_location_id = location
+                c.current_macro_faction_id = faction
                 c.current_faction_id = faction
-                c.current_subdivision_id = subdivision
 
         result = self.bridge.apply_edit(mutator)
         if result.valid:
@@ -1547,7 +1549,7 @@ class HarmonicDashboardScreen(ModalScreen[None]):
 
         ws = self.ws
         facs = sorted(
-            (e for e in ws.entities.values() if isinstance(e, Faction)),
+            (e for e in ws.entities.values() if isinstance(e, MacroFaction)),
             key=lambda f: f.name,
         )
         chars = sorted(
@@ -1592,13 +1594,13 @@ class HarmonicDashboardScreen(ModalScreen[None]):
             instab_data: list[tuple[str, float]] = []
             for loc in locs:
                 fac_ids = []
-                if loc.controlling_faction_id:
-                    fac_ids.append(loc.controlling_faction_id)
-                fac_ids.extend(loc.secondary_faction_ids)
+                if loc.controlling_macro_faction_id:
+                    fac_ids.append(loc.controlling_macro_faction_id)
+                fac_ids.extend(loc.secondary_macro_faction_ids)
                 intervals_list = []
                 for fid in fac_ids:
                     fac = ws.entities.get(fid)
-                    if isinstance(fac, Faction) and fac.intervals:
+                    if isinstance(fac, MacroFaction) and fac.intervals:
                         intervals_list.append(fac.intervals)
                 instab = location_instability(loc.tonic, intervals_list)
                 instab_data.append((loc.name, instab))
@@ -1617,17 +1619,17 @@ class HarmonicDashboardScreen(ModalScreen[None]):
             # 3. Character-faction affinity summary
             yield Static("\n[b]Character-Faction Affinity[/b]  [dim](negative = misplaced)[/dim]")
             aff_table = DataTable(id="aff-summary")
-            aff_table.add_columns("Character", "Note", "Faction", "Subdivision", "Affinity")
+            aff_table.add_columns("Character", "Note", "MacroFaction", "Faction", "Affinity")
             for c in chars:
                 fac_name = "-"
                 sub_root = None
-                if c.current_faction_id:
-                    fac_ent = ws.entities.get(c.current_faction_id)
-                    if isinstance(fac_ent, Faction):
+                if c.current_macro_faction_id:
+                    fac_ent = ws.entities.get(c.current_macro_faction_id)
+                    if isinstance(fac_ent, MacroFaction):
                         fac_name = fac_ent.name
-                        if c.current_subdivision_id:
-                            for s in fac_ent.subdivisions:
-                                if s.name == c.current_subdivision_id:
+                        if c.current_faction_id:
+                            for s in fac_ent.factions:
+                                if s.name == c.current_faction_id:
                                     sub_root = s.note
                                     break
                         aff = character_faction_affinity(c.note, fac_ent.intervals, sub_root)
@@ -1643,7 +1645,7 @@ class HarmonicDashboardScreen(ModalScreen[None]):
                     aff_str = "[dim]n/a[/dim]"
                 aff_table.add_row(
                     c.civil_name, c.note, fac_name,
-                    c.current_subdivision_id or "-", aff_str,
+                    c.current_faction_id or "-", aff_str,
                 )
             yield aff_table
 
@@ -1653,3 +1655,325 @@ class HarmonicDashboardScreen(ModalScreen[None]):
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "harmonic-close":
             self.dismiss(None)
+
+
+class MapScreen(ModalScreen[None]):
+    """Fullscreen map showing character positions across locations."""
+
+    BINDINGS = [
+        ("escape", "close_map", "Close"),
+        ("space", "toggle_play", "Play/Pause"),
+    ]
+
+    DEFAULT_CSS = """
+    MapScreen {
+        align: center middle;
+    }
+    #map-container {
+        width: 95%;
+        height: 95%;
+        border: solid $accent;
+        background: $surface;
+    }
+    """
+
+    def __init__(self, bridge: "SimulatorBridge") -> None:
+        super().__init__()
+        self.bridge = bridge
+        self._prev_locations: dict[str, str] = {}
+        self._last_event: str | None = None
+        self._playing = False
+        self._play_timer: Any = None
+
+    def compose(self) -> ComposeResult:
+        from .map_widget import MapPanel
+        with Vertical(id="map-container"):
+            yield MapPanel(self.bridge.ws, id="map-panel")
+
+    def on_mount(self) -> None:
+        self._snapshot_locations()
+        self.refresh_map()
+
+    def _snapshot_locations(self) -> None:
+        """Save current character locations for move detection."""
+        self._prev_locations = {}
+        for eid, ent in self.bridge.ws.entities.items():
+            if isinstance(ent, Character):
+                self._prev_locations[eid] = ent.current_location_id
+
+    def _detect_moves(self) -> set[str]:
+        """Compare current locations to previous snapshot, return moved char IDs."""
+        moved: set[str] = set()
+        for eid, ent in self.bridge.ws.entities.items():
+            if isinstance(ent, Character):
+                prev = self._prev_locations.get(eid)
+                if prev and prev != ent.current_location_id:
+                    moved.add(eid)
+        return moved
+
+    def _get_last_event(self) -> str | None:
+        """Get the most recent event from the log for the current hour."""
+        log = self.bridge.event_log
+        if not log:
+            return None
+        last = log[-1]
+        return f"H{last.hour:02d}: {last.name} [{last.event_id}]"
+
+    def refresh_map(self, moved_ids: set[str] | None = None) -> None:
+        from .map_widget import MapPanel
+        panel = self.query_one("#map-panel", MapPanel)
+        panel.refresh_map(
+            self.bridge.ws,
+            self.bridge.current_hour,
+            last_event=self._last_event,
+            moved_ids=moved_ids,
+            playing=self._playing,
+        )
+
+    def step_and_refresh(self, n: int) -> None:
+        """Advance/rewind n hours with move tracking."""
+        self._snapshot_locations()
+        if n > 0:
+            self.bridge.step_forward(n)
+        else:
+            self.bridge.step_backward(-n)
+        moved = self._detect_moves()
+        self._last_event = self._get_last_event()
+        self.refresh_map(moved)
+
+    def action_close_map(self) -> None:
+        self._stop_play()
+        self.dismiss(None)
+
+    def action_toggle_play(self) -> None:
+        if self._playing:
+            self._stop_play()
+        else:
+            self._start_play()
+
+    def _start_play(self) -> None:
+        if self.bridge.current_hour >= self.bridge.max_hour:
+            return
+        self._playing = True
+        self._play_timer = self.set_interval(1.0, self._auto_step, name="map-autoplay")
+        self.refresh_map()
+
+    def _stop_play(self) -> None:
+        self._playing = False
+        if self._play_timer is not None:
+            self._play_timer.stop()
+            self._play_timer = None
+        self.refresh_map()
+
+    def _auto_step(self) -> None:
+        if self.bridge.current_hour >= self.bridge.max_hour:
+            self._stop_play()
+            return
+        self.step_and_refresh(1)
+
+
+class TimelineScreen(ModalScreen[int | None]):
+    """Interactive timeline showing all events. Enter jumps to selected hour."""
+
+    BINDINGS = [
+        ("escape", "close_timeline", "Close"),
+    ]
+
+    DEFAULT_CSS = """
+    TimelineScreen {
+        align: center middle;
+    }
+    #timeline-dialog {
+        width: 90%;
+        height: 90%;
+        border: solid $accent;
+        background: $surface;
+        padding: 1 2;
+    }
+    #timeline-header {
+        height: 1;
+        background: $primary;
+        text-style: bold;
+        padding: 0 1;
+    }
+    #timeline-footer {
+        height: 1;
+        padding: 0 1;
+    }
+    """
+
+    def __init__(self, bridge: "SimulatorBridge") -> None:
+        super().__init__()
+        self.bridge = bridge
+        # Build variable resolution map from event_rules
+        self._var_events: dict[str, str] = {}
+        for eid, rule in bridge.sim.event_rules.items():
+            var_cfg = rule.get("resolve_variable")
+            if var_cfg and "var_id" in var_cfg:
+                self._var_events[eid] = var_cfg["var_id"]
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="timeline-dialog"):
+            yield Static(
+                f"  TIMELINE \u00b7 H00 \u2192 H{self.bridge.max_hour:02d} \u00b7 seed {self.bridge.seed:03d}",
+                id="timeline-header",
+            )
+            table = DataTable(id="timeline-table")
+            table.cursor_type = "row"
+            table.add_columns("Hour", "ID", "Event", "Characters", "Variable")
+            yield table
+            yield Static(
+                "[dim]Enter = jump to hour  \u2191/\u2193 = navigate  Esc = close[/dim]",
+                id="timeline-footer",
+            )
+
+    def on_mount(self) -> None:
+        table = self.query_one("#timeline-table", DataTable)
+        current = self.bridge.current_hour
+
+        for event in self.bridge.timeline_events:
+            hour = event.get("hour", 0)
+            eid = event.get("id", "?")
+            name = event.get("name", "?")
+            chars_raw = event.get("characters", [])
+            chars_str = ", ".join(str(c) for c in chars_raw[:4])
+            if len(chars_raw) > 4:
+                chars_str += f" +{len(chars_raw) - 4}"
+
+            # Variable marker
+            var = self._var_events.get(eid, "")
+            var_str = f"\u2605 {var}" if var else ""
+
+            # Highlight current hour
+            hour_str = f"H{hour:02d}"
+            if hour == current:
+                hour_str = f"[bold yellow]H{hour:02d}[/bold yellow]"
+
+            table.add_row(hour_str, eid, name, chars_str, var_str, key=f"{hour}:{eid}")
+
+    def on_data_table_row_selected(self, event: DataTable.RowSelected) -> None:
+        """Jump to the selected event's hour."""
+        try:
+            raw = str(event.row_key.value)
+            hour = int(raw.split(":")[0])
+            self.dismiss(hour)
+        except (ValueError, TypeError):
+            pass
+
+    def action_close_timeline(self) -> None:
+        self.dismiss(None)
+
+
+# ---------------------------------------------------------------------------
+# Life Pack Inspector
+# ---------------------------------------------------------------------------
+
+
+class LifePackInspectorScreen(ModalScreen[None]):
+    """Inspect a character's Life Pack — all octaves, all slots."""
+
+    BINDINGS = [("escape", "dismiss", "Close")]
+
+    DEFAULT_CSS = """
+    LifePackInspectorScreen {
+        align: center middle;
+    }
+    #lp-dialog {
+        width: 90;
+        height: auto;
+        max-height: 90%;
+        border: thick $accent;
+        background: $surface;
+        padding: 1 2;
+    }
+    #lp-scroll {
+        height: auto;
+        max-height: 80vh;
+    }
+    """
+
+    def __init__(self, character_id: str, ws: WorldState) -> None:
+        super().__init__()
+        self.character_id = character_id
+        self.ws = ws
+
+    def compose(self) -> ComposeResult:
+        content = self._build_content()
+        with Vertical(id="lp-dialog"):
+            with VerticalScroll(id="lp-scroll"):
+                yield Static(content, id="lp-content")
+            with Center():
+                yield Button("Close", variant="primary", id="lp-close")
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "lp-close":
+            self.dismiss(None)
+
+    def _build_content(self) -> str:
+        from gigagen.core.lifepack import LifePack, LifePackSlot
+
+        lp = self.ws.lifepacks.get(self.character_id)
+        char = self.ws.entities.get(self.character_id)
+        char_name = getattr(char, "civil_name", self.character_id)
+
+        if lp is None:
+            return f"[b]{char_name}[/b] — No Life Pack loaded."
+
+        lines: list[str] = []
+        lines.append(f"[b]=== LIFE PACK: {char_name} ({lp.meta.tonic}) ===[/b]")
+        lines.append(
+            f"Mode: {lp.meta.mode or '?'}  Collection: {lp.meta.collection or '?'}"
+        )
+        lines.append("")
+
+        # Octave definitions
+        octaves = [
+            ("octave_0_lore", "Oct 0 — Lore"),
+            ("octave_1_animas", "Oct 1 — Ánimas"),
+            ("octave_2_linajes", "Oct 2 — Linaje"),
+            ("octave_3_locations", "Oct 3 — Locations"),
+            ("octave_4_objetos", "Oct 4 — Objetos"),
+            ("octave_5_skills", "Oct 5 — Skills"),
+            ("octave_6_reservada", "Oct 6 — Reservada"),
+            ("octave_7_personajes", "Oct 7 — Personajes"),
+            ("octave_8_eventos", "Oct 8 — Eventos"),
+        ]
+
+        for attr_name, label in octaves:
+            octave = getattr(lp, attr_name, None)
+            if octave is None:
+                continue
+
+            slot_count = len(octave.slots)
+            if slot_count == 0:
+                lines.append(f"[dim]▸ {label} (empty)[/dim]")
+                continue
+
+            lines.append(f"[b]▸ {label}[/b]  [{octave.logic or '?'}]")
+
+            for key, slot in octave.slots.items():
+                if not isinstance(slot, LifePackSlot):
+                    continue
+                lines.append(self._format_slot(key, slot))
+
+            lines.append("")
+
+        return "\n".join(lines)
+
+    @staticmethod
+    def _format_slot(key: str, slot: "LifePackSlot") -> str:
+        """Format a single slot line with color by state."""
+        note = slot.resolved_note or slot.note or ""
+        entity = slot.entity_name or slot.definition or ""
+        role = slot.role or slot.archetype or ""
+
+        # Color by state
+        if slot.locked:
+            # Locked = grey
+            return f"  [dim]{key:<24} {note:<4} {role:<24} (locked)[/dim]"
+        elif entity:
+            # Unlocked + filled = green
+            return f"  [green]{key:<24} {note:<4} {role:<24} {entity}[/green]"
+        else:
+            # Unlocked + empty = yellow
+            return f"  [yellow]{key:<24} {note:<4} {role:<24} (empty)[/yellow]"

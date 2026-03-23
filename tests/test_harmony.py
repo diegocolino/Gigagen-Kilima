@@ -8,9 +8,8 @@ from gigagen.core.harmony import (
     build_scale,
     character_faction_affinity,
     character_location_affinity,
-    dual_membership_cost,
     location_instability,
-    subdivision_weight,
+    faction_weight,
     faction_compatibility,
     CHROMATIC_NOTES,
 )
@@ -85,7 +84,7 @@ class TestBuildScale:
 
 class TestCharacterFactionAffinity:
     def test_unison_with_root(self) -> None:
-        """Leader in their own subdivision → maximum affinity."""
+        """Leader in their own faction → maximum affinity."""
         aff = character_faction_affinity("B", [1, 2, 2, 2, 1, 2, 2], "B")
         assert aff == 1.0
 
@@ -174,33 +173,6 @@ class TestCharacterLocationAffinity:
 # Dual membership cost
 # ---------------------------------------------------------------------------
 
-class TestDualMembershipCost:
-    def test_same_faction_zero_cost(self) -> None:
-        """Same faction, same root → full overlap → zero cost."""
-        ionian = [2, 2, 1, 2, 2, 2, 1]
-        cost = dual_membership_cost(ionian, "C", ionian, "C")
-        assert cost == 0.0
-
-    def test_disjoint_scales_high_cost(self) -> None:
-        """Two scales with minimal overlap → high cost."""
-        # Whole tone scales from C and C# have NO overlap
-        wt = [2, 2, 2, 2, 2, 2]
-        cost = dual_membership_cost(wt, "C", wt, "C#")
-        assert cost == 1.0  # zero overlap
-
-    def test_null_root_moderate(self) -> None:
-        cost = dual_membership_cost([2, 2, 1, 2, 2, 2, 1], None, [2, 2, 1, 2, 2, 2, 1], "C")
-        assert cost == 0.5
-
-    def test_range(self) -> None:
-        ionian = [2, 2, 1, 2, 2, 2, 1]
-        phrygian = [1, 2, 2, 2, 1, 2, 2]
-        for r1 in CHROMATIC_NOTES[:4]:
-            for r2 in CHROMATIC_NOTES[:4]:
-                cost = dual_membership_cost(ionian, r1, phrygian, r2)
-                assert 0.0 <= cost <= 1.0
-
-
 # ---------------------------------------------------------------------------
 # Location instability
 # ---------------------------------------------------------------------------
@@ -236,27 +208,27 @@ class TestLocationInstability:
 
 
 # ---------------------------------------------------------------------------
-# Subdivision weight
+# Faction weight
 # ---------------------------------------------------------------------------
 
-class TestSubdivisionWeight:
-    def test_only_subdivision(self) -> None:
-        assert subdivision_weight("C", []) == 1.0
+class TestFactionWeight:
+    def test_only_faction(self) -> None:
+        assert faction_weight("C", []) == 1.0
 
     def test_fifth_is_central(self) -> None:
         """A root forming perfect fifths with others should be highly weighted."""
         # C with G (perfect fifth) and F (perfect fourth from C = fifth below)
-        w = subdivision_weight("C", ["G", "F"])
+        w = faction_weight("C", ["G", "F"])
         assert w > 0.7
 
     def test_tritone_is_outlier(self) -> None:
         """A root forming tritones with others should be low-weighted."""
-        w = subdivision_weight("C", ["F#"])
+        w = faction_weight("C", ["F#"])
         assert w < 0.3
 
     def test_range(self) -> None:
         for note in CHROMATIC_NOTES:
-            w = subdivision_weight(note, ["C", "G", "D"])
+            w = faction_weight(note, ["C", "G", "D"])
             assert 0.0 <= w <= 1.0
 
 

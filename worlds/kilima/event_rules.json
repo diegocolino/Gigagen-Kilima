@@ -1,11 +1,11 @@
 [
   {
     "event_id": "E05",
-    "move_characters": {"kive": "loc.road", "yeri": "loc.road"}
+    "move_characters": {"kive": "last_road", "yeri": "last_road"}
   },
   {
     "event_id": "E06",
-    "move_characters": {"kive": "loc.kilima", "yeri": "loc.kilima"}
+    "move_characters": {"kive": "kilima", "yeri": "kilima"}
   },
   {
     "event_id": "E07",
@@ -26,10 +26,10 @@
   {
     "event_id": "E_FORNO",
     "move_characters": {
-      "kive": "loc.forno", "luka": "loc.forno", "saarah": "loc.forno",
-      "cris": "loc.forno", "yeri": "loc.forno", "ali": "loc.forno"
+      "kive": "loc.recess", "luka": "loc.recess", "saarah": "loc.recess",
+      "cris": "loc.recess", "yeri": "loc.recess", "ali": "loc.recess"
     },
-    "set_factions": {"luka": "fac.anti_group"},
+    "set_factions": {"luka": "mfac.anti_group"},
     "set_political": {"luka": "turned"}
   },
   {
@@ -58,12 +58,12 @@
     "event_id": "E_MOVE_OUT",
     "move_active": {
       "characters": ["kive", "luka", "saarah", "cris", "ali"],
-      "location": "loc.road"
+      "location": "last_road"
     }
   },
   {
     "event_id": "E17",
-    "move_characters": {"kive": "loc.village", "freya": "loc.village"}
+    "move_characters": {"kive": "pobla2", "freya": "pobla2"}
   },
   {
     "event_id": "E18",
