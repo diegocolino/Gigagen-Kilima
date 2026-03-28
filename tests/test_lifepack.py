@@ -475,7 +475,7 @@ class TestUnlockLifepackSlot:
         ws = WorldState(
             world_id="test",
             seed=1,
-            phase="test",
+            phase="contempo",
             entities={"kilima_in12_rebel": char},
             lifepacks={"kilima_in12_rebel": lp},
         )
@@ -678,7 +678,7 @@ class TestLifePackInspectorScreen:
         ws = WorldState(
             world_id="test",
             seed=1,
-            phase="test",
+            phase="contempo",
             entities={"kilima_in12_rebel": char},
             lifepacks={"kilima_in12_rebel": lp},
         )
@@ -714,7 +714,7 @@ class TestLifePackInspectorScreen:
         ws = WorldState(
             world_id="test",
             seed=1,
-            phase="test",
+            phase="contempo",
             entities={"kilima_in12_orphan": char},
         )
 
@@ -732,7 +732,7 @@ class TestLifePackInspectorScreen:
         lp.octave_7_personajes.slots["7_quinta_justa"].entity_name = "Cris"
 
         ws = WorldState(
-            world_id="test", seed=1, phase="test",
+            world_id="test", seed=1, phase="contempo",
             lifepacks={"test": lp},
         )
 
@@ -750,7 +750,7 @@ class TestLifePackInspectorScreen:
         lp.meta.entity_name = "Test"
 
         ws = WorldState(
-            world_id="test", seed=1, phase="test",
+            world_id="test", seed=1, phase="contempo",
             lifepacks={"test": lp},
         )
 

@@ -36,7 +36,7 @@ class TestLoadWorldpack:
         assert ws.seed == 1
 
     def test_phase(self, ws: WorldState) -> None:
-        assert ws.phase == "block_1_start"
+        assert ws.phase == "contempo"
 
     def test_loads_12_characters(self, ws: WorldState) -> None:
         chars = [e for e in ws.entities.values() if isinstance(e, Character)]

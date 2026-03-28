@@ -298,7 +298,7 @@ class TestWorldState:
         return WorldState(
             world_id="world.kilima",
             seed=1,
-            phase="block_1_start",
+            phase="contempo",
             description="Kilima NB1 — seed 1",
             entities=entities,
             relations=relations,
@@ -331,7 +331,7 @@ class TestWorldState:
             ws = WorldState(
                 world_id="world.kilima",
                 seed=seed,
-                phase="block_1_start",
+                phase="contempo",
                 entities=entities,
                 relations=relations,
                 active_macro_faction_ids=[f.id for f in factions],
@@ -429,7 +429,7 @@ class TestWorldpackFiles:
         ws = WorldState(
             world_id="world.kilima",
             seed=1,
-            phase="block_1_start",
+            phase="contempo",
             entities=entities,
             relations=relations,
             active_macro_faction_ids=[f.id for f in factions if f.status != "dissolved"],
@@ -459,7 +459,7 @@ class TestFactionInvariants:
         return WorldState(
             world_id="world.kilima",
             seed=1,
-            phase="block_1_start",
+            phase="contempo",
             entities=entities,
             relations=relations,
             active_macro_faction_ids=[f.id for f in facs],
@@ -519,7 +519,7 @@ class TestLocationParentInvariants:
         return WorldState(
             world_id="world.kilima",
             seed=1,
-            phase="block_1_start",
+            phase="contempo",
             entities=entities,
             relations=relations,
             active_macro_faction_ids=[f.id for f in facs],

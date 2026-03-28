@@ -1,0 +1,54 @@
+{
+  "$schema": "gigagen.y.v1",
+  "$doc": "Catalog of matter (Adam/Hardware). Concrete instances that can exist. Worldpack-specific assignments.",
+
+  "chromatic_notes": ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+
+  "archetypes": {
+    "$doc": "Archetype code -> chromatic note assignment for this worldpack.",
+    "CAR": "C",
+    "JES": "C#",
+    "HER": "D",
+    "REB": "D#",
+    "ORP": "E",
+    "LOV": "F",
+    "HCK": "F#",
+    "LEA": "G",
+    "INN": "G#",
+    "EXP": "A",
+    "CRE": "A#",
+    "DEI": "B"
+  },
+
+  "elements": [
+    {"id": "agua",     "name": "Agua",     "tier": "fundamental", "components": []},
+    {"id": "fuego",    "name": "Fuego",    "tier": "fundamental", "components": []},
+    {"id": "tierra",   "name": "Tierra",   "tier": "fundamental", "components": []},
+    {"id": "aire",     "name": "Aire",     "tier": "fundamental", "components": []},
+
+    {"id": "nube",     "name": "Nube",     "tier": "mixed", "components": ["agua", "aire"]},
+    {"id": "barro",    "name": "Barro",    "tier": "mixed", "components": ["agua", "tierra"]},
+    {"id": "hielo",    "name": "Hielo",    "tier": "mixed", "components": ["agua", "aire"]},
+    {"id": "metal",    "name": "Metal",    "tier": "mixed", "components": ["fuego", "tierra"]},
+    {"id": "humo",     "name": "Humo",     "tier": "mixed", "components": ["fuego", "aire"]},
+    {"id": "polvo",    "name": "Polvo",    "tier": "mixed", "components": ["tierra", "aire"]},
+
+    {"id": "lava",     "name": "Lava",     "tier": "truncated", "components": ["fuego", "tierra"]},
+    {"id": "tormenta", "name": "Tormenta", "tier": "truncated", "components": ["agua", "aire"]},
+    {"id": "ceniza",   "name": "Ceniza",   "tier": "truncated", "components": ["fuego", "tierra"]},
+    {"id": "humedad",  "name": "Humedad",  "tier": "truncated", "components": ["agua", "aire"]},
+
+    {"id": "eter_natural",   "name": "Éter Natural",   "tier": "supreme", "components": ["agua", "fuego", "tierra", "aire"]},
+    {"id": "eter_sintetico", "name": "Éter Sintético", "tier": "supreme", "components": ["agua", "fuego", "tierra", "aire"]}
+  ],
+
+  "character_tiers": ["S", "A", "B"],
+  "location_levels": ["world", "territory", "region", "area", "location", "room", "locker"],
+  "item_tiers": ["S", "A", "B"],
+  "skill_tiers": ["S", "A", "B"],
+
+  "emotional_states": ["neutral", "grief", "rage", "hope", "fear"],
+  "character_statuses": ["active", "dead", "missing", "captive", "digitalized", "transferred", "automaton"],
+  "faction_statuses": ["active", "dissolved", "underground", "dominant"],
+  "location_statuses": ["stable", "tense", "fragile", "unstable", "hidden", "active", "breached", "besieged"]
+}

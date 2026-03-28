@@ -1,0 +1,84 @@
+{
+  "$schema": "gigagen.x.v1",
+  "$doc": "Laws of the universe (Eva/Software). Abstract patterns that govern how things relate. Does not change between seeds.",
+
+  "archetypes": [
+    {"code": "CAR", "name": "Caregiver", "description": "Nurtures and protects others"},
+    {"code": "JES", "name": "Jester", "description": "Brings joy and irreverence"},
+    {"code": "HER", "name": "Hero", "description": "Overcomes challenges through courage"},
+    {"code": "REB", "name": "Rebel", "description": "Breaks rules and challenges authority"},
+    {"code": "ORP", "name": "Orphan", "description": "Seeks belonging and connection"},
+    {"code": "LOV", "name": "Lover", "description": "Pursues passion and intimacy"},
+    {"code": "HCK", "name": "Hacker", "description": "Manipulates systems from within"},
+    {"code": "LEA", "name": "Leader", "description": "Takes responsibility and guides others"},
+    {"code": "INN", "name": "Innocent", "description": "Maintains faith and optimism"},
+    {"code": "EXP", "name": "Explorer", "description": "Seeks freedom and discovery"},
+    {"code": "CRE", "name": "Creator", "description": "Brings vision into reality"},
+    {"code": "DEI", "name": "Deity", "description": "Transcends and transforms"}
+  ],
+
+  "harmonic_intervals": {
+    "$doc": "Documentation only. Operational source is relation.py. These are universal laws, not worldpack config.",
+    "0":  {"label": "unison",        "affinity":  1.0, "meaning": "Total resonance"},
+    "1":  {"label": "minor_second",  "affinity": -0.8, "meaning": "Strong friction"},
+    "2":  {"label": "major_second",  "affinity": -0.5, "meaning": "Moderate tension"},
+    "3":  {"label": "minor_third",   "affinity": -0.3, "meaning": "Dramatic tension, tense emotional bond"},
+    "4":  {"label": "major_third",   "affinity":  0.7, "meaning": "Emotional affinity, warm harmony"},
+    "5":  {"label": "perfect_fourth","affinity":  0.8, "meaning": "Stability, support"},
+    "6":  {"label": "tritone",       "affinity": -1.0, "meaning": "Nemesis, maximum dissonance"},
+    "7":  {"label": "perfect_fifth", "affinity":  0.9, "meaning": "Natural ally, strong harmony"},
+    "8":  {"label": "minor_sixth",   "affinity": -0.2, "meaning": "Melancholy, bittersweet bond"},
+    "9":  {"label": "major_sixth",   "affinity":  0.6, "meaning": "Sweet affinity, complement"},
+    "10": {"label": "minor_seventh", "affinity": -0.4, "meaning": "Dynamic tension, push"},
+    "11": {"label": "major_seventh", "affinity": -0.6, "meaning": "Elevated tension, aspiration"}
+  },
+
+  "modes": {
+    "$doc": "Scale patterns. Intervals must sum to 12 semitones.",
+    "ionian":     {"intervals": [2,2,1,2,2,2,1], "family": "greek", "character": "bright, stable"},
+    "dorian":     {"intervals": [2,1,2,2,2,1,2], "family": "greek", "character": "minor with raised 6th"},
+    "phrygian":   {"intervals": [1,2,2,2,1,2,2], "family": "greek", "character": "dark, tense, Spanish"},
+    "lydian":     {"intervals": [2,2,2,1,2,2,1], "family": "greek", "character": "bright, ethereal"},
+    "mixolydian": {"intervals": [2,2,1,2,2,1,2], "family": "greek", "character": "major with flat 7th"},
+    "aeolian":    {"intervals": [2,1,2,2,1,2,2], "family": "greek", "character": "natural minor"},
+    "locrian":    {"intervals": [1,2,2,1,2,2,2], "family": "greek", "character": "unstable, diminished"},
+    "whole_tone": {"intervals": [2,2,2,2,2,2],   "family": "symmetric", "character": "dreamlike, no resolution"},
+    "diminished": {"intervals": [2,1,2,1,2,1,2,1], "family": "symmetric", "character": "tense, symmetrical"}
+  },
+
+  "scale_families": ["greek", "symmetric", "pentatonic"],
+
+  "relation_types": {
+    "$doc": "Valid relation kinds between entities.",
+    "character_character": [
+      "sibling", "partner", "ex_partner", "close_friend", "former_friend",
+      "rival", "mentor", "distrust", "childhood_best_friends", "oneiric_bond",
+      "maternal_figure", "leadership_succession", "reunited_in_limbo",
+      "automaton_of", "future_partner", "contacted_in_limbo"
+    ],
+    "character_faction": [
+      "member_of", "leader_of", "allied_with", "opposed_to", "infiltrated_in"
+    ],
+    "character_location": [
+      "lives_in", "tied_to", "hidden_in"
+    ],
+    "faction_location": [
+      "based_in", "controls", "influences", "hides_in"
+    ]
+  },
+
+  "entity_types": ["character", "macro_faction", "faction", "location", "item", "skill", "anima", "lineage"],
+
+  "canon_levels": {
+    "fixed": "Cannot change between seeds. Identity.",
+    "seeded": "Decided at simulation start, coherent within that run.",
+    "derived": "Emerges from relations and rules during simulation."
+  },
+
+  "element_tiers": {
+    "fundamental": "Primary elements (4). Cannot be decomposed.",
+    "mixed": "Combination of 2 fundamentals (6).",
+    "truncated": "Unstable combinations (4).",
+    "supreme": "Transcendent element (Ether). Encompasses all."
+  }
+}

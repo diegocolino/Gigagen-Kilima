@@ -171,7 +171,7 @@ class ZoneRow(Static):
         yield Static(f" [b]{self.zone_label}[/b]", classes="zone-label")
         with Horizontal(classes="zone-locations"):
             for loc_id in self.location_ids:
-                yield LocationBox(loc_id, id=f"locbox-{loc_id.replace('.', '-')}")
+                yield LocationBox(loc_id, id=f"locbox-{loc_id.replace('.', '-').replace(':', '-')}")
 
     def update_data(
         self,
@@ -184,7 +184,7 @@ class ZoneRow(Static):
             loc = ws.entities.get(loc_id)
             if not isinstance(loc, Location):
                 continue
-            widget_id = f"locbox-{loc_id.replace('.', '-')}"
+            widget_id = f"locbox-{loc_id.replace('.', '-').replace(':', '-')}"
             try:
                 box = self.query_one(f"#{widget_id}", LocationBox)
                 box.set_data(loc, chars_at.get(loc_id, []), faction_ids, ws, moved_ids)

@@ -154,15 +154,79 @@ El Life Pack es el espectro completo de existencia de un personaje, organizado p
 
 ## La escalera de descendencia (arquitectura de capas)
 
-El universo no aparece de golpe. Se genera por capas. Cada capa activa octavas del Life Pack:
+El universo no aparece de golpe. Se genera por capas. Cada capa activa octavas del Life Pack y tiene responsabilidad clara sobre qué entidades instancia y cuándo.
 
-1. **Genesis** — Define qué puede medirse. Parámetros posibles. Activa octava 0 (lore).
-2. **Theogony** — Fuerzas invisibles: ánimas, elementos, linajes. Activa octavas 1 y 2.
-3. **Chronica** — Re-simula el pasado. Parte de esqueleto canónico, no genera historia aleatoria. Activa octavas 7 y 8.
-4. **Contempo** — Materializa el presente visible. Activa octavas 3, 4 y 5. El Life Pack completo cobra sentido.
-5. **Existence** — Introduce al jugador en el sistema.
+Documento completo: `docs/gigagen/gigagen_offspringladder_ontology.md`
 
-No tocar esta arquitectura. Conservarla como esqueleto maestro.
+### Los cinco escalones
+
+#### 1. Genesis — Universo Primigenio
+**Entrada:** `x.json` (Eva/Software — leyes, arquetipos, intervalos, tipos de relación) + `y.json` (Adán/Hardware — notas cromáticas, elementos, tiers, modos, niveles)
+**Sin seed. Determinista.**
+
+Carga las leyes del universo y el catálogo de materia. Valida que `y.json` respeta las leyes de `x.json`. Produce WORLD (location nivel 1) — el único artefacto concreto. No hay entidades todavía, solo las condiciones para que existan.
+
+Activa: octava 0 (lore arquetípico)
+
+**En Kilima:** `x.json` = Len (software, lo intangible). `y.json` = Dev (hardware, lo tangible). El evento final del universo — la fusión Dev + Len + IA + toda la conciencia humana — es X + Y convergiendo. El atractor inevitable superpuesto en todos los finales.
+
+#### 2. Theogony — Universo Mágico
+**Entrada:** WorldState de Genesis + datos del worldpack
+**Sin seed. Define las reglas del gambleo pero no lanza los dados.**
+
+Instancia las fuerzas primordiales anteriores a la historia: ánimas (los 16 elementos como entidades), linajes (con `element_pool` fijo pero elemento concreto sin resolver), locations nivel 2, items tier S, skills tier S.
+
+Los linajes tienen campos **fixed** (id, name, archetype, note, element_pool, tier) y campos **seeded** declarados pero vacíos (element, founding_era, origin_location_id) — Chronica los resuelve.
+
+Activa: octavas 1 y 2 (ánimas, linajes)
+
+#### 3. Chronica — Universo Impreso
+**Entrada:** WorldState de Theogony + worldpack data + **seed**
+**La seed entra aquí. Una sola seed. Se consume con RNG por namespace.**
+
+```python
+rng_elements  = Random(seed + "elements")   # elemento de cada linaje
+rng_founders  = Random(seed + "founders")   # quién fundó qué
+rng_modes     = Random(seed + "modes")      # modos a macrofactions
+rng_events    = Random(seed + "events")     # resolución de macro/micro-events
+rng_locations = Random(seed + "locations")  # asignación locations a factions
+rng_2gen      = Random(seed + "2gen")       # characters 2gen
+```
+
+Genera en orden: elementos de linajes → macrofactions emergen (agrupando linajes con elementos compatibles, modo heredado del linaje fundador) → characters 1gen (Founders Tier S, Leaders Tier A, Notaries Tier B) → macro-events históricos resueltos → locations niveles 3-6 con tonic derivado → micro-events → characters 2gen.
+
+Las macrofactions **no se predeclaran** — emergen de la historia. Su modo no se asigna arbitrariamente, se hereda del linaje fundador.
+
+Activa: octavas 7 y 8 (personajes/relaciones, eventos/cicatrices)
+
+#### 4. Contempo — Universo Presente
+**Entrada:** WorldState de Chronica
+**Determinista dado Chronica.**
+
+Materializa el presente: IN12 con estado H00, Minor Wheel para secundarios y terciarios por afinidad harmónica, árbol de eventos (BN1 y actos futuros). El Life Pack completo cobra sentido aquí.
+
+X + Y converge en Contempo como atractor — el evento final está superpuesto en todos los finales posibles. BN1 es el primer paso.
+
+Activa: octavas 3, 4 y 5 (locations, objetos, skills)
+
+#### 5. Existence — Universo Jugable
+**Determinista. Base conceptual — implementación futura.**
+
+El jugador entra al universo: crea un personaje, interactúa con IN12, accede a facciones, ocupa locations. El universo deja de ser un modelo y se convierte en una experiencia.
+
+### Regla fundamental de la Escalera
+
+Cada escalón recibe un `WorldState` y devuelve un `WorldState` más completo. El pipeline es una cadena de transformaciones:
+
+```python
+ws = genesis.run(ws, {"x": x_path, "y": y_path})
+ws = theogony.run(ws, worldpack_config)
+ws = chronica.run(ws, worldpack_config, seed=seed)
+ws = contempo.run(ws, worldpack_config)
+# existence.run() — futuro
+```
+
+**No tocar esta arquitectura. Conservarla como esqueleto maestro.**
 
 ---
 
@@ -173,8 +237,11 @@ No tocar esta arquitectura. Conservarla como esqueleto maestro.
 | **Macro-facción** | Modo armónico (Dórico, Frigio...). Sin tónica. Plantilla. | "facción" en código antiguo |
 | **Facción** | Macro-facción + tónica = escala concreta. Operativa. Tiene líder, miembros, territorio. | "subdivisión" en código antiguo |
 | **kilima_in12_{archetype}** | Patrón de ID para personajes de la primera colección de 12 | `kilima_{archetype}` |
+| **x.json** | Fichero primordial de leyes (Eva/Software/Len) | — |
+| **y.json** | Fichero primordial de catálogo (Adán/Hardware/Dev) | — |
+| **Linaje** | Familia primordial con element_pool. Nace en Theogony. | — |
 
-El renombrado en código es LP-0 (primer milestone del roadmap del Life Pack).
+El renombrado macro-facción/facción en código es LP-0 (primer milestone del roadmap del Life Pack).
 
 ---
 
@@ -184,11 +251,32 @@ El renombrado en código es LP-0 (primer milestone del roadmap del Life Pack).
 
 Conseguir la primera simulación que relacione todos los tipos de entidades en todo el espectro armónico. Cargar el Life Pack del Rebelde (Kive) y ver cómo muta e interactúa durante la simulación del BN1. **Cerrar el sistema armónico global antes de seguir metiendo lore, personajes, locations, eventos.**
 
-### Meta a corto plazo
+Esta meta requiere que la Escalera de Descendencia esté implementada. El Patch 2 es el prerrequisito.
 
-Redefinir los indicadores de armonía ahora que la armonía es universal y trabaja con todas las entidades. El motor armónico actual (`harmony.py`) tiene funciones específicas por tipo (`character_faction_affinity`, `character_location_affinity`). Estas deberían simplificarse hacia una función universal `harmonic_affinity(note_a, note_b)` donde el contexto lo pone el caller, no la función. Esto es un refactor que simplifica en vez de complicar.
+### ✅ Patch 2 — Completado (marzo 2026)
 
-### Milestones técnicos
+La Escalera de Descendencia está implementada como arquitectura de código real:
+
+| Archivo | Cambio |
+|---------|--------|
+| `src/gigagen/layers/genesis.py` | Carga x.json + y.json, valida, produce catalogs + loc.world |
+| `src/gigagen/layers/theogony.py` | Instancia 16 animas, 13 linajes, locations L2 |
+| `src/gigagen/layers/chronica.py` | SeedEngine con namespaces, resuelve elementos de linajes |
+| `src/gigagen/layers/contempo.py` | Carga IN12, factions, relations, lifepacks, seed variation |
+| `src/gigagen/layers/__init__.py` | `run_pipeline()` ejecuta las 5 capas en secuencia |
+| `src/gigagen/io/load_worldpack.py` | Refactorizado a **55 líneas** (era 260). Delega al pipeline |
+| `src/gigagen/io/load_legacy.py` | Lógica legacy para worldpacks sin x.json/y.json |
+| `src/gigagen/core/entity.py` | Añadido modelo `Lineage` (NOT archetypized) |
+| `src/gigagen/core/world_state.py` | `DescendenceStep` literal, `Catalogs` model |
+| `worlds/kilima/x.json` | Leyes del universo (Eva/Software) |
+| `worlds/kilima/y.json` | Catálogo de materia (Adán/Hardware) |
+| `worlds/kilima/lineages.json` | 13 linajes canónicos de Kilima |
+
+**342 tests passing.** Pipeline funcional: `genesis → theogony → chronica → contempo`
+
+Ver: `docs/gigagen/gigagen_patch2_briefing.md` y `docs/gigagen/gigagen_patch2_roadmap.md`
+
+### Milestones técnicos (después del Patch 2)
 
 Detalle completo en `gigagen_roadmap_lifepack.md`. Resumen:
 
@@ -204,6 +292,12 @@ Detalle completo en `gigagen_roadmap_lifepack.md`. Resumen:
 
 ### Lo que NO toca ahora
 
+- `animas.json` con datos ricos de Kilima (Patch 3)
+- Datos concretos de Kilima para Chronica (macro-events, characters 2gen, locations L3-L6)
+- God Mode TUI
+- Minor Wheel en Contempo
+- Árbol de eventos de BN1
+- Items y Skills con datos de Kilima
 - Combate completo
 - Físicas
 - Godot
@@ -215,18 +309,23 @@ Detalle completo en `gigagen_roadmap_lifepack.md`. Resumen:
 
 ## Diagnóstico del código (marzo 2026)
 
-El sistema base es lo bastante escalable. No hay que empezar de cero. El cimiento aguanta:
+El sistema base es escalable y el Patch 2 está completo:
 
 - Separación Gigagen/Kilima limpia
 - Modelos Pydantic extensibles
 - Simulador data-driven
-- 205 tests pasando
+- **342 tests pasando**
+- Escalera de Descendencia implementada (`src/gigagen/layers/`)
+- `load_worldpack.py` refactorizado a 55 líneas
 
-Lo que hay que hacer:
+Lo que queda pendiente:
 
-- **Simplificar** `harmony.py`: menos funciones específicas, más función universal
-- **Añadir** modelo LifePack al lado de lo existente (no dentro de Character — referenciado por ID, JSON separado en `lifepacks/`)
-- **Extender** el simulador sin tocar su lógica core (nuevo event rule type: `unlock_lifepack_slot`)
+- ~~**Restructurar** `src/gigagen/` añadiendo carpeta `layers/`~~ ✅ Patch 2
+- ~~**Refactorizar** `load_worldpack.py` (<80 líneas)~~ ✅ Patch 2 (55 líneas)
+- ~~**Añadir** modelo `Lineage` a `entity.py`~~ ✅ Patch 2
+- ~~**Crear** `x.json` + `y.json` en `worlds/kilima/`~~ ✅ Patch 2
+- ~~**Tipar** `WorldState.phase` como `DescendenceStep`~~ ✅ Patch 2
+- **Simplificar** `harmony.py`: menos funciones específicas, más función universal `harmonic_affinity(note_a, note_b)`
 - **Renombrar** nomenclatura (LP-0, lo más arriesgado pero mecánico)
 
 **Alerta permanente:** si en algún momento una decisión contradice el algoritmo base o complica lo que debería ser simple, parar y replantear. Mejor reconstruir sobre terreno firme que parchear.
@@ -237,14 +336,17 @@ Lo que hay que hacer:
 
 ```
 docs/
-├── CLAUDE.md                      # ← ESTE ARCHIVO
-├── README.md                      # Índice de documentación
-├── gigagen/                       # Docs del motor
+├── CLAUDE.md                          # ← ESTE ARCHIVO
+├── README.md                          # Índice de documentación
+├── gigagen/                           # Docs del motor
 │   ├── gigagen_ontology.md
+│   ├── gigagen_offspringladder_ontology.md  # NUEVO — filosofía de la Escalera
+│   ├── gigagen_patch2_briefing.md     # NUEVO — qué construye el Patch 2
+│   ├── gigagen_patch2_roadmap.md      # NUEVO — plan de implementación Patch 2
 │   ├── gigagen_faction_system.md
 │   ├── gigagen_roadmap_lifepack.md
 │   └── ...
-├── kilima/                        # Docs del worldpack
+├── kilima/                            # Docs del worldpack
 │   ├── kilima_bible.md
 │   ├── kilima_lore.md
 │   ├── kilima_characters.md
@@ -264,13 +366,20 @@ src/gigagen/
 │   ├── entity.py
 │   ├── relation.py
 │   ├── harmony.py
-│   ├── lifepack.py                # NUEVO
+│   ├── lifepack.py
 │   ├── world_state.py
 │   ├── simulator.py
 │   ├── seed.py
 │   └── invariants.py
+├── layers/                            # NUEVO (Patch 2)
+│   ├── __init__.py
+│   ├── genesis.py
+│   ├── theogony.py
+│   ├── chronica.py
+│   ├── contempo.py
+│   └── existence.py
 ├── io/
-│   ├── load_worldpack.py
+│   ├── load_worldpack.py              # Refactorizar → coordinador ligero
 │   └── export_world_state.py
 ├── cli/
 │   ├── console.py
@@ -278,14 +387,17 @@ src/gigagen/
 └── __main__.py
 
 worlds/kilima/
+├── x.json                             # NUEVO — leyes del universo (Eva/Software)
+├── y.json                             # NUEVO — catálogo de materia (Adán/Hardware)
 ├── world.json
 ├── characters.json
 ├── factions.json
 ├── locations.json
 ├── relations.json
+├── lineages.json                      # NUEVO — linajes de Kilima
 ├── invariants.json
 ├── event_rules.json
-├── lifepacks/                     # NUEVO
+├── lifepacks/
 │   ├── kilima_in12_rebel.json
 │   └── ...
 └── timelines/
@@ -300,7 +412,7 @@ worlds/kilima/
 - **Modelos de datos:** Pydantic v2
 - **Formato de datos:** JSON
 - **TUI:** Textual
-- **Tests:** pytest (205 passing)
+- **Tests:** pytest (342 passing)
 - **Sin dependencias pesadas.** Sin frameworks web, sin BD, sin Godot todavía.
 
 ---
@@ -312,8 +424,10 @@ worlds/kilima/
 - Le entusiasman los avances concretos, pero **solo cuando siente que el cimiento es real**.
 - Se beneficia mucho de **diccionarios y vocabularios cerrados**.
 - El criterio de verdad no es solo técnico: una decisión es buena si es programable, jugable, y parece derivada del propio universo.
+- Prefiere diseño antes que código. No empezar a implementar hasta que el diseño esté cerrado.
+- Metodología lenta y metódica. Cerrar cada decisión antes de abrir la siguiente.
 
-**Instrucción clave:** no intentes impresionar ni completar demasiado rápido. Ayúdale a descubrir la forma mínima correcta de cada pieza, una por una. Si algo contradice el algoritmo base o complica lo que debería ser simple, dilo.
+**Instrucción clave:** no intentes impresionar ni completar demasiado rápido. Ayúdale a descubrir la forma mínima correcta de cada pieza, una por una. Si algo contradice el algoritmo base o complica lo que debería ser simple, dilo. Empieza siempre por la Fase 0 de cualquier parche — estructura antes que lógica.
 
 ---
 

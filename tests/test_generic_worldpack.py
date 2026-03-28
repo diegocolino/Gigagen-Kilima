@@ -83,7 +83,7 @@ def _build_mini_worldpack() -> tuple[WorldState, list[dict]]:
     ws = WorldState(
         world_id="world.testlands",
         seed=7,
-        phase="start",
+        phase="contempo",
         description="A tiny test worldpack",
         entities=entities,
         relations=[],

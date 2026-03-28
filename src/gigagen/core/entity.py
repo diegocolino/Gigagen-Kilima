@@ -13,7 +13,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 
-EntityType = Literal["character", "faction", "location", "item", "anima"]
+EntityType = Literal["character", "faction", "location", "item", "anima", "lineage"]
 CanonLevel = Literal["fixed", "seeded", "derived"]
 
 
@@ -120,3 +120,31 @@ class Anima(BaseEntity):
     stability: float = Field(ge=0.0, le=1.0, default=1.0)
     manifestation_level: float = Field(ge=0.0, le=1.0, default=0.0)
     current_plane: str = "dormant"  # e.g. "physical", "red", "dormant"
+
+
+class Lineage(BaseEntity):
+    """Primordial family. Born in Theogony, before history.
+
+    Lineages are NOT archetypized — they don't have note or archetype.
+    Their relational system is elemental, not harmonic-chromatic.
+    """
+
+    entity_type: Literal["lineage"] = "lineage"
+
+    # Identity — fixed in Theogony
+    tier: str  # "founder", "leader", "notary"
+    element_pool: list[str] = Field(default_factory=list)  # possible elements for this lineage
+    status: str = "relevant"  # "powerful", "relevant", "endangered", "unknown"
+
+    # Political weight and demographics
+    power: float | None = Field(default=None, ge=0.0, le=1.0)  # political influence
+    population: float | None = Field(default=None, ge=0.0, le=1.0)  # proportion of Kilima population
+
+    # Reference to associated character (informative, not relational)
+    character_id: str | None = None  # e.g. "char.protagonist"
+    note_ref: str | None = None  # informative: the note of the associated character (NOT the lineage's note)
+
+    # Seeded — resolved in Chronica
+    element: str | None = None  # which element from pool this lineage has in this seed
+    founding_era: str | None = None  # which revolution/era consolidated this lineage
+    origin_location_id: str | None = None  # where this lineage settled
